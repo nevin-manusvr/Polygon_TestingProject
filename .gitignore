@@ -1,0 +1,15 @@
+
+Job-e-tunities/Library/
+
+Job-e-tunities/Temp/
+
+Job-e-tunities/Logs/
+Library/
+Temp/
+
+job-e-tunities/\.vs/job-e-tunities/v16/
+
+*.cache
+*.csproj
+
+*.sln
