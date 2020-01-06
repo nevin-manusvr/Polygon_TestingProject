@@ -1,0 +1,9 @@
+[submodule "Polygon/Assets/ManusVR/manus-polygon"]
+	path = Polygon/Assets/ManusVR/manus-polygon
+	url = https://github.com/manusvr/Artus.git
+[submodule "Polygon/Assets/ManusVR/manus-core"]
+	path = Polygon/Assets/ManusVR/manus-core
+	url = https://github.com/manusvr/unity-core.git
+[submodule "Polygon/Assets/ManusVR/manus-networking"]
+	path = Polygon/Assets/ManusVR/manus-networking
+	url = https://github.com/manusvr/UnityNetworking.git
