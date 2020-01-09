@@ -136,20 +136,21 @@ public class PointSaver : MonoBehaviour
 
 	private void GetOffsetToTracker()
 	{
-		Transform transform = new GameObject("trackerPosition").transform;
-
+		Transform trackerTransform = new GameObject("trackerPosition").transform;
 		var offsetsToTracker = new List<Vector3>();
 
 		foreach (TransformValues value in savedPoints)
 		{
-			transform.position = Vector3.ProjectOnPlane(value.position, normal);
-			transform.rotation = value.rotation;
+			trackerTransform.position = Vector3.ProjectOnPlane(value.position, normal);
+			trackerTransform.rotation = value.rotation;
 
-			Vector3 offset = transform.InverseTransformPoint(intersectioPoint);// TODO: Fix offset
-			Debug.DrawLine(transform.position, transform.position + offset, Color.white, 1000f);
+			Vector3 pointOffset = trackerTransform.InverseTransformPoint(intersectionPoint);
+			offsetsToTracker.Add(pointOffset);
 		}
 
-		Destroy(transform.gameObject); 
+		Vector3 offset = AverageVector(offsetsToTracker.ToArray());
+
+		transform.GetChild(0).localPosition = offset;
 	}
 
 	private Vector3 AverageVector(Vector3[] vectors)
