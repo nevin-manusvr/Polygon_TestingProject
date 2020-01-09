@@ -13,9 +13,7 @@ namespace ManusVR.Polygon
 		public Bone(Transform bone)
 		{
 			if (bone == null) return;
-
 			this.bone = bone;
-			SetInitialValues();
 		}
 
 		public void SetInitialValues()

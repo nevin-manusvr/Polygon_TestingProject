@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028381, g: 0.22571406, b: 0.30692294, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -72,7 +72,7 @@ LightmapSettings:
     m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
-    m_BakeBackend: 1
+    m_BakeBackend: 2
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
@@ -206,7 +206,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &705507994
 Light:
   m_ObjectHideFlags: 0
@@ -225,7 +225,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: -1
+    m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.05
@@ -263,7 +263,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 5.12e-42, y: 1.05e-43, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 7.31e-43, y: 1.9077273e+30, z: 7.31e-43, w: 6e-45}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -274,13 +274,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.10938167, y: 0.8754261, z: -0.40821788, w: 0.23456976}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 150, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +440,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1118148674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -930,7 +930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1959935266
 Transform:
   m_ObjectHideFlags: 0
@@ -2567,25 +2567,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!95 &3166231813870256534
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8296172669213433599}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 32223f3637032f042aee5924f84ee2a3, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3175900350732396170
 GameObject:
   m_ObjectHideFlags: 0
@@ -3963,7 +3944,7 @@ Transform:
   m_GameObject: {fileID: 7269281077755922512}
   m_LocalRotation: {x: 0.0030214305, y: 0.9998758, z: -0.015140101, w: -0.0031863868}
   m_LocalPosition: {x: -0.09094263, y: -0.06611551, z: -0.0005521672}
-  m_LocalScale: {x: 0.9999996, y: 1.0000001, z: 1.0000007}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5704366637468315243}
   m_Father: {fileID: 7492028975591766989}
@@ -4830,7 +4811,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5006512734784957676}
-  - component: {fileID: 3166231813870256534}
+  - component: {fileID: 8296172669213433601}
   - component: {fileID: 8296172669213433600}
   m_Layer: 0
   m_Name: PolygonModel
@@ -4838,7 +4819,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8296172669213433600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4851,25 +4832,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6cabbc104370c49a94c6a9f6abfefc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 3166231813870256534}
+  animator: {fileID: 8296172669213433601}
   boneReferences:
+    head:
+      neck:
+        bone: {fileID: 8934294593378444946}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      head:
+        bone: {fileID: 6176433058162028537}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      eyeLeft:
+        bone: {fileID: 5361469876162329625}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      eyeRight:
+        bone: {fileID: 304097874276445354}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
     body:
       hip:
         bone: {fileID: 7492028975591766989}
-        initialPosition: {x: 0.0000014199968, y: 1.0096639, z: 0.0005587846}
-        initialRotation: {x: 0.000000081460335, y: -3.6657152e-13, z: 0.0000045, w: 1}
-      spine: []
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      spine:
+      - bone: {fileID: 4675343901980823041}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      - bone: {fileID: 6096039801141341775}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
+      - bone: {fileID: 2137818250965618722}
+        initialPosition: {x: 0, y: 0, z: 0}
+        initialRotation: {x: 0, y: 0, z: 0, w: 0}
     armLeft:
       shoulder:
-        bone: {fileID: 0}
+        bone: {fileID: 6491364910890713070}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       upperArm:
-        bone: {fileID: 0}
+        bone: {fileID: 2853835700614792052}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       lowerArm:
-        bone: {fileID: 0}
+        bone: {fileID: 723828292149348690}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       hand:
@@ -4964,15 +4971,15 @@ MonoBehaviour:
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
     armRight:
       shoulder:
-        bone: {fileID: 0}
+        bone: {fileID: 8972364331671586910}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       upperArm:
-        bone: {fileID: 0}
+        bone: {fileID: 3379359624305524834}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       lowerArm:
-        bone: {fileID: 0}
+        bone: {fileID: 6846903625533067979}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       hand:
@@ -5067,46 +5074,65 @@ MonoBehaviour:
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
     legLeft:
       upperLeg:
-        bone: {fileID: 0}
+        bone: {fileID: 6748021209028126604}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       lowerLeg:
-        bone: {fileID: 0}
+        bone: {fileID: 5704366637468315243}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       foot:
-        bone: {fileID: 0}
+        bone: {fileID: 5419939793821249564}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       toes:
-        bone: {fileID: 0}
+        bone: {fileID: 3666571726905155895}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
-      toesTip:
-        bone: {fileID: 0}
+      toesEnd:
+        bone: {fileID: 3060643859955877310}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
     legRight:
       upperLeg:
-        bone: {fileID: 0}
+        bone: {fileID: 9177165411564563500}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       lowerLeg:
-        bone: {fileID: 0}
+        bone: {fileID: 4462442484330644175}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       foot:
-        bone: {fileID: 0}
+        bone: {fileID: 3797617039587001483}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       toes:
-        bone: {fileID: 0}
+        bone: {fileID: 8622073427668907818}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
-      toesTip:
-        bone: {fileID: 0}
+      toesEnd:
+        bone: {fileID: 7988999590213408158}
         initialPosition: {x: 0, y: 0, z: 0}
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
+--- !u!95 &8296172669213433601
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8296172669213433599}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 32223f3637032f042aee5924f84ee2a3, type: 3}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &8310052126382705794
 Transform:
   m_ObjectHideFlags: 0

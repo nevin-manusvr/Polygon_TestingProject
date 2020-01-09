@@ -151,6 +151,8 @@ public class PointSaver : MonoBehaviour
 		Vector3 offset = AverageVector(offsetsToTracker.ToArray());
 
 		transform.GetChild(0).localPosition = offset;
+
+		Destroy(trackerTransform.gameObject);
 	}
 
 	private Vector3 AverageVector(Vector3[] vectors)
