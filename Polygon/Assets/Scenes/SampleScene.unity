@@ -160,36 +160,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1952690827}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &584761493
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 584761494}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &584761494
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 584761493}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.00002503395, y: 0.907775, z: -0.05749069}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,7 +233,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 7.31e-43, y: 1.9077273e+30, z: 7.31e-43, w: 6e-45}
+  m_BoundingSphereOverride: {x: 2.94e-43, y: 1.05e-43, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -467,7 +437,7 @@ Transform:
   m_Children:
   - {fileID: 1251850701}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1251850700
 GameObject:
@@ -4881,92 +4851,92 @@ MonoBehaviour:
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       hand:
         wrist:
-          bone: {fileID: 0}
+          bone: {fileID: 3108225986182693406}
           initialPosition: {x: 0, y: 0, z: 0}
           initialRotation: {x: 0, y: 0, z: 0, w: 0}
         index:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 7497962492695157551}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 8633082062209336221}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 6198656599557168220}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 6570802079379534281}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         middle:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 7460936342033942030}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 6488364846547018701}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 3663559556566287895}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 6403970666049897203}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         ring:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 1649340196149826746}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 2864545245070651674}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 3325090472899561959}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 3277005332796471161}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         pinky:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 6433116937422029314}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 3338986343153240772}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 8289752733709941977}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 4146822306946970415}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         thumb:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 6604645133134112780}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 4201460231361509495}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 4137134502889061806}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 8632588057499492042}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
     armRight:
@@ -4984,92 +4954,92 @@ MonoBehaviour:
         initialRotation: {x: 0, y: 0, z: 0, w: 0}
       hand:
         wrist:
-          bone: {fileID: 0}
+          bone: {fileID: 5246287522368861051}
           initialPosition: {x: 0, y: 0, z: 0}
           initialRotation: {x: 0, y: 0, z: 0, w: 0}
         index:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 3730882571626927434}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 7325072786670600662}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 6042105182838441512}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 505961598319956325}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         middle:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 5736256681179984228}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 6975371591986059307}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 5527427063231712678}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 11609055549590016}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         ring:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 309031204743427539}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 5286990946994796391}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 2483966812084688640}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 416518372871601455}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         pinky:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 2616741658534663848}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 6190722398466578529}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 6007132870981145889}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 6945135060710596224}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
         thumb:
           proximal:
-            bone: {fileID: 0}
+            bone: {fileID: 2029939462196722723}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           middle:
-            bone: {fileID: 0}
+            bone: {fileID: 3383802855653556799}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           distal:
-            bone: {fileID: 0}
+            bone: {fileID: 8717511607396128053}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
           tip:
-            bone: {fileID: 0}
+            bone: {fileID: 6699995620137555575}
             initialPosition: {x: 0, y: 0, z: 0}
             initialRotation: {x: 0, y: 0, z: 0, w: 0}
     legLeft:

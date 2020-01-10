@@ -10,6 +10,22 @@ namespace ManusVR.Polygon
 
 		public SkeletonBoneReferences boneReferences;
 
+		#region Monobehaviour Callbacks
+
+		private void Start()
+		{
+			GameObject scaleBone = new GameObject("shoulderScaleBone");
+			scaleBone.transform.position = boneReferences.armLeft.shoulder.bone.position;
+			scaleBone.transform.LookAt(boneReferences.armLeft.upperArm.bone);
+
+			scaleBone.transform.SetParent(boneReferences.armLeft.shoulder.bone);
+			boneReferences.armLeft.upperArm.bone.SetParent(scaleBone.transform);
+
+			Debug.Log("New scalebone", scaleBone);
+		}
+
+		#endregion
+
 		#region Private Methods
 
 		private Animator FindValidAnimatorInHierarchy()

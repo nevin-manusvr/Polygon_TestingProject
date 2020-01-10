@@ -46,7 +46,6 @@ namespace ManusVR.Polygon
 		{
 			bool isLeft = left;
 
-
 			wrist = new Bone(
 				animator?.GetBoneTransform(isLeft ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand)
 				?? Utils.FindDeepChildTransform(lowerArm, new string[] { "wrist" })
