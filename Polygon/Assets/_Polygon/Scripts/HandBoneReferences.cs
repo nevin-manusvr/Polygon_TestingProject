@@ -12,9 +12,9 @@ namespace ManusVR.Polygon
 		public Bone distal;
 		public Bone tip;
 
-		public bool IsComplete
+		public bool IsValid
 		{
-			get { return proximal.bone && middle.bone && distal.bone && tip.bone; }
+			get { return proximal?.bone && middle?.bone && distal?.bone && tip?.bone; }
 		}
 
 		public void AssignBones(Transform proximal, Transform middle, Transform distal, Transform tip)
@@ -36,6 +36,11 @@ namespace ManusVR.Polygon
 		public Finger ring;
 		public Finger pinky;
 		public Finger thumb;
+
+		public bool IsValid
+		{
+			get { return wrist?.bone && index.IsValid && middle.IsValid && ring.IsValid && pinky.IsValid && thumb.IsValid; }
+		}
 
 		public void PopulateBones(Transform lowerArm)
 		{
@@ -103,13 +108,13 @@ namespace ManusVR.Polygon
 					? animator?.GetBoneTransform(isLeft ? HumanBodyBones.LeftLittleDistal : HumanBodyBones.RightLittleDistal).GetChild(0)
 					: Utils.FindDeepChildTransform(lowerArm, new string[] { "pinky", "4" }));
 
-			if (!index.IsComplete || !middle.IsComplete || !ring.IsComplete || !pinky.IsComplete || !thumb.IsComplete)
+			if (!index.IsValid || !middle.IsValid || !ring.IsValid || !pinky.IsValid || !thumb.IsValid)
 			{
 				Debug.LogWarning("Not all finger bones found. Please assign missing bones manually");
 			}
 		}
 
-		private void Clear()
+		public void ClearBoneReferences()
 		{
 			wrist = null;
 			thumb = new Finger();

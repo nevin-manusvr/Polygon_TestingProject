@@ -12,6 +12,11 @@ namespace ManusVR.Polygon
 		public Bone hip;
 		public Bone[] spine;
 
+		public bool IsValid
+		{
+			get { return hip?.bone && spine?.Length > 0; }
+		}
+
 		public void AssignBones(Transform hip, Transform spine, Transform chest, Transform upperChest)
 		{
 			this.hip = new Bone(hip);
@@ -32,6 +37,11 @@ namespace ManusVR.Polygon
 		public Bone head;
 		public Bone eyeLeft;
 		public Bone eyeRight;
+
+		public bool IsValid
+		{
+			get { return neck?.bone && head?.bone; }
+		}
 
 		public void AssignBones(Transform neck, Transform head, Transform eyeLeft, Transform eyeRight)
 		{
@@ -54,14 +64,22 @@ namespace ManusVR.Polygon
 		public Bone lowerArm;
 		public HandBoneReferences hand;
 
-		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm, Animator animator, bool left)
+		public bool IsValid
+		{
+			get { return shoulder?.bone && upperArm?.bone && lowerArm?.bone && hand.IsValid; }
+		}
+
+		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm)
 		{
 			this.shoulder = new Bone(shoulder);
 			this.upperArm = new Bone(upperArm);
 			this.lowerArm = new Bone(lowerArm);
 
-			//this.hand.PopulateBones(animator, lowerArm, left);
-			this.hand.PopulateBones(lowerArm);
+		}
+
+		public void AssignHandBones(Transform lowerArm, Animator animator, bool left)
+		{
+			this.hand.PopulateBones(animator, lowerArm, left);
 		}
 	}
 
@@ -74,7 +92,12 @@ namespace ManusVR.Polygon
 		public Bone toes;
 		public Bone toesEnd;
 
-		public void AssignBones(Transform upperLeg, Transform lowerLeg, Transform foot, Transform toes)
+		public bool IsValid
+		{
+			get { return upperLeg?.bone && lowerLeg?.bone && foot?.bone; }
+		}
+
+		public void AssignBones(Transform upperLeg, Transform lowerLeg, Transform foot, Transform toes, Transform toesEnd)
 		{
 			this.upperLeg = new Bone(upperLeg);
 			this.lowerLeg = new Bone(lowerLeg);
@@ -88,13 +111,13 @@ namespace ManusVR.Polygon
 			
 			this.toes = new Bone(toes);
 
-			if (toes.childCount == 0)
+			if (toesEnd == null && toes.childCount == 0)
 			{
 				Debug.LogWarning($"No toe end bone assigned in the avatar for {toes.name}, consider assigning the foot for a better connection to the ground", toes);
 				return;
 			}
 
-			this.toesEnd = new Bone(this.toes.bone.GetChild(0));
+			this.toesEnd = new Bone(toesEnd ?? this.toes.bone.GetChild(0));
 		}
 }
 
@@ -112,6 +135,11 @@ namespace ManusVR.Polygon
 		public Leg legLeft;
 		public Leg legRight;
 
+		public bool IsValid
+		{
+			get { return head.IsValid && body.IsValid && armLeft.IsValid && armRight.IsValid && legLeft.IsValid && legRight.IsValid; }
+		}
+
 		public void Populate(Animator animator)
 		{
 			this.head.AssignBones(
@@ -127,23 +155,27 @@ namespace ManusVR.Polygon
 			this.armLeft.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.LeftShoulder), 
 				animator.GetBoneTransform(HumanBodyBones.LeftUpperArm),
-				animator.GetBoneTransform(HumanBodyBones.LeftLowerArm), 
-				animator, true);
+				animator.GetBoneTransform(HumanBodyBones.LeftLowerArm));
+			this.armLeft.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.LeftLowerArm), animator, true);
+
 			this.armRight.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.RightShoulder),
 				animator.GetBoneTransform(HumanBodyBones.RightUpperArm),
-				animator.GetBoneTransform(HumanBodyBones.RightLowerArm),
-				animator, false);
+				animator.GetBoneTransform(HumanBodyBones.RightLowerArm));
+			this.armRight.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.RightLowerArm), animator, false);
+
 			this.legLeft.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg),
 				animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg),
 				animator.GetBoneTransform(HumanBodyBones.LeftFoot),
-				animator.GetBoneTransform(HumanBodyBones.LeftToes));
+				animator.GetBoneTransform(HumanBodyBones.LeftToes),
+				null);
 			this.legRight.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.RightUpperLeg),
 				animator.GetBoneTransform(HumanBodyBones.RightLowerLeg),
 				animator.GetBoneTransform(HumanBodyBones.RightFoot),
-				animator.GetBoneTransform(HumanBodyBones.RightToes));
+				animator.GetBoneTransform(HumanBodyBones.RightToes),
+				null);
 		}
 
 		public void Clear()
