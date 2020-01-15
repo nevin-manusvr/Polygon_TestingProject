@@ -12,35 +12,26 @@ namespace ManusVR.Polygon
 
 		public SkeletonBoneReferences newSkeleton;
 
-		public float spineLength = 0.1f;
-
-		public List<Transform> scaleBones;
-		public List<Transform> scaleFixBones;
-
 		private Transform newSkeletonParent;
 
 		#region Monobehaviour Callbacks
 
 		private void Start()
 		{
-
-			if (boneReferences.IsValid)
+			if (boneReferences.IsValid && newSkeleton.IsValid)
 			{
-				newSkeleton = CopySkeleton(boneReferences, newSkeletonParent);
+				ReparentSkeleton(newSkeleton);
+				ParentSkeletonToAnotherSkeleton(newSkeleton, boneReferences);
+
+				SkeletonScaler scaler = new SkeletonScaler();
+				scaler.AddScalerBone(HumanBodyBones.Hips, boneReferences.body.hip.bone, newSkeleton.body.hip.bone.rotation);
+				scaler.boneScalers[HumanBodyBones.Hips].ScaleBone(5, ScaleMode.Percentage, ScaleAxis.Length);
 			}
 		}
 
 		private void Update()
 		{
-			//foreach (Transform bone in scaleBones)
-			//{
-			//	bone.localScale = new Vector3(1, 1, spineLength);
-			//}
-
-			//foreach (Transform bone in scaleFixBones)
-			//{
-			//	bone.localScale = new Vector3(1, 1, 1f / spineLength);
-			//}
+			
 		}
 
 		#endregion
@@ -122,6 +113,127 @@ namespace ManusVR.Polygon
 			return skeletonCopy;
 		}
 
+		// Parent Skeleton to another skeleton
+		public void ParentSkeletonToAnotherSkeleton(SkeletonBoneReferences parent, SkeletonBoneReferences child)
+		{
+			InsertBoneParent(child.body.hip.bone, parent.body.hip.bone);
+			for (var index = 0; index < child.body.spine.Length; index++)
+			{
+				InsertBoneParent(child.body.spine[index].bone, parent.body.spine[index].bone);
+			}
+
+			InsertBoneParent(child.head.neck.bone, parent.head.neck.bone);
+			InsertBoneParent(child.head.head.bone, parent.head.head.bone);
+
+			ParentArmToArm(parent.armLeft, child.armLeft);
+			ParentArmToArm(parent.armRight, child.armRight);
+
+			ParentLegToLeg(parent.legLeft, child.legLeft);
+			ParentLegToLeg(parent.legRight, child.legRight);
+
+			ParentHandSkeletonToAnotherHandSkeleton(parent.armLeft.hand, child.armLeft.hand);
+			ParentHandSkeletonToAnotherHandSkeleton(parent.armRight.hand, child.armRight.hand);
+		}
+
+		public void ParentHandSkeletonToAnotherHandSkeleton(HandBoneReferences parent, HandBoneReferences child)
+		{
+			InsertBoneParent(child.wrist.bone, parent.wrist.bone);
+
+			ParentFingerToFinger(parent.index, child.index);
+			ParentFingerToFinger(parent.middle, child.middle);
+			ParentFingerToFinger(parent.ring, child.ring);
+			ParentFingerToFinger(parent.pinky, child.pinky);
+			ParentFingerToFinger(parent.thumb, child.thumb);
+		}
+
+		void ParentArmToArm(Arm parent, Arm child)
+		{
+			InsertBoneParent(child.shoulder.bone, parent.shoulder.bone);
+			InsertBoneParent(child.upperArm.bone, parent.upperArm.bone);
+			InsertBoneParent(child.lowerArm.bone, parent.lowerArm.bone);
+		}
+
+		void ParentLegToLeg(Leg parent, Leg child)
+		{
+			InsertBoneParent(child.upperLeg.bone, parent.upperLeg.bone);
+			InsertBoneParent(child.lowerLeg.bone, parent.lowerLeg.bone);
+			InsertBoneParent(child.foot.bone, parent.foot.bone);
+			if (child.toes?.bone != null) InsertBoneParent(child.toes.bone, parent.toes.bone);
+			if (child.toesEnd?.bone != null) InsertBoneParent(child.toesEnd.bone, parent.toesEnd.bone);
+		}
+
+		private void ParentFingerToFinger(Finger parent, Finger child)
+		{
+			InsertBoneParent(child.proximal.bone, parent.proximal.bone);
+			InsertBoneParent(child.middle.bone, parent.middle.bone);
+			InsertBoneParent(child.distal.bone, parent.distal.bone);
+			InsertBoneParent(child.tip.bone, parent.tip.bone);
+		}
+
+		private void InsertBoneParent(Transform child, Transform parent)
+		{
+			Debug.Log(child.parent);
+			parent.SetParent(child.parent);
+			child.SetParent(parent);
+		}
+
+		// Fix parenting of a single skeleton
+		public void ReparentSkeleton(SkeletonBoneReferences skeleton)
+		{
+			skeleton.body.spine[0].bone.SetParent(skeleton.body.hip.bone);
+			for (int i = 0; i < skeleton.body.spine.Length; i++)
+			{
+				skeleton.body.spine[i].bone.SetParent(i == 0 ? skeleton.body.hip.bone : skeleton.body.spine[i - 1].bone);
+			}
+			skeleton.armLeft.shoulder.bone.SetParent(skeleton.body.spine[skeleton.body.spine.Length - 1].bone);
+
+			skeleton.head.neck.bone.SetParent(skeleton.body.spine[skeleton.body.spine.Length - 1].bone);
+			skeleton.head.head.bone.SetParent(skeleton.head.neck.bone);
+
+			ReparentArm(skeleton.armLeft, skeleton.body);
+			ReparentArm(skeleton.armRight, skeleton.body);
+
+			ReparentLeg(skeleton.legLeft, skeleton.body);
+			ReparentLeg(skeleton.legRight, skeleton.body);
+
+			ReparentHand(skeleton.armLeft.hand);
+			ReparentHand(skeleton.armRight.hand);
+		}
+
+		public void ReparentHand(HandBoneReferences hand)
+		{
+			ReparentFinger(hand.index, hand.wrist);
+			ReparentFinger(hand.middle, hand.wrist);
+			ReparentFinger(hand.ring, hand.wrist);
+			ReparentFinger(hand.pinky, hand.wrist);
+			ReparentFinger(hand.thumb, hand.wrist);
+		}
+
+		private void ReparentArm(Arm arm, Body body)
+		{
+			arm.shoulder.bone.SetParent(body.spine[body.spine.Length - 1].bone);
+			arm.upperArm.bone.SetParent(arm.shoulder.bone);
+			arm.lowerArm.bone.SetParent(arm.upperArm.bone);
+			arm.hand.wrist.bone.SetParent(arm.lowerArm.bone);
+		}
+
+		private void ReparentLeg(Leg leg, Body body)
+		{
+			leg.upperLeg.bone.SetParent(body.hip.bone);
+			leg.lowerLeg.bone.SetParent(leg.upperLeg.bone);
+			leg.foot.bone.SetParent(leg.lowerLeg.bone);
+			if (leg.toes?.bone != null) leg.toes.bone.SetParent(leg.foot.bone);
+			if (leg.toesEnd?.bone != null && leg.toes?.bone != null) leg.toesEnd.bone.SetParent(leg.toes.bone);
+		}
+
+		private void ReparentFinger(Finger finger, Bone wrist)
+		{
+			finger.proximal.bone.SetParent(wrist.bone);
+			finger.middle.bone.SetParent(finger.proximal.bone);
+			finger.distal.bone.SetParent(finger.middle.bone);
+			finger.tip.bone.SetParent(finger.distal.bone);
+		}
+
 		private HandBoneReferences CopyHandSkeleton(HandBoneReferences hand, Transform parent)
 		{
 			var newHand = new HandBoneReferences();
@@ -161,7 +273,6 @@ namespace ManusVR.Polygon
 
 			return newHand;
 		}
-		// TODO: end to do
 
 		private Transform CreateDirectionBone(string name, Vector3 position, Vector3 lookForward, Vector3 lookUp, Transform parent = null)
 		{
@@ -172,39 +283,7 @@ namespace ManusVR.Polygon
 
 			return newBone;
 		}
-
-		private void InsertScaleBone(Transform bone, Transform target)
-		{
-			Quaternion lookRotation = Quaternion.LookRotation(target.position - bone.position); 
-
-			Transform scaleBone = new GameObject(bone.name + "_scaleBone").transform;
-			scaleBone.SetParent(bone.parent);
-			scaleBone.position = bone.position;
-			scaleBone.rotation = lookRotation;
-
-			scaleBones.Add(scaleBone); // TODO: temp
-
-			bone.SetParent(scaleBone, true);
-
-			var childs = new Transform[bone.childCount];
-			for (int i = 0; i < bone.childCount; i++)
-			{
-				childs[i] = bone.GetChild(i);
-			}
-
-			foreach (Transform child in childs)
-			{
-				Transform scaleFixBone = new GameObject(child.name + "_scaleFixBone").transform;
-
-				scaleFixBone.SetParent(bone, true);
-				scaleFixBone.position = child.position;
-				scaleFixBone.rotation = lookRotation;
-
-				scaleFixBones.Add(scaleFixBone); // TODO: temp
-
-				child.SetParent(scaleFixBone);
-			}
-		}
+		// TODO: end to do
 
 		#endregion
 

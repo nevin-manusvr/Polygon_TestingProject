@@ -9,6 +9,7 @@ namespace ManusVR.Polygon
 		private float size = 0.03f;
 
 		private Color handlesColor = Color.cyan;
+		private Transform selectedBone;
 
 		public override void OnInspectorGUI()
 		{
@@ -30,15 +31,18 @@ namespace ManusVR.Polygon
 		void OnSceneGUI()
 		{
 			// TODO: add undo/redo functionality
-			
 			PolygonSkeleton skeleton = target as PolygonSkeleton;
-			if (skeleton == null) return;
+
+			if (skeleton == null || !skeleton.boneReferences.IsValid) return;
+
+			SkeletonBoneReferences bones = skeleton.boneReferences;
+			if (skeleton.newSkeleton.IsValid) bones = skeleton.newSkeleton;
 
 			if (skeleton.boneReferences.IsValid) 
-				DrawHumanoidSkeletonBones(skeleton.boneReferences);
+				DrawHumanoidSkeletonBones(bones);
 
-			if (skeleton.newSkeleton.IsValid)
-				DrawHumanoidSkeletonDirections(skeleton.newSkeleton);
+			if (Selection.activeGameObject != skeleton.gameObject) selectedBone = null;
+			if (selectedBone != null) DrawRotationGizmo(selectedBone);
 		}
 
 		private void DrawHumanoidSkeletonBones(SkeletonBoneReferences bones)
@@ -52,23 +56,6 @@ namespace ManusVR.Polygon
 
 			DrawArm(bones.armLeft, bones.body);
 			DrawArm(bones.armRight, bones.body);
-		}
-
-		private void DrawHumanoidSkeletonDirections(SkeletonBoneReferences bones)
-		{
-			DrawDirectionBone(bones.body.hip, size * 2f);
-		}
-
-		private void DrawDirectionBone(Bone bone, float size)
-		{
-			//HandleUtility.
-
-			Handles.color = Handles.zAxisColor;
-			Handles.ArrowHandleCap(0, bone.bone.position, bone.bone.rotation, size, EventType.Repaint);
-
-			Handles.color = Handles.yAxisColor;
-			Handles.DrawLine(bone.bone.position, bone.bone.position + bone.bone.up * size);
-			Handles.CylinderHandleCap(0, bone.bone.position + bone.bone.up * size, bone.bone.rotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
 		}
 
 		#region drawing the skeleton bones
@@ -86,8 +73,8 @@ namespace ManusVR.Polygon
 
 			ConnectBones(body.spine[body.spine.Length - 1], head.neck);
 			ConnectBones(head.neck, head.head);
-			ConnectBones(head.head, head.eyeLeft);
-			ConnectBones(head.head, head.eyeRight);
+			if (head.eyeLeft?.bone != null) ConnectBones(head.head, head.eyeLeft);
+			if (head.eyeRight?.bone != null) ConnectBones(head.head, head.eyeRight);
 
 			// Draw Bones
 			DrawBone(body.hip, size);
@@ -98,8 +85,8 @@ namespace ManusVR.Polygon
 
 			DrawBone(head.neck, size);
 			DrawBone(head.head, size);
-			DrawBone(head.eyeLeft, size);
-			DrawBone(head.eyeRight, size);
+			if (head.eyeLeft?.bone != null) DrawBone(head.eyeLeft, size);
+			if (head.eyeRight?.bone != null) DrawBone(head.eyeRight, size);
 		}
 
 		private void DrawArm(Arm arm, Body body)
@@ -163,6 +150,7 @@ namespace ManusVR.Polygon
 
 		private void ConnectBones(Bone bone1, Bone bone2)
 		{
+			Handles.color = handlesColor;
 			Handles.DrawLine(bone1.bone.position, bone2.bone.position);
 		}
 
@@ -171,22 +159,45 @@ namespace ManusVR.Polygon
 			Handles.color = handlesColor;
 			if (Handles.Button(bone.bone.position, Quaternion.identity, size, size, Handles.SphereHandleCap))
 			{
-				Selection.activeGameObject = bone.bone.gameObject;
+				if (Event.current.control)
+				{
+					Selection.activeGameObject = bone.bone.gameObject;
+				}
+				else
+				{
+					Selection.activeGameObject = (target as PolygonSkeleton)?.gameObject;
+					selectedBone = bone.bone;
+				}
 			}
 
-			//if (Handles.Button(bone.bone.position + bone.bone.up * size, bone.bone.rotation * Quaternion.Euler(0, 90, 0), size / 3f, size / 3f, Handles.CylinderHandleCap))
-			//{
-			//	Handles.DrawWireDisc(bone.bone.position, bone.bone.forward, size);
+			DrawDirectionBone(bone, size);
+		}
 
-			//}
+		private void DrawDirectionBone(Bone bone, float size)
+		{
+			Handles.color = Handles.zAxisColor;
+			Handles.ArrowHandleCap(0, bone.bone.position, bone.bone.rotation, size, EventType.Repaint);
 
-			//Handles.color = Color.blue;
-			//Handles.ArrowHandleCap(0, bone.bone.position, bone.bone.rotation, size * 3f, EventType.Repaint);
+			Handles.color = Handles.yAxisColor;
+			Handles.DrawLine(bone.bone.position, bone.bone.position + bone.bone.up * size);
 
-			//Handles.color = Color.green;
-			////Handles.CylinderHandleCap(0, bone.bone.position + bone.bone.up * size, bone.bone.rotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
+			Handles.CylinderHandleCap(0, bone.bone.position + bone.bone.up * size, bone.bone.rotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
+		}
 
-			//Handles.color = handlesColor;
+		private void DrawRotationGizmo(Transform bone)
+		{
+			EditorGUI.BeginChangeCheck();
+			Quaternion rot = Handles.RotationHandle(bone.rotation, bone.position);
+			if (EditorGUI.EndChangeCheck())
+			{
+				Undo.RecordObject(bone, "Rotated Bone");
+				bone.rotation = rot;
+			}
+
+			// TODO: implement this for the rotating of the bones
+			//float snap = 0.1f;
+			//Vector3 newTargetPosition = Handles.Slider2D(bone.position, bone.forward, bone.right, bone.up, size, Handles.CircleHandleCap, snap);
+			//bone.position = newTargetPosition;
 		}
 
 		#endregion
