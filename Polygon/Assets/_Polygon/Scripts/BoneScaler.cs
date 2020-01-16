@@ -24,9 +24,9 @@ namespace ManusVR.Polygon
 		private Transform scaleBone;
 		private Transform[] scaleFixBones;
 
-		private float defaultLength;
+		private float defaultLength = 1;
 
-		public BoneScaler(Transform bone, Quaternion lookRotation)
+		public BoneScaler(Transform bone, Quaternion lookRotation, bool counterScaleChildren)
 		{
 			// Instantiate scale bone
 			scaleBone = new GameObject(bone.name + "_scaleBone").transform;
@@ -43,32 +43,95 @@ namespace ManusVR.Polygon
 				childs[i] = bone.GetChild(i);
 			}
 
-			var scaleFixList = new List<Transform>();
+			scaleFixBones = new Transform[] { };
+
+			if (counterScaleChildren)
+			{
+				var scaleFixList = new List<Transform>();
+
+				foreach (Transform child in childs)
+				{
+					Transform scaleFixBone = new GameObject(child.name + "_scaleFixBone").transform;
+
+					scaleFixBone.SetParent(bone, true);
+					scaleFixBone.position = child.position;
+					scaleFixBone.rotation = lookRotation;
+
+					scaleFixList.Add(scaleFixBone);
+
+					child.SetParent(scaleFixBone);
+				}
+
+				scaleFixBones = scaleFixList.ToArray();
+			}
+
+			// Calculate the default bone length
+			float smallestAngle = float.MaxValue;
+			Transform lookAtChild = null;
 
 			foreach (Transform child in childs)
 			{
-				Transform scaleFixBone = new GameObject(child.name + "_scaleFixBone").transform;
+				float angleToChild = Vector3.Angle(child.position - bone.position, lookRotation * Vector3.forward);
 
-				scaleFixBone.SetParent(bone, true);
-				scaleFixBone.position = child.position;
-				scaleFixBone.rotation = lookRotation;
-
-				scaleFixList.Add(scaleFixBone);
-
-				child.SetParent(scaleFixBone);
+				if (angleToChild < smallestAngle && angleToChild < 20)
+				{
+					smallestAngle = angleToChild;
+					lookAtChild = child;
+				}
 			}
 
-			scaleFixBones = scaleFixList.ToArray();
+			if (lookAtChild != null)
+			{
+				defaultLength = Vector3.Project(lookAtChild.position - bone.position, lookRotation * Vector3.forward).magnitude;
+			}
 		}
 
-		public void ScaleBone(float scale, ScaleMode mode, ScaleAxis axis)
+		public void ScaleBone(float scale, ScaleAxis axis, ScaleMode mode)
 		{
 			float size = scale;
 
-			scaleBone.localScale = new Vector3(scaleBone.localScale.x, scaleBone.localScale.y, size);
-			foreach (Transform scaleFixBone in scaleFixBones)
+			if (axis == ScaleAxis.Length && mode == ScaleMode.Length)
 			{
-				scaleFixBone.localScale = new Vector3(scaleBone.localScale.x, scaleBone.localScale.y, 1 / size);
+				// TODO: calculate size to achieve this length
+			}
+
+			switch (axis)
+			{
+				case ScaleAxis.Length:
+					scaleBone.localScale = new Vector3(scaleBone.localScale.x, scaleBone.localScale.y, size);
+					foreach (Transform scaleFixBone in scaleFixBones)
+					{
+						scaleFixBone.localScale = new Vector3(scaleFixBone.localScale.x, scaleFixBone.localScale.y, 1 / size);
+					}
+					break;
+				case ScaleAxis.Width:
+					scaleBone.localScale = new Vector3(size, scaleBone.localScale.y, scaleBone.localScale.z);
+					foreach (Transform scaleFixBone in scaleFixBones)
+					{
+						scaleFixBone.localScale = new Vector3(1f / size, scaleFixBone.localScale.y, scaleFixBone.localScale.z);
+					}
+					break;
+				case ScaleAxis.Height:
+					scaleBone.localScale = new Vector3(scaleBone.localScale.x, size, scaleBone.localScale.z);
+					foreach (Transform scaleFixBone in scaleFixBones)
+					{
+						scaleFixBone.localScale = new Vector3(scaleFixBone.localScale.x, 1f / size, scaleFixBone.localScale.z);
+					}
+					break;
+				case ScaleAxis.Thickness:
+					scaleBone.localScale = new Vector3(size, size, scaleBone.localScale.z);
+					foreach (Transform scaleFixBone in scaleFixBones)
+					{
+						scaleFixBone.localScale = new Vector3(1f / size, 1f / size, scaleFixBone.localScale.z);
+					}
+					break;
+				case ScaleAxis.All:
+					scaleBone.localScale = new Vector3(size, size, size);
+					foreach (Transform scaleFixBone in scaleFixBones)
+					{
+						scaleFixBone.localScale = new Vector3(1f / size, 1f / size, 1f / size);
+					}
+					break;
 			}
 		}
 	}

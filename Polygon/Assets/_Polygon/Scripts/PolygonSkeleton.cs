@@ -14,24 +14,20 @@ namespace ManusVR.Polygon
 
 		private Transform newSkeletonParent;
 
+		public SkeletonBoneScalers boneScalers;
+
 		#region Monobehaviour Callbacks
 
-		private void Start()
+		private void Awake()
 		{
 			if (boneReferences.IsValid && newSkeleton.IsValid)
 			{
 				ReparentSkeleton(newSkeleton);
 				ParentSkeletonToAnotherSkeleton(newSkeleton, boneReferences);
 
-				SkeletonScaler scaler = new SkeletonScaler();
-				scaler.AddScalerBone(HumanBodyBones.Hips, boneReferences.body.hip.bone, newSkeleton.body.hip.bone.rotation);
-				scaler.boneScalers[HumanBodyBones.Hips].ScaleBone(5, ScaleMode.Percentage, ScaleAxis.Length);
+				boneScalers = new SkeletonBoneScalers();
+				boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
 			}
-		}
-
-		private void Update()
-		{
-			
 		}
 
 		#endregion
@@ -97,14 +93,14 @@ namespace ManusVR.Polygon
 				CreateDirectionBone("upperLeg_left", skeleton.legLeft.upperLeg.bone.position, skeleton.legLeft.lowerLeg.bone.position - skeleton.legLeft.upperLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("lowerLeg_left", skeleton.legLeft.lowerLeg.bone.position, skeleton.legLeft.foot.bone.position - skeleton.legLeft.lowerLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("foot_left", skeleton.legLeft.foot.bone.position, skeleton.legLeft.toes != null ? skeleton.legLeft.toes.bone.position - skeleton.legLeft.foot.bone.position : bodyForward, Vector3.up, parent),
-				skeleton.legLeft.toes == null ? null : CreateDirectionBone("toes_left", skeleton.legLeft.toes.bone.position, skeleton.legLeft.toesEnd != null ? skeleton.legLeft.toesEnd.bone.position - skeleton.legLeft.toes.bone.position : bodyForward, Vector3.up, parent),
+				skeleton.legLeft.toes == null ? null : CreateDirectionBone("toes_left", skeleton.legLeft.toes.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legLeft.toesEnd == null ? null : CreateDirectionBone("toesEnd_left", skeleton.legLeft.toesEnd.bone.position, bodyForward, Vector3.up, parent));
 
 			skeletonCopy.legRight.AssignBones(
 				CreateDirectionBone("upperLeg_right", skeleton.legRight.upperLeg.bone.position, skeleton.legRight.lowerLeg.bone.position - skeleton.legRight.upperLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("lowerLeg_right", skeleton.legRight.lowerLeg.bone.position, skeleton.legRight.foot.bone.position - skeleton.legRight.lowerLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("foot_right", skeleton.legRight.foot.bone.position, skeleton.legRight.toes != null ? skeleton.legRight.toes.bone.position - skeleton.legRight.foot.bone.position : bodyForward, Vector3.up, parent),
-				skeleton.legRight.toes == null ? null : CreateDirectionBone("toes_right", skeleton.legRight.toes.bone.position, skeleton.legRight.toesEnd != null ? skeleton.legRight.toesEnd.bone.position - skeleton.legRight.toes.bone.position : bodyForward, Vector3.up, parent),
+				skeleton.legRight.toes == null ? null : CreateDirectionBone("toes_right", skeleton.legRight.toes.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legRight.toesEnd == null ? null : CreateDirectionBone("toesEnd_right", skeleton.legRight.toesEnd.bone.position, bodyForward, Vector3.up, parent));
 
 			skeletonCopy.armLeft.hand = CopyHandSkeleton(skeleton.armLeft.hand, parent);
@@ -172,7 +168,6 @@ namespace ManusVR.Polygon
 
 		private void InsertBoneParent(Transform child, Transform parent)
 		{
-			Debug.Log(child.parent);
 			parent.SetParent(child.parent);
 			child.SetParent(parent);
 		}
