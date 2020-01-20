@@ -26,7 +26,7 @@ namespace ManusVR.Polygon
 		[SerializeField] private CanvasGroup timeCanvas;
 		[SerializeField] private Slider timer;
 
-		private void Start()
+		private void Awake()
 		{
 			ui.alpha = 1;
 
@@ -41,17 +41,13 @@ namespace ManusVR.Polygon
 			timeCanvas.alpha = 0;
 			timer.value = 0;
 
-			Calibrate("Mom's Spaghetti!", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Done"); });
+			// Test code
+			// Calibrate("Mom's Spaghetti!", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Done"); });
 		}
 
 		public void ToggleUI(bool tf)
 		{
 			ui.DOFade(tf ? 1 : 0, .3f).SetEase(Ease.InOutCubic);
-		}
-
-		public void SetCurrentStep(string step)
-		{
-			currentStep.text = step;
 		}
 
 		public void Calibrate(string step, float time, Action startCallback = null, Action endCallback = null)
