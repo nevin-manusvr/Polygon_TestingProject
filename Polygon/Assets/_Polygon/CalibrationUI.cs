@@ -26,6 +26,9 @@ namespace ManusVR.Polygon
 		[SerializeField] private CanvasGroup timeCanvas;
 		[SerializeField] private Slider timer;
 
+		[Header("Settings")]
+		[SerializeField] private float countdownTime = 3f;
+
 		private void Awake()
 		{
 			ui.alpha = 1;
@@ -50,8 +53,10 @@ namespace ManusVR.Polygon
 			ui.DOFade(tf ? 1 : 0, .3f).SetEase(Ease.InOutCubic);
 		}
 
-		public void Calibrate(string step, float time, Action startCallback = null, Action endCallback = null)
+		public void Calibrate(string step, float time, Action startCallback = null, Action updateCallback = null, Action endCallback = null)
 		{
+			// TODO: put this mess inside of a coroutine or a sequence
+
 			titleGroup.DOFade(1, .5f).SetEase(Ease.InCubic);
 			currentStepGroup.DOFade(1, .5f).SetDelay(0.1f).SetEase(Ease.InCubic);
 			currentStep.text = step;
@@ -64,13 +69,19 @@ namespace ManusVR.Polygon
 
 						timeCanvas.DOFade(1, 0.5f).SetEase(Ease.InCubic).OnComplete(() => { timeCanvas.DOFade(0, 0.5f).SetDelay(time - 0.5f).SetEase(Ease.OutCubic); });
 
-						DOVirtual.Float(0, 1, time, value => { timer.value = value; }).SetEase(Ease.Linear).OnComplete(() =>
-						{
-							endCallback?.Invoke();
+						DOVirtual.Float(0, 1, time,
+							value =>
+							{
+								updateCallback?.Invoke();
+								timer.value = value;
+							}).SetEase(Ease.Linear).OnComplete(
+							() =>
+							{
+								endCallback?.Invoke();
 
-							titleGroup.DOFade(0, .5f).SetEase(Ease.OutCubic);
-							currentStepGroup.DOFade(0, .5f).SetDelay(0.1f).SetEase(Ease.OutCubic);
-						});
+								titleGroup.DOFade(0, .5f).SetEase(Ease.OutCubic);
+								currentStepGroup.DOFade(0, .5f).SetDelay(0.1f).SetEase(Ease.OutCubic);
+							});
 					})));
 				});
 		}
@@ -80,9 +91,11 @@ namespace ManusVR.Polygon
 			number.alpha = 0;
 			number.transform.localScale = Vector3.zero;
 
-			number.DOFade(1, 0.3f).SetEase(Ease.InCubic).OnComplete(
-				() => { number.DOFade(0, 0.2f).SetEase(Ease.OutCubic).SetDelay(.6f); });
-			number.transform.DOScale(1.5f, 1f).SetEase(Ease.InCubic).OnComplete(() => { callback?.Invoke(); });
+			float time = countdownTime / 3f;
+
+			number.DOFade(1, time * 0.3f).SetEase(Ease.InCubic).OnComplete(
+				() => { number.DOFade(0, time * 0.2f).SetEase(Ease.OutCubic).SetDelay(time * 0.5f); });
+			number.transform.DOScale(1.5f, time).SetEase(Ease.InCubic).OnComplete(() => { callback?.Invoke(); });
 		}
 	}
 }
