@@ -4,7 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	using System;
 

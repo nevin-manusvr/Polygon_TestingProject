@@ -4,11 +4,8 @@ using UnityEngine;
 
 namespace Manus.Polygon
 {
-	public static class BoneDirection
+	public class Calibrator : MonoBehaviour
 	{
-		public static void CalculateDirection()
-		{
-
-		}
+		public CalibrationSequence sequence;
 	}
 }

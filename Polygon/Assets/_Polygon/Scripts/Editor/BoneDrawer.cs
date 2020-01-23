@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	[CustomPropertyDrawer(typeof(Bone))]
 	public class BoneDrawer : PropertyDrawer

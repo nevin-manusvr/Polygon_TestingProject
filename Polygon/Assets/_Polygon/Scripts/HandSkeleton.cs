@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	public class HandSkeleton : MonoBehaviour
 	{

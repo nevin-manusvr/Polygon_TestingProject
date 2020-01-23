@@ -1,10 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	[CustomEditor(typeof(PolygonSkeleton))]
-	public class PolygonSkeletonEditor : Editor
+	public class PolygonSkeletonEditor : UnityEditor.Editor
 	{
 		private float size = 0.03f;
 
@@ -47,8 +47,15 @@ namespace ManusVR.Polygon
 
 		private void DrawHumanoidSkeletonBones(SkeletonBoneReferences bones)
 		{
-			Handles.color = handlesColor;
+			// Draw Skeleton
+			ConnectBones(bones.main, bones.legLeft.upperLeg);
+			ConnectBones(bones.main, bones.legRight.upperLeg);
 
+			// Draw Bones
+			DrawBone(bones.main, size);
+
+
+			// Draw whole skeleton
 			DrawBodyAndHead(bones.body, bones.head);
 
 			DrawLeg(bones.legLeft, bones.body);

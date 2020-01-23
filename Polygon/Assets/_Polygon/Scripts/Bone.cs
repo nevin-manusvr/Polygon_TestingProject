@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	[System.Serializable]
 	public class Bone

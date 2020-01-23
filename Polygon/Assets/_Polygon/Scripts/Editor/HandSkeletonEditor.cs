@@ -1,10 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	[CustomEditor(typeof(HandSkeleton))]
-	public class HandSkeletonEditor : Editor
+	public class HandSkeletonEditor : UnityEditor.Editor
 	{
 		private float size = 0.03f;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	public class PolygonSkeleton : MonoBehaviour
 	{
@@ -68,6 +68,8 @@ namespace ManusVR.Polygon
 
 			Debug.DrawRay(transform.position, bodyForward, Color.red, 10);
 
+			skeletonCopy.main = new Bone(CreateDirectionBone("main", (skeleton.legLeft.upperLeg.bone.position + skeleton.legRight.upperLeg.bone.position) / 2f, bodyForward, Vector3.up, parent));
+
 			skeletonCopy.head.AssignBones(
 				CreateDirectionBone("neck", skeleton.head.neck.bone.position, skeleton.head.head.bone.position - skeleton.head.neck.bone.position, -bodyForward, parent),
 				CreateDirectionBone("head", skeleton.head.head.bone.position, bodyForward, Vector3.up, parent),
@@ -112,6 +114,7 @@ namespace ManusVR.Polygon
 		// Parent Skeleton to another skeleton
 		public void ParentSkeletonToAnotherSkeleton(SkeletonBoneReferences parent, SkeletonBoneReferences child)
 		{
+			InsertBoneParent(child.main.bone, parent.main.bone);
 			InsertBoneParent(child.body.hip.bone, parent.body.hip.bone);
 			for (var index = 0; index < child.body.spine.Length; index++)
 			{
@@ -175,6 +178,8 @@ namespace ManusVR.Polygon
 		// Fix parenting of a single skeleton
 		public void ReparentSkeleton(SkeletonBoneReferences skeleton)
 		{
+			skeleton.body.hip.bone.SetParent(skeleton.body.hip.bone);
+
 			skeleton.body.spine[0].bone.SetParent(skeleton.body.hip.bone);
 			for (int i = 0; i < skeleton.body.spine.Length; i++)
 			{

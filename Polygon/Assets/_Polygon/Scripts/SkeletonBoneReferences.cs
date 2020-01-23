@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ManusVR.Polygon
+namespace Manus.Polygon
 {
 	using UnityEngine;
 
@@ -126,6 +126,8 @@ namespace ManusVR.Polygon
 	[System.Serializable]
 	public class SkeletonBoneReferences
 	{
+		public Bone main;
+
 		public Head head;
 		public Body body;
 
@@ -137,11 +139,13 @@ namespace ManusVR.Polygon
 
 		public bool IsValid
 		{
-			get { return head.IsValid && body.IsValid && armLeft.IsValid && armRight.IsValid && legLeft.IsValid && legRight.IsValid; }
+			get { return main?.bone != null && head.IsValid && body.IsValid && armLeft.IsValid && armRight.IsValid && legLeft.IsValid && legRight.IsValid; }
 		}
 
 		public void Populate(Animator animator)
 		{
+			this.main = new Bone(animator.GetBoneTransform(HumanBodyBones.Hips).parent);
+
 			this.head.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.Neck),
 				animator.GetBoneTransform(HumanBodyBones.Head),
