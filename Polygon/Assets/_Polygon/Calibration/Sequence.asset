@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb3fea47577664478031170e7d16157, type: 3}
   m_Name: Sequence
   m_EditorClassIdentifier: 
+  profileRequirements:
+    requiredTrackerOffsets: 0600000001000000020000000300000004000000
+    requiredBoneMeasurements: 00000000010000000200000003000000060000000a0000000c0000000d000000
   calibrationSteps:
   - {fileID: 11400000, guid: 3c103259d6577b04885b18fbc285932c, type: 2}

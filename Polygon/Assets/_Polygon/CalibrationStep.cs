@@ -6,14 +6,34 @@ namespace Manus.Polygon
 {
 	public abstract class CalibrationStep : ScriptableObject
 	{
-		public string name;
-		[Range(0, 5)] public float time = 1f;
+		[TextArea] public string description;
+		[Range(1, 10)] public float time = 1f;
 
-		public abstract void Start();
+		protected CalibrationProfile profile;
+		protected TrackerReference trackers;
 
-		//public virtual void Update();
+		public virtual void Setup(CalibrationProfile profile, TrackerReference trackers)
+		{
+			this.profile = profile;
+			this.trackers = trackers;
 
-		//public virtual void End();
+			// Create all data needed for the calibration step
+		}
+
+		public virtual void Update()
+		{
+			// Accumulate data for the calibration step
+		}
+
+		public virtual void End()
+		{
+			// Apply calibration step data to the profile
+		}
+
+		public virtual void Revert()
+		{
+			// Remove added profile date
+		}
 	}
 }
 

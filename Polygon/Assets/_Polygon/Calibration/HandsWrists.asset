@@ -12,5 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
   m_Name: HandsWrists
   m_EditorClassIdentifier: 
-  name: 
+  description: Create an arc with both hands to calibrate the wrist offset
   time: 1
+  settings:
+  - tracker: 1
+    useTrackerWithOffsets: 0
+    getPositionOffset: 1
+    parentTracker: 1
+    offsetToTracker: 0
+    bodyMeasurement: 0
+  - tracker: 2
+    useTrackerWithOffsets: 0
+    getPositionOffset: 0
+    parentTracker: 2
+    offsetToTracker: 0
+    bodyMeasurement: 7

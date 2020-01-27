@@ -2,27 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Manus.Core.VR;
 
 namespace Manus.Polygon
 {
+
 	public class Arc
 	{
 		#region Fields
 
 		// Data
 		private readonly List<ArcPoint> arcPoints;
-		private readonly Transform parent;
+		private readonly Tracker parent;
 
 		// Results
 		private Vector3 normal;
 		private Vector3 intersectionPoint;
+		private Vector3 averageArcPosition;
 
 		// Settings
 		private float minPointDistance = 0.01f;
 
 		#endregion
 
-		public Arc(Transform parent = null)
+		#region Properties
+
+		public Vector3 IntersectionPoint
+		{
+			get { return intersectionPoint; }
+		}
+
+		public Vector3 planeNormal
+		{
+			get { return normal; }
+		}
+
+		#endregion
+
+		public Arc(Tracker parent = null)
 		{
 			this.arcPoints = new List<ArcPoint>();
 			this.parent = parent;
@@ -41,6 +58,7 @@ namespace Manus.Polygon
 		public void CalculateArc()
 		{
 			Vector3[] arcPositions = arcPoints.Select(value => value.point).ToArray();
+			averageArcPosition = AverageVector(arcPositions);
 
 			normal = CalculatePlaneNormal(arcPositions);
 			intersectionPoint = CalculateIntersectionPoint(arcPositions);
@@ -58,7 +76,7 @@ namespace Manus.Polygon
 				if (value.parent == null) continue;
 				TransformValues parentValues = (TransformValues)value.parent;
 
-				trackerTransform.position = Vector3.ProjectOnPlane(parentValues.position, normal);
+				trackerTransform.position = parentValues.position;
 				trackerTransform.rotation = parentValues.rotation;
 
 				Vector3 pointOffset = trackerTransform.InverseTransformPoint(intersectionPoint);
@@ -75,7 +93,8 @@ namespace Manus.Polygon
 			var distanceToCenter = new List<float>();
 			foreach (ArcPoint value in arcPoints)
 			{
-				distanceToCenter.Add(Vector3.Distance(intersectionPoint, value.point));
+				Vector3 arcPoint = PlacePointOnPlane(value.point, averageArcPosition, normal);
+				distanceToCenter.Add(Vector3.Distance(intersectionPoint, arcPoint));
 			}
 
 			// Get the average off all the distances
@@ -91,6 +110,26 @@ namespace Manus.Polygon
 		#endregion
 
 		#region Private Methods
+
+		public void DebugPoints()
+		{
+			foreach (ArcPoint point in arcPoints)
+			{
+				Debug.DrawRay(point.point, normal * 0.01f, Color.yellow, 100f);
+				Debug.DrawRay(PlacePointOnPlane(point.point, averageArcPosition, normal), normal * 0.01f, Color.red, 100f);
+			}
+
+			Debug.DrawRay(intersectionPoint, normal * 0.01f, Color.cyan, 100f);
+			Debug.DrawRay(averageArcPosition, normal, Color.blue, 100f);
+		}
+
+		private Vector3 PlacePointOnPlane(Vector3 point, Vector3 center, Vector3 planeNormal)
+		{
+			Vector3 dir = point - center;
+			dir = Vector3.ProjectOnPlane(dir, planeNormal);
+
+			return center + dir;
+		}
 
 		private Vector3 AverageVector(Vector3[] vectors)
 		{
@@ -130,10 +169,10 @@ namespace Manus.Polygon
 					normals.Add(normal);
 				}
 
-				Debug.DrawRay(AverageVector(arcPositions), normal * 0.1f, Color.blue, 1f);
+				// Debug.DrawRay(AverageVector(arcPositions), normal * 0.1f, Color.blue, 1f);
 			}
 
-			Debug.DrawRay(AverageVector(arcPositions), AverageVector(normals.ToArray()), Color.white, 1f);
+			// Debug.DrawRay(AverageVector(arcPositions), AverageVector(normals.ToArray()), Color.white, 1f);
 			return AverageVector(normals.ToArray());
 		}
 
@@ -143,8 +182,12 @@ namespace Manus.Polygon
 			for (int i = 0; i < arcPositions.Length - 1; i++)
 			{
 				int[] indexes = { i, i + 1 };
-				Vector3 averagePoint = (Vector3.ProjectOnPlane(arcPositions[indexes[0]], normal) + Vector3.ProjectOnPlane(arcPositions[indexes[1]], normal)) / 2f;
-				Vector3 toCenterDirection = Vector3.Cross(arcPositions[indexes[0]] - arcPositions[indexes[1]], normal).normalized;
+
+				Vector3 point1 = PlacePointOnPlane(arcPositions[indexes[0]], averageArcPosition, normal);
+				Vector3 point2 = PlacePointOnPlane(arcPositions[indexes[1]], averageArcPosition, normal);
+
+				Vector3 averagePoint = (point1 + point2) / 2f;
+				Vector3 toCenterDirection = Vector3.Cross(point1 - point2, normal).normalized;
 
 				if (lines.Count > 0)
 				{
@@ -153,8 +196,9 @@ namespace Manus.Polygon
 						toCenterDirection *= -1;
 					}
 				}
+
 				lines.Add(new Ray(averagePoint, toCenterDirection));
-				Debug.DrawRay(averagePoint, toCenterDirection * 0.3f, Color.yellow, 1f);
+				// Debug.DrawRay(averagePoint, toCenterDirection * 0.3f, Color.yellow, 100f);
 			}
 
 			var intersections = new List<Vector3>();
@@ -167,7 +211,7 @@ namespace Manus.Polygon
 					if (LineLineIntersection(out Vector3 intersection, currentRay.origin, currentRay.direction, otherRay.origin, otherRay.direction))
 					{
 						intersections.Add(intersection);
-						Debug.DrawRay(intersection, normal * 0.01f, Color.cyan, 1f);
+						// Debug.DrawRay(intersection, normal * 0.01f, Color.cyan, 1f);
 					}
 				}
 			}
@@ -207,7 +251,7 @@ namespace Manus.Polygon
 			public Vector3 position;
 			public Quaternion rotation;
 
-			public TransformValues(Transform transform)
+			public TransformValues(Tracker transform)
 			{
 				position = transform.position;
 				rotation = transform.rotation;
@@ -219,7 +263,7 @@ namespace Manus.Polygon
 			public Vector3 point;
 			public TransformValues? parent;
 
-			public ArcPoint(Vector3 point, Transform parent)
+			public ArcPoint(Vector3 point, Tracker parent)
 			{
 				this.point = point;
 				this.parent = parent == null ? null : (TransformValues?)new TransformValues(parent);

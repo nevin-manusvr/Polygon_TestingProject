@@ -20,31 +20,31 @@ namespace Manus.Polygon
 
 		private void Start()
 		{
-			Arc leftHandArc = new Arc(leftHand.transform);
-			Arc rightHandArc = new Arc(rightHand.transform);
+			//Arc leftHandArc = new Arc(leftHand.transform);
+			//Arc rightHandArc = new Arc(rightHand.transform);
 
-			calibrationUI.Calibrate("Hand Arc", 3f,
-				() =>
-					{
-						//AlignHands(leftHand, rightHand);
-					}, 
-				() =>
-					{
-						leftHandArc.AddMeasurement(leftHand.transform.position);
-						rightHandArc.AddMeasurement(rightHand.transform.position);
-					}, 
-				() =>
-					{
-						leftHandArc.CalculateArc();
-						rightHandArc.CalculateArc();
+			//calibrationUI.Calibrate("Hand Arc", 3f,
+			//	() =>
+			//		{
+			//			//AlignHands(leftHand, rightHand);
+			//		}, 
+			//	() =>
+			//		{
+			//			leftHandArc.AddMeasurement(leftHand.transform.position);
+			//			rightHandArc.AddMeasurement(rightHand.transform.position);
+			//		}, 
+			//	() =>
+			//		{
+			//			leftHandArc.CalculateArc();
+			//			rightHandArc.CalculateArc();
 
-						Vector3 offset = (leftHandArc.GetOffsetToTracker() + rightHandArc.GetOffsetToTracker()) / 2f;
+			//			Vector3 offset = (leftHandArc.GetOffsetToTracker() + rightHandArc.GetOffsetToTracker()) / 2f;
 
-						leftHand.transform.GetChild(0).localPosition = offset;
-						rightHand.transform.GetChild(0).localPosition = offset;
+			//			leftHand.transform.GetChild(0).localPosition = offset;
+			//			rightHand.transform.GetChild(0).localPosition = offset;
 
-						DOVirtual.DelayedCall(1, () => { calibrationUI.Calibrate("Hand Offsets", 1f, () => { AlignHands(leftHand, rightHand); }); });
-					});
+			//			// DOVirtual.DelayedCall(1, () => { calibrationUI.Calibrate("Hand Offsets", 1f, () => { AlignHands(leftHand, rightHand); }); });
+			//		});
 		}
 
 		private void Update()

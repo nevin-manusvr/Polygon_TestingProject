@@ -5,8 +5,9 @@ using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
-	[CreateAssetMenu(fileName = "new Requirements", menuName = "ManusVR/Polygon/Calibration/Requirements")]
-	public class ProfileRequirements : ScriptableObject
+	[System.Serializable]
+	//[CreateAssetMenu(fileName = "new Requirements", menuName = "ManusVR/Polygon/Calibration/Requirements")]
+	public class ProfileRequirements// : ScriptableObject
 	{
 		public VRTrackerType[] requiredTrackerOffsets =
 			{
