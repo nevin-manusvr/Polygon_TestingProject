@@ -10,21 +10,17 @@ namespace Manus.Polygon
 		public CalibrationProfile profile;
 		public CalibrationSequence sequence;
 
-		private TrackerManager trackerManager;
+		private TrackerReference trackers;
 
 		private void Start()
 		{
-			trackerManager = TrackerManager.instance;
-
-			foreach (TrackedObject trackedObject in trackerManager.m_TrackedObjects)
-			{
-				Debug.Log(trackedObject.type);
-			}
+			trackers = FindObjectOfType<TrackerReference>();
+			StartCalibration();
 		}
 
 		public void StartCalibration()
 		{
-
+			sequence.StartCalibrationSequence(new CalibrationProfile(), trackers, this);
 		}
 	}
 }

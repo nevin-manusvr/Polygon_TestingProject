@@ -9,7 +9,6 @@ namespace Manus.Polygon
 	public class ArcCalibrationStep : CalibrationStep
 	{
 		public ArcSettings[] settings;
-
 		private Arc[] arcArray;
 
 		public override void Setup(CalibrationProfile profile, TrackerReference trackers)
@@ -24,7 +23,21 @@ namespace Manus.Polygon
 			}
 		}
 
-		public override void Update()
+		public override IEnumerator Start()
+		{
+			float timer = 0;
+
+			while (timer < time)
+			{
+				timer += Time.deltaTime;
+				Update();
+				yield return new WaitForEndOfFrame();
+			}
+
+			End();
+		}
+
+		protected override void Update()
 		{
 			for (int i = 0; i < settings.Length; i++)
 			{
@@ -32,15 +45,20 @@ namespace Manus.Polygon
 			}
 		}
 
-		public override void End()
+		protected override void End()
 		{
 			for (int i = 0; i < settings.Length; i++)
 			{
 				arcArray[i].CalculateArc();
 				GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				sphere.transform.position = arcArray[i].IntersectionPoint;
-				sphere.transform.localScale = new Vector3(.2f, .2f, .2f);
+				sphere.transform.localScale = new Vector3(.05f, .05f, .05f);
 			}
+		}
+
+		public override void Revert()
+		{
+			// TODO: implement this
 		}
 		
 		[System.Serializable]
