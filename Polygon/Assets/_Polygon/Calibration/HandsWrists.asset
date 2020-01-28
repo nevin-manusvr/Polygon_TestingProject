@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   description: Create an arc with both hands to calibrate the wrist offset
   time: 2
-  settings:
+  arcSettings:
   - tracker: 1
-    useTrackerWithOffsets: 0
+    useTrackerLocal: 0
     getPositionOffset: 1
     parentTracker: 1
-    offsetToTracker: 1
-    bodyMeasurement: 6
   - tracker: 2
-    useTrackerWithOffsets: 0
+    useTrackerLocal: 0
     getPositionOffset: 1
     parentTracker: 2
-    offsetToTracker: 2
-    bodyMeasurement: 7
+  arcData:
+  - saveOffsetToTracker: 0
+    offset: 0
+    arc: 

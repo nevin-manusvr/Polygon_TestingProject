@@ -6,23 +6,36 @@ using UnityEngine.Events;
 public class GameEventListener : MonoBehaviour
 {
 	[Tooltip("Event to register with.")]
-	public GameEvent Event;
+	public GameEvent CalibrationEvent;
 
 	[Tooltip("Response to invoke when Event is raised.")]
-	public UnityEvent Response;
+	public UnityEvent<float> StartCountdownResponse;
+	public UnityEvent<float> StartCalibrationResponse;
+	public UnityEvent CalibrationFinishedResponse;
 
 	private void OnEnable()
 	{
-		Event.RegisterListener(this);
+		CalibrationEvent.RegisterListener(this);
 	}
 
 	private void OnDisable()
 	{
-		Event.UnregisterListener(this);
+		CalibrationEvent.UnregisterListener(this);
 	}
 
-	public void OnEventRaised()
+	public void StartCountDownRaised(float countdownTime)
 	{
-		Response.Invoke();
+		// DoStuff
+		StartCountdownResponse?.Invoke(countdownTime);
+	}
+
+	public void CalibrationStartRaised(float time)
+	{
+		StartCalibrationResponse?.Invoke(time);
+	}
+
+	public void CalibrationFinishedRaised()
+	{
+		CalibrationFinishedResponse?.Invoke();
 	}
 }
