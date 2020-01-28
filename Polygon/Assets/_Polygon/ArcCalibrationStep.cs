@@ -19,7 +19,7 @@ namespace Manus.Polygon
 
 			for (var i = 0; i < settings.Length; i++)
 			{
-				arcArray[i] = new Arc(trackers.GetTracker(settings[i].parentTracker)); // TODO: fix this to work with local positions
+				arcArray[i] = new Arc();//trackers.GetTracker(settings[i].parentTracker)); // TODO: fix this to work with local positions
 			}
 		}
 
