@@ -9,7 +9,7 @@ namespace Manus.Polygon
 	public class ArcCalibrationStep : CalibrationStep
 	{
 		public ArcSettings[] arcSettings;
-		public DataToSave[] arcData;
+		public ArcDataToSave[] arcData;
 		private Arc[] arcArray;
 
 		public override void Setup(CalibrationProfile profile, TrackerReference trackers)
@@ -20,8 +20,8 @@ namespace Manus.Polygon
 
 			for (var i = 0; i < arcSettings.Length; i++)
 			{
-				arcArray[i] = arcSettings[i].getPositionOffset
-					              ? new Arc(trackers, arcSettings[i].parentTracker)
+				arcArray[i] = arcSettings[i].useParentTracker
+								  ? new Arc(trackers, arcSettings[i].parentTracker)
 					              : arcArray[i] = new Arc();
 			}
 		}
@@ -69,8 +69,9 @@ namespace Manus.Polygon
 		{
 			public VRTrackerType tracker = VRTrackerType.Waist;
 			public bool useTrackerLocal = false;
+			public OffsetsToTrackers localOffset;
 
-			public bool getPositionOffset = false;
+			public bool useParentTracker = false;
 			public VRTrackerType parentTracker;
 			
 			//public OffsetsToTrackers offsetToTracker;
@@ -78,7 +79,7 @@ namespace Manus.Polygon
 		}
 
 		[System.Serializable]
-		public class DataToSave
+		public class ArcDataToSave
 		{
 			public bool saveOffsetToTracker = false;
 			public OffsetsToTrackers offset;
