@@ -20,20 +20,13 @@ namespace Manus.Polygon
 			// Create all data needed for the calibration step
 		}
 
-		public virtual void Update()
-		{
-			// Accumulate data for the calibration step
-		}
+		public abstract IEnumerator Start();
 
-		public virtual void End()
-		{
-			// Apply calibration step data to the profile
-		}
+		protected abstract void Update(); // Accumulate data for the calibration step
 
-		public virtual void Revert()
-		{
-			// Remove added profile date
-		}
+		protected abstract void End(); // Apply calibration step data to the profile
+
+		public abstract void Revert(); // Remove added profile date
 	}
 }
 
