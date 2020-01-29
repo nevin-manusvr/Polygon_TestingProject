@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
-  m_Name: HandsWrists
+  m_Name: Test
   m_EditorClassIdentifier: 
-  description: Create an arc with both hands to calibrate the wrist offset
-  time: 2
+  description: 'A Testing Thingy
+
+'
+  time: 5
   arcSettings:
   - tracker: 1
-    useTrackerLocal: 0
+    useTrackerLocal: 1
     localOffset: 1
     useParentTracker: 1
     parentTracker: 1
   - tracker: 2
-    useTrackerLocal: 0
-    localOffset: 0
+    useTrackerLocal: 1
+    localOffset: 2
     useParentTracker: 1
     parentTracker: 2
   arcData:
@@ -30,8 +32,8 @@ MonoBehaviour:
     trackerOffset: 1
     arcPositionIndex: 0
     measurement: 0
-    arcMeasurementIndices: 
-    distanceMeasurement: 0
+    arcMeasurementIndices: 0000000001000000
+    distanceMeasurement: 13
     point1:
       pointType: 0
       arcIndex: 0
@@ -39,20 +41,20 @@ MonoBehaviour:
       useLocalOffset: 0
       offset: 0
     point2:
-      pointType: 0
+      pointType: 1
       arcIndex: 0
       tracker: 0
-      useLocalOffset: 0
+      useLocalOffset: 1
       offset: 0
     trackerType: 0
     arcDirection:
       directionType: 0
       arcDirectionIndices: 
-  - dataType: 0
-    trackerOffset: 2
+  - dataType: 3
+    trackerOffset: 1
     arcPositionIndex: 0
-    measurement: 0
-    arcMeasurementIndices: 
+    measurement: 6
+    arcMeasurementIndices: 0000000001000000
     distanceMeasurement: 0
     point1:
       pointType: 0

@@ -18,7 +18,7 @@ namespace Manus.Polygon
 
 			//if (!trackerOffsets.ContainsKey(type))
 			//{
-			//	trackerOffsets.Add(type, new TrackerOffset(positionValue));
+			//	trackerOffsets.Add(type, new Tracker(positionValue));
 			//}
 			//else
 			//{
@@ -33,7 +33,7 @@ namespace Manus.Polygon
 
 			//if (!trackerOffsets.ContainsKey(type))
 			//{
-			//	trackerOffsets.Add(type, new TrackerOffset(rotationValue));
+			//	trackerOffsets.Add(type, new Tracker(rotationValue));
 			//}
 			//else
 			//{
@@ -48,7 +48,7 @@ namespace Manus.Polygon
 
 			//if (!trackerOffsets.ContainsKey(type))
 			//{
-			//	trackerOffsets.Add(type, new TrackerOffset(positionValue, rotationValue));
+			//	trackerOffsets.Add(type, new Tracker(positionValue, rotationValue));
 			//}
 			//else
 			//{
@@ -76,6 +76,19 @@ namespace Manus.Polygon
 		public void RemoveBodyMeasurement(BodyMeasurements type)
 		{
 			Debug.LogWarning($"Remove body measurement: {type}");
+		}
+
+		// Tracker Direction
+		public void AddTrackerDirection(VRTrackerType trackerType, Directions type, Vector3 direction)
+		{
+			Debug.LogWarning($"Add tracker direction: {type}");
+
+		}
+
+		public void RemoveTrackerDirection(VRTrackerType trackerType, Directions type)
+		{
+			Debug.LogWarning($"Remove tracker direction: {type}");
+
 		}
 
 		#region Serialization
@@ -163,5 +176,19 @@ namespace Manus.Polygon
 		}
 
 		#endregion
+	}
+
+	[System.Serializable]
+	public struct TrackerDirection
+	{
+		public Directions type;
+		public Vector3 direction;
+	}
+
+	public enum Directions
+	{
+		forward,
+		up,
+		left
 	}
 }
