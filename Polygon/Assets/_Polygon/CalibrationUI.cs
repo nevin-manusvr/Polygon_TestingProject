@@ -45,7 +45,7 @@ namespace Manus.Polygon
 			timer.value = 0;
 
 			// Test code
-			// Calibrate("Mom's Spaghetti!", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Done"); });
+			Calibrate("Wrists", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Done"); });
 		}
 
 		public void ToggleUI(bool tf)
