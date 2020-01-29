@@ -47,7 +47,7 @@ namespace Manus.Polygon
 			this.trackers = null;
 		}
 
-		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType)
+		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType) // TODO: add local offset
 		{
 			this.arcPoints = new List<ArcPoint>();
 			this.trackers = trackers;

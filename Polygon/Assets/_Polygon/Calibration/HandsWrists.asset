@@ -17,7 +17,7 @@ MonoBehaviour:
   arcSettings:
   - tracker: 1
     useTrackerLocal: 0
-    localOffset: 0
+    localOffset: 1
     useParentTracker: 1
     parentTracker: 1
   - tracker: 2
@@ -26,6 +26,39 @@ MonoBehaviour:
     useParentTracker: 1
     parentTracker: 2
   arcData:
-  - saveOffsetToTracker: 0
-    offset: 0
-    arc: 
+  - dataType: 0
+    trackerOffset: 1
+    arc: 0
+    measurement: 0
+    arcs: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arc: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arc: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+  - dataType: 0
+    trackerOffset: 2
+    arc: 1
+    measurement: 0
+    arcs: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arc: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arc: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0

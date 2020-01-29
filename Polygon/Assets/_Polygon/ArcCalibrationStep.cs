@@ -5,6 +5,8 @@ using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
+	using System.Linq;
+
 	[CreateAssetMenu(fileName = "new Arc Calibration Step", menuName = "ManusVR/Polygon/Calibration/Arc Calibration Step", order = 10)]
 	public class ArcCalibrationStep : CalibrationStep
 	{
@@ -57,6 +59,54 @@ namespace Manus.Polygon
 				sphere.transform.position = arcArray[i].IntersectionPoint;
 				sphere.transform.localScale = new Vector3(.05f, .05f, .05f);
 			}
+
+			foreach (ArcDataToSave data in arcData)
+			{
+				switch (data.dataType)
+				{
+					case ArcDataType.OffsetToTracker:
+
+						profile.AddTrackerOffset(data.trackerOffset, arcArray[data.arc].GetOffsetToTracker());
+
+						break;
+					case ArcDataType.Length:
+
+						float value = data.arcs.Sum(arc => arcArray[arc].GetArcRadius()) / data.arcs.Length;
+						profile.AddBodyMeasurement(data.measurement, value);
+
+						break;
+					case ArcDataType.Distance:
+
+						Vector3 point1 = Vector3.zero;
+						Vector3 point2 = Vector3.zero;
+
+						switch (data.point1.pointType)
+						{
+							case ArcPointType.ArcPoint:
+								point1 = arcArray[data.point1.arc].IntersectionPoint;
+								break;
+							case ArcPointType.TrackerOffset:
+								point1 = Vector3.zero; // TODO: calculate local offset to tracker
+								break;
+						}
+
+						switch (data.point2.pointType)
+						{
+							case ArcPointType.ArcPoint:
+								point2 = arcArray[data.point2.arc].IntersectionPoint;
+								break;
+							case ArcPointType.TrackerOffset:
+								point2 = Vector3.zero; // TODO: calculate local offset to tracker
+								break;
+						}
+
+						float distance = Vector3.Distance(point1, point2);
+
+						profile.AddBodyMeasurement(data.distanceMeasurement, distance);
+
+						break;
+				}
+			}
 		}
 
 		public override void Revert()
@@ -73,18 +123,57 @@ namespace Manus.Polygon
 
 			public bool useParentTracker = false;
 			public VRTrackerType parentTracker;
-			
-			//public OffsetsToTrackers offsetToTracker;
-			//public BodyMeasurements bodyMeasurement;
 		}
 
 		[System.Serializable]
 		public class ArcDataToSave
 		{
-			public bool saveOffsetToTracker = false;
-			public OffsetsToTrackers offset;
+			public ArcDataType dataType;
 
-			public int[] arc;
+			[Header("Offset To Tracker")]
+			// OffsetToTracker
+			public OffsetsToTrackers trackerOffset;
+			public int arc;
+
+			[Header("Measurement")]
+			// Measurement
+			public BodyMeasurements measurement;
+			public int[] arcs;
+
+			[Header("Distance")]
+			// Distance
+			public BodyMeasurements distanceMeasurement;
+			public ArcPoint point1;
+			public ArcPoint point2;
+		}
+
+		[System.Serializable]
+		public class ArcPoint
+		{
+			public ArcPointType pointType;
+
+			[Header("Arc point")]
+			// Arc point
+			public int arc;
+
+			[Header("Tracker offset")]
+			// TrackerOffset
+			public VRTrackerType tracker;
+			public bool useLocalOffset;
+			public OffsetsToTrackers offset;
+		}
+
+		public enum ArcPointType
+		{
+			ArcPoint,
+			TrackerOffset
+		}
+
+		public enum ArcDataType
+		{
+			OffsetToTracker,
+			Length,
+			Distance
 		}
 	}
 }

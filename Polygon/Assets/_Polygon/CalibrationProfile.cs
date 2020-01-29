@@ -14,66 +14,68 @@ namespace Manus.Polygon
 		// Tracker offset
 		public void AddTrackerOffset(OffsetsToTrackers type, Vector3 positionValue)
 		{
-			Debug.LogWarning($"Add {type} tracker offset to calibration profile");
+			Debug.LogWarning($"Add tracker position offset: {type}");
 
-			if (!trackerOffsets.ContainsKey(type))
-			{
-				trackerOffsets.Add(type, new TrackerOffset(positionValue));
-			}
-			else
-			{
-				trackerOffsets[type].SetPositionOffset(positionValue);
-			}
+			//if (!trackerOffsets.ContainsKey(type))
+			//{
+			//	trackerOffsets.Add(type, new TrackerOffset(positionValue));
+			//}
+			//else
+			//{
+			//	trackerOffsets[type].SetPositionOffset(positionValue);
+			//}
 		}
 
 		public void AddTrackerOffset(OffsetsToTrackers type, Quaternion rotationValue)
 		{
-			Debug.LogWarning($"Add {type} tracker offset to calibration profile");
+			Debug.LogWarning($"Add tracker rotation offset: {type}");
 
-			if (!trackerOffsets.ContainsKey(type))
-			{
-				trackerOffsets.Add(type, new TrackerOffset(rotationValue));
-			}
-			else
-			{
-				trackerOffsets[type].SetRotationOffset(rotationValue);
-			}
+
+			//if (!trackerOffsets.ContainsKey(type))
+			//{
+			//	trackerOffsets.Add(type, new TrackerOffset(rotationValue));
+			//}
+			//else
+			//{
+			//	trackerOffsets[type].SetRotationOffset(rotationValue);
+			//}
 		}
 
 		public void AddTrackerOffset(OffsetsToTrackers type, Vector3 positionValue, Quaternion rotationValue)
 		{
-			Debug.LogWarning($"Add {type} tracker offset to calibration profile");
+			Debug.LogWarning($"Add tracker position and rotation offset: {type}");
 
-			if (!trackerOffsets.ContainsKey(type))
-			{
-				trackerOffsets.Add(type, new TrackerOffset(positionValue, rotationValue));
-			}
-			else
-			{
-				trackerOffsets[type].SetPositionOffset(positionValue);
-				trackerOffsets[type].SetRotationOffset(rotationValue);
-			}
+
+			//if (!trackerOffsets.ContainsKey(type))
+			//{
+			//	trackerOffsets.Add(type, new TrackerOffset(positionValue, rotationValue));
+			//}
+			//else
+			//{
+			//	trackerOffsets[type].SetPositionOffset(positionValue);
+			//	trackerOffsets[type].SetRotationOffset(rotationValue);
+			//}
 		}
 
 		public void RemoveTrackerOffset(OffsetsToTrackers type, bool removePositionOffset, bool removeRotationOffset)
 		{
-			Debug.LogWarning($"Removed {type} tracker offset from calibration profile");
+			Debug.LogWarning($"Removed tracker position and rotation offset: {type}");
 
-			if (trackerOffsets[type].RemoveValue(removePositionOffset, removeRotationOffset))
-			{
-				trackerOffsets.Remove(type);
-			}
+			//if (trackerOffsets[type].RemoveValue(removePositionOffset, removeRotationOffset))
+			//{
+			//	trackerOffsets.Remove(type);
+			//}
 		}
 
 		// Body measurement
 		public void AddBodyMeasurement(BodyMeasurements type, float value)
 		{
-
+			Debug.LogWarning($"Add body measurement: {type}");
 		}
 
 		public void RemoveBodyMeasurement(BodyMeasurements type)
 		{
-
+			Debug.LogWarning($"Remove body measurement: {type}");
 		}
 
 		#region Serialization
