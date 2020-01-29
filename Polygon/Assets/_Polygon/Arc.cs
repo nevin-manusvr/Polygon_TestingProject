@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Manus.Core.VR;
+using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
@@ -13,7 +14,8 @@ namespace Manus.Polygon
 
 		// Data
 		private readonly List<ArcPoint> arcPoints;
-		private readonly Tracker parent;
+		private readonly TrackerReference trackers;
+		private readonly VRTrackerType parentTracker;
 
 		// Results
 		private Vector3 normal;
@@ -39,10 +41,17 @@ namespace Manus.Polygon
 
 		#endregion
 
-		public Arc(Tracker parent = null)
+		public Arc()
 		{
 			this.arcPoints = new List<ArcPoint>();
-			this.parent = parent;
+			this.trackers = null;
+		}
+
+		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType)
+		{
+			this.arcPoints = new List<ArcPoint>();
+			this.trackers = trackers;
+			this.parentTracker = parentTrackerType;
 		}
 
 		#region Public Methods
@@ -51,7 +60,7 @@ namespace Manus.Polygon
 		{
 			if (arcPoints.Count == 0 || Vector3.Distance(arcPoints[arcPoints.Count - 1].point, point) > minPointDistance)
 			{
-				arcPoints.Add(new ArcPoint(point, parent));
+				arcPoints.Add(new ArcPoint(point, trackers?.GetTracker(parentTracker)));
 			}
 		}
 
@@ -66,7 +75,7 @@ namespace Manus.Polygon
 
 		public Vector3 GetOffsetToTracker()
 		{
-			if (parent == null) return Vector3.zero;
+			if (trackers == null) return Vector3.zero;
 
 			Transform trackerTransform = new GameObject("trackerPosition").transform;
 			var offsetsToTracker = new List<Vector3>();
@@ -246,27 +255,15 @@ namespace Manus.Polygon
 
 		#region Structs
 
-		public struct TransformValues
-		{
-			public Vector3 position;
-			public Quaternion rotation;
-
-			public TransformValues(Tracker transform)
-			{
-				position = transform.position;
-				rotation = transform.rotation;
-			}
-		}
-
 		public struct ArcPoint
 		{
 			public Vector3 point;
 			public TransformValues? parent;
 
-			public ArcPoint(Vector3 point, Tracker parent)
+			public ArcPoint(Vector3 point, TransformValues? parentTransformValues = null)
 			{
 				this.point = point;
-				this.parent = parent == null ? null : (TransformValues?)new TransformValues(parent);
+				this.parent = parentTransformValues;
 			}
 		}
 

@@ -587,6 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fd6d7e779d654247af0b5b7d7b7d041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  addToLocal: 0
   requiredTrackers: 060000000100000002000000
   areAllRequiredTrackersConnected: 0
 --- !u!4 &172832949
@@ -2817,7 +2818,6 @@ GameObject:
   - component: {fileID: 517112211}
   - component: {fileID: 517112213}
   - component: {fileID: 517112212}
-  - component: {fileID: 517112214}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -2870,7 +2870,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -2890,20 +2890,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!114 &517112214
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 517112210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8be3a0bc80d5e94da18cf35028e2a52, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 6
-  index: 0
 --- !u!4 &521176461 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400038, guid: b48fbfb126d0a4f41b244c4bd6f6ced3,
@@ -3790,7 +3776,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 5.438e-42, y: 1.05e-43, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 5.647e-42, y: 1.05e-43, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0

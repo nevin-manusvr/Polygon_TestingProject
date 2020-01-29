@@ -7,10 +7,11 @@ using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
-
 	public class TrackerReference : MonoBehaviour
 	{
 		#region Fields
+
+		public bool addToLocal;
 
 		[SerializeField] private VRTrackerType[] requiredTrackers =
 			{
@@ -56,8 +57,10 @@ namespace Manus.Polygon
 			
 			Vector3 size = new Vector3(1f, 1f, 1f);
 
-			Matrix4x4 parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
-			
+			Matrix4x4 parentMatrix = Matrix4x4.identity;
+			if (addToLocal)
+				parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+
 			foreach (Tracker tracker in trackers.Values)
 			{
 				// Draw tracker
@@ -90,9 +93,23 @@ namespace Manus.Polygon
 			UpdateTrackerReferences();
 		}
 
-		public Tracker GetTracker(VRTrackerType type)
+		public TransformValues GetTracker(VRTrackerType type)
 		{
-			return trackers[type];
+			if (trackers.ContainsKey(type))
+			{
+				if (addToLocal)
+				{
+					Matrix4x4 parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+					Vector3 trackerLocalPosition = parentMatrix.MultiplyPoint3x4(trackers[type].position);
+					Quaternion trackerLocalRotation = parentMatrix.rotation * trackers[type].rotation;
+
+					return new TransformValues(trackerLocalPosition, trackerLocalRotation);
+				}
+
+				return new TransformValues(trackers[type].position, trackers[type].rotation);
+			}
+
+			return new TransformValues(Vector3.zero, Quaternion.identity);
 		}
 
 		#endregion

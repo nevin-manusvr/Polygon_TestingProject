@@ -8,52 +8,83 @@ namespace Manus.Polygon
 	[CreateAssetMenu(fileName = "new Arc Calibration Step", menuName = "ManusVR/Polygon/Calibration/Arc Calibration Step", order = 10)]
 	public class ArcCalibrationStep : CalibrationStep
 	{
-		public ArcSettings[] settings;
-
+		public ArcSettings[] arcSettings;
+		public ArcDataToSave[] arcData;
 		private Arc[] arcArray;
 
 		public override void Setup(CalibrationProfile profile, TrackerReference trackers)
 		{
 			base.Setup(profile, trackers);
 
-			arcArray = new Arc[settings.Length];
+			arcArray = new Arc[arcSettings.Length];
 
-			for (var i = 0; i < settings.Length; i++)
+			for (var i = 0; i < arcSettings.Length; i++)
 			{
-				arcArray[i] = new Arc(trackers.GetTracker(settings[i].parentTracker)); // TODO: fix this to work with local positions
+				arcArray[i] = arcSettings[i].useParentTracker
+								  ? new Arc(trackers, arcSettings[i].parentTracker)
+					              : arcArray[i] = new Arc();
 			}
 		}
 
-		public override void Update()
+		public override IEnumerator Start()
 		{
-			for (int i = 0; i < settings.Length; i++)
+			float timer = 0;
+
+			while (timer < time)
 			{
-				arcArray[i].AddMeasurement(trackers.GetTracker(settings[i].tracker).position);
+				timer += Time.deltaTime;
+				Update();
+				yield return new WaitForEndOfFrame();
+			}
+
+			End();
+		}
+
+		protected override void Update()
+		{
+			for (int i = 0; i < arcSettings.Length; i++)
+			{
+				arcArray[i].AddMeasurement(trackers.GetTracker(arcSettings[i].tracker).position);
 			}
 		}
 
-		public override void End()
+		protected override void End()
 		{
-			for (int i = 0; i < settings.Length; i++)
+			for (int i = 0; i < arcSettings.Length; i++)
 			{
 				arcArray[i].CalculateArc();
 				GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				sphere.transform.position = arcArray[i].IntersectionPoint;
-				sphere.transform.localScale = new Vector3(.2f, .2f, .2f);
+				sphere.transform.localScale = new Vector3(.05f, .05f, .05f);
 			}
+		}
+
+		public override void Revert()
+		{
+			// TODO: implement this
 		}
 		
 		[System.Serializable]
 		public class ArcSettings
 		{
 			public VRTrackerType tracker = VRTrackerType.Waist;
-			public bool useTrackerWithOffsets = false;
+			public bool useTrackerLocal = false;
+			public OffsetsToTrackers localOffset;
 
-			public bool getPositionOffset = false;
+			public bool useParentTracker = false;
 			public VRTrackerType parentTracker;
-			public OffsetsToTrackers offsetToTracker;
+			
+			//public OffsetsToTrackers offsetToTracker;
+			//public BodyMeasurements bodyMeasurement;
+		}
 
-			public BodyMeasurements bodyMeasurement;
+		[System.Serializable]
+		public class ArcDataToSave
+		{
+			public bool saveOffsetToTracker = false;
+			public OffsetsToTrackers offset;
+
+			public int[] arc;
 		}
 	}
 }
