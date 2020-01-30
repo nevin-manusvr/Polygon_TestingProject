@@ -88,6 +88,8 @@ namespace Manus.Polygon
 					dataName = $"{distanceBodyMeasurementType} ({distanceIndex})";
 					break;
 				case ArcCalibrationStep.ArcDataType.Direction:
+					Axis directionAxis = (Axis)property.FindPropertyRelative("directionAxis").intValue;
+					dataName = $"{directionAxis} ({property.FindPropertyRelative("arcDirectionIndex").intValue})";
 					break;
 			}
 
@@ -103,18 +105,23 @@ namespace Manus.Polygon
 
 			// Calculate rects
 			var dataTypeRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + lineHeight, position.width, EditorGUIUtility.singleLineHeight);
+			// Tracker offset
 			var trackerOffsetEnumRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width, EditorGUIUtility.singleLineHeight);
 			var trackerOffetArcIndexRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width, EditorGUIUtility.singleLineHeight);
-
+			// Length
 			SerializedProperty lengthIndicesProperty = property.FindPropertyRelative("arcMeasurementIndices");
 			var lengthMeasurementTypeRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width, EditorGUIUtility.singleLineHeight);
 			var lengthIndicesRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width, EditorGUI.GetPropertyHeight(lengthIndicesProperty));
-
+			// Distance
 			SerializedProperty distancePoint1 = property.FindPropertyRelative("point1");
 			SerializedProperty distancePoint2 = property.FindPropertyRelative("point2");
 			var distanceEnumRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width, EditorGUIUtility.singleLineHeight);
 			var distancePoint1Rect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width, EditorGUI.GetPropertyHeight(distancePoint1));
 			var distancePoint2Rect = new Rect(position.x, position.y + EditorGUI.GetPropertyHeight(distancePoint1) + lineHeight + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width, EditorGUI.GetPropertyHeight(distancePoint2));
+			// Direction
+			var directionAxisRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width, EditorGUIUtility.singleLineHeight);
+			var arcDirectionIndexRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width, EditorGUIUtility.singleLineHeight);
+
 
 			// Draw fields
 			if (property.isExpanded)
@@ -132,11 +139,13 @@ namespace Manus.Polygon
 						EditorGUI.PropertyField(lengthIndicesRect, lengthIndicesProperty, new GUIContent("Arc indices"), true);
 						break;
 					case ArcCalibrationStep.ArcDataType.Distance:
-						EditorGUI.PropertyField(distanceEnumRect, property.FindPropertyRelative("distanceMeasurement"), new GUIContent("Distance"));
+						EditorGUI.PropertyField(distanceEnumRect, property.FindPropertyRelative("distanceMeasurement"), new GUIContent("Measurement"));
 						EditorGUI.PropertyField(distancePoint1Rect, distancePoint1, new GUIContent("Point 1"), true);
 						EditorGUI.PropertyField(distancePoint2Rect, distancePoint2, new GUIContent("Point 2"), true);
 						break;
 					case ArcCalibrationStep.ArcDataType.Direction:
+						EditorGUI.PropertyField(directionAxisRect, property.FindPropertyRelative("directionAxis"), new GUIContent("Axis"));
+						EditorGUI.PropertyField(arcDirectionIndexRect, property.FindPropertyRelative("arcDirectionIndex"), new GUIContent("Arc index"));
 						break;
 				}
 			}
@@ -176,7 +185,7 @@ namespace Manus.Polygon
 					}
 					break;
 				case ArcCalibrationStep.ArcDataType.Direction:
-					lines = 10;
+					lines = 4;
 					break;
 			}
 

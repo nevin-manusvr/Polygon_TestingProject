@@ -44,11 +44,29 @@ MonoBehaviour:
       tracker: 0
       useLocalOffset: 0
       offset: 0
-    trackerType: 0
-    arcDirection:
-      directionType: 0
-      arcDirectionIndices: 
+    directionAxis: 0
+    arcDirectionIndex: 0
   - dataType: 0
+    trackerOffset: 2
+    arcPositionIndex: 1
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
+  - dataType: 3
     trackerOffset: 2
     arcPositionIndex: 0
     measurement: 0
@@ -66,7 +84,25 @@ MonoBehaviour:
       tracker: 0
       useLocalOffset: 0
       offset: 0
-    trackerType: 0
-    arcDirection:
-      directionType: 0
-      arcDirectionIndices: 
+    directionAxis: 0
+    arcDirectionIndex: 0
+  - dataType: 3
+    trackerOffset: 2
+    arcPositionIndex: 0
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 1

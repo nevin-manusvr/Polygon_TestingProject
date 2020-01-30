@@ -46,7 +46,20 @@ namespace Manus.Polygon
 		{
 			for (int i = 0; i < arcSettings.Length; i++)
 			{
-				arcArray[i].AddMeasurement(trackers.GetTracker(arcSettings[i].tracker).position);
+				TransformValues? trackerTransform = trackers.GetTracker(arcSettings[i].tracker);
+				if (arcSettings[i].useParentTracker)
+				{
+					if (profile.trackerOffsets.ContainsKey(arcSettings[i].localOffset))
+					{
+						Vector3 localOffset = profile.trackerOffsets[arcSettings[i].localOffset].positionOffset ?? Vector3.zero;
+						trackerTransform = trackers.GetTrackerWithOffset(arcSettings[i].tracker, localOffset, Quaternion.identity);
+					}
+				}
+				
+				if (trackerTransform == null) 
+					return;
+
+				arcArray[i].AddMeasurement(trackerTransform.Value.position);
 			}
 		}
 
@@ -55,9 +68,6 @@ namespace Manus.Polygon
 			for (int i = 0; i < arcSettings.Length; i++)
 			{
 				arcArray[i].CalculateArc();
-				GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-				sphere.transform.position = arcArray[i].IntersectionPoint;
-				sphere.transform.localScale = new Vector3(.05f, .05f, .05f);
 			}
 
 			foreach (ArcDataToSave data in arcData)
@@ -70,6 +80,14 @@ namespace Manus.Polygon
 
 						break;
 					case ArcDataType.Length:
+
+						// TODO: TMP
+						foreach (int index in data.arcMeasurementIndices)
+						{
+							GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+							sphere.transform.position = arcArray[index].IntersectionPoint;
+							sphere.transform.localScale = new Vector3(.05f, .05f, .05f);
+						}
 
 						float value = data.arcMeasurementIndices.Sum(arc => arcArray[arc].GetArcRadius()) / data.arcMeasurementIndices.Length;
 						profile.AddBodyMeasurement(data.measurement, value);
@@ -89,7 +107,6 @@ namespace Manus.Polygon
 								point1 = Vector3.zero; // TODO: calculate local offset to tracker
 								break;
 						}
-
 						switch (data.point2.pointType)
 						{
 							case ArcPointType.ArcPoint:
@@ -106,17 +123,9 @@ namespace Manus.Polygon
 
 						break;
 					case ArcDataType.Direction:
-
-						//switch (data.directionType)
-						//{
-						//	case ArcDirectionType.ArcNormal:
-
-						//		Vector3 arcNormal = data.arcDirectionIndices.Aggregate(Vector3.zero, (current, index) => current + arcArray[index].planeNormal)
-						//		                    / data.arcDirectionIndices.Length;
-
-								
-						//		break;
-						//}
+						
+						Vector3 normal = arcArray[data.arcDirectionIndex].GetArcNormalFromTracker();
+						profile.AddTrackerDirection(arcSettings[data.arcDirectionIndex].parentTracker, data.directionAxis, normal);
 
 						break;
 				}
@@ -127,7 +136,27 @@ namespace Manus.Polygon
 		{
 			// TODO: implement this
 		}
-		
+
+		#region enums
+
+		public enum ArcDataType
+		{
+			OffsetToTracker,
+			Length,
+			Distance,
+			Direction
+		}
+
+		public enum ArcPointType
+		{
+			ArcPoint,
+			Tracker
+		}
+
+		#endregion
+
+		#region classes
+
 		[System.Serializable]
 		public class ArcSettings
 		{
@@ -158,8 +187,8 @@ namespace Manus.Polygon
 			public ArcPoint point2;
 
 			// Direction
-			public VRTrackerType trackerType;
-			public ArcDirection arcDirection;
+			public Axis directionAxis;
+			public int arcDirectionIndex;
 		}
 
 		[System.Serializable]
@@ -176,32 +205,6 @@ namespace Manus.Polygon
 			public OffsetsToTrackers offset;
 		}
 
-		[System.Serializable]
-		public class ArcDirection
-		{
-			public ArcDirectionType directionType;
-
-			[Header("Arc normal")]
-			public int[] arcDirectionIndices;
-		}
-
-		public enum ArcPointType
-		{
-			ArcPoint,
-			Tracker
-		}
-
-		public enum ArcDirectionType
-		{
-			ArcNormal
-		}
-
-		public enum ArcDataType
-		{
-			OffsetToTracker,
-			Length,
-			Distance,
-			Direction
-		}
+		#endregion
 	}
 }

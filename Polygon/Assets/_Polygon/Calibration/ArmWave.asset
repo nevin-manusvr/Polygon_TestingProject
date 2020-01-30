@@ -28,37 +28,41 @@ MonoBehaviour:
   arcData:
   - dataType: 1
     trackerOffset: 0
-    arc: 0
+    arcPositionIndex: 0
     measurement: 6
-    arcs: 0000000001000000
+    arcMeasurementIndices: 00000000
     distanceMeasurement: 0
     point1:
       pointType: 0
-      arc: 0
+      arcIndex: 0
       tracker: 0
       useLocalOffset: 0
       offset: 0
     point2:
       pointType: 0
-      arc: 0
+      arcIndex: 0
       tracker: 0
       useLocalOffset: 0
       offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
   - dataType: 2
     trackerOffset: 0
-    arc: 1
+    arcPositionIndex: 0
     measurement: 0
-    arcs: 
+    arcMeasurementIndices: 
     distanceMeasurement: 13
     point1:
       pointType: 0
-      arc: 0
+      arcIndex: 0
       tracker: 0
       useLocalOffset: 0
       offset: 0
     point2:
-      pointType: 1
-      arc: 1
+      pointType: 0
+      arcIndex: 1
       tracker: 5
       useLocalOffset: 1
       offset: 8
+    directionAxis: 0
+    arcDirectionIndex: 0

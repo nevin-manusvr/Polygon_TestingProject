@@ -9,7 +9,6 @@ namespace Manus.Polygon
 	[CreateAssetMenu(fileName = "new Calibration Sequence", menuName = "ManusVR/Polygon/Calibration/Calibration Sequence", order = 0)]
 	public class CalibrationSequence : ScriptableObject
 	{
-		public ProfileRequirements profileRequirements;
 		public List<CalibrationStep> calibrationSteps;
 
 		private CalibrationProfile profile;

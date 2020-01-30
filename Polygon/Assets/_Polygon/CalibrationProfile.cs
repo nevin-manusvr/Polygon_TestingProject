@@ -8,22 +8,41 @@ namespace Manus.Polygon
 	[CreateAssetMenu(fileName = "new Calibration Profile", menuName = "ManusVR/Polygon/Calibration/Profile", order = 1)]
 	public class CalibrationProfile : ScriptableObject
 	{
-		public Dictionary<OffsetsToTrackers, TrackerOffset> trackerOffsets;
-		public Dictionary<BodyMeasurements, float> bodyMeasurements;
+		public ProfileRequirements profileRequirements;
+
+		public Dictionary<OffsetsToTrackers, TrackerOffset> trackerOffsets = new Dictionary<OffsetsToTrackers, TrackerOffset>();
+		public Dictionary<VRTrackerType, TrackerDirection> trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
+		public Dictionary<BodyMeasurements, float> bodyMeasurements = new Dictionary<BodyMeasurements, float>();
+
+		// Main
+		public void Reset()
+		{
+			trackerOffsets = new Dictionary<OffsetsToTrackers, TrackerOffset>();
+			trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
+			bodyMeasurements = new Dictionary<BodyMeasurements, float>();
+		}
+
+		public void Reset(CalibrationProfile newProfile)
+		{
+			profileRequirements = newProfile.profileRequirements;
+			trackerOffsets = newProfile.trackerOffsets;
+			trackerDirections = newProfile.trackerDirections;
+			bodyMeasurements = newProfile.bodyMeasurements;
+		}
 
 		// Tracker offset
 		public void AddTrackerOffset(OffsetsToTrackers type, Vector3 positionValue)
 		{
 			Debug.LogWarning($"Add tracker position offset: {type}");
 
-			//if (!trackerOffsets.ContainsKey(type))
-			//{
-			//	trackerOffsets.Add(type, new Tracker(positionValue));
-			//}
-			//else
-			//{
-			//	trackerOffsets[type].SetPositionOffset(positionValue);
-			//}
+			if (!trackerOffsets.ContainsKey(type))
+			{
+				trackerOffsets.Add(type, new TrackerOffset(positionValue));
+			}
+			else
+			{
+				trackerOffsets[type].SetPositionOffset(positionValue);
+			}
 		}
 
 		public void AddTrackerOffset(OffsetsToTrackers type, Quaternion rotationValue)
@@ -31,14 +50,14 @@ namespace Manus.Polygon
 			Debug.LogWarning($"Add tracker rotation offset: {type}");
 
 
-			//if (!trackerOffsets.ContainsKey(type))
-			//{
-			//	trackerOffsets.Add(type, new Tracker(rotationValue));
-			//}
-			//else
-			//{
-			//	trackerOffsets[type].SetRotationOffset(rotationValue);
-			//}
+			if (!trackerOffsets.ContainsKey(type))
+			{
+				trackerOffsets.Add(type, new TrackerOffset(rotationValue));
+			}
+			else
+			{
+				trackerOffsets[type].SetRotationOffset(rotationValue);
+			}
 		}
 
 		public void AddTrackerOffset(OffsetsToTrackers type, Vector3 positionValue, Quaternion rotationValue)
@@ -46,49 +65,66 @@ namespace Manus.Polygon
 			Debug.LogWarning($"Add tracker position and rotation offset: {type}");
 
 
-			//if (!trackerOffsets.ContainsKey(type))
-			//{
-			//	trackerOffsets.Add(type, new Tracker(positionValue, rotationValue));
-			//}
-			//else
-			//{
-			//	trackerOffsets[type].SetPositionOffset(positionValue);
-			//	trackerOffsets[type].SetRotationOffset(rotationValue);
-			//}
+			if (!trackerOffsets.ContainsKey(type))
+			{
+				trackerOffsets.Add(type, new TrackerOffset(positionValue, rotationValue));
+			}
+			else
+			{
+				trackerOffsets[type].SetPositionOffset(positionValue);
+				trackerOffsets[type].SetRotationOffset(rotationValue);
+			}
 		}
 
 		public void RemoveTrackerOffset(OffsetsToTrackers type, bool removePositionOffset, bool removeRotationOffset)
 		{
 			Debug.LogWarning($"Removed tracker position and rotation offset: {type}");
 
-			//if (trackerOffsets[type].RemoveValue(removePositionOffset, removeRotationOffset))
-			//{
-			//	trackerOffsets.Remove(type);
-			//}
+			if (trackerOffsets[type].RemoveValue(removePositionOffset, removeRotationOffset))
+			{
+				trackerOffsets.Remove(type);
+			}
+		}
+
+		// Tracker Direction
+		public void AddTrackerDirection(VRTrackerType type, Axis axis, Vector3 direction)
+		{
+			Debug.LogWarning($"Add tracker direction: {type} - {axis}");
+
+			if (!trackerDirections.ContainsKey(type))
+			{
+				trackerDirections.Add(type, new TrackerDirection(axis, direction));
+			}
+			else
+			{
+				trackerDirections[type].SetAxis(axis, direction);
+			}
+		}
+
+		public void RemoveTrackerDirection(VRTrackerType trackerType, Axis type)
+		{
+			Debug.LogWarning($"Remove tracker direction: {trackerType} - {type}");
+
 		}
 
 		// Body measurement
 		public void AddBodyMeasurement(BodyMeasurements type, float value)
 		{
 			Debug.LogWarning($"Add body measurement: {type}");
+
+			if (!bodyMeasurements.ContainsKey(type))
+			{
+				bodyMeasurements.Add(type, value);
+			}
+			else
+			{
+				bodyMeasurements[type] = value;
+			}
 		}
 
 		public void RemoveBodyMeasurement(BodyMeasurements type)
 		{
 			Debug.LogWarning($"Remove body measurement: {type}");
-		}
-
-		// Tracker Direction
-		public void AddTrackerDirection(VRTrackerType trackerType, Directions type, Vector3 direction)
-		{
-			Debug.LogWarning($"Add tracker direction: {type}");
-
-		}
-
-		public void RemoveTrackerDirection(VRTrackerType trackerType, Directions type)
-		{
-			Debug.LogWarning($"Remove tracker direction: {type}");
-
 		}
 
 		#region Serialization
@@ -165,14 +201,20 @@ namespace Manus.Polygon
 		}
 
 		/// <summary>
-		/// Function to remove the position or rotation offset. Returns true if the offset is completely empty and can be destroyed
+		/// Function to remove the position or rotation offset.
 		/// </summary>
 		/// <param name="removePositionOffset">Should the position offset be removed</param>
 		/// <param name="removeRotationOffset">Should the rotation offset be removed</param>
-		/// <returns></returns>
+		/// <returns>Returns true if the offset is completely empty and can be destroyed</returns>
 		public bool RemoveValue(bool removePositionOffset, bool removeRotationOffset)
 		{
-			return true;
+			if (removePositionOffset)
+				positionOffset = null;
+
+			if (removeRotationOffset)
+				rotationOffset = null;
+
+			return IsEmpty;
 		}
 
 		#endregion
@@ -181,14 +223,101 @@ namespace Manus.Polygon
 	[System.Serializable]
 	public struct TrackerDirection
 	{
-		public Directions type;
-		public Vector3 direction;
-	}
+		private Vector3? x;
+		private Vector3? y;
+		private Vector3? z;
 
-	public enum Directions
-	{
-		forward,
-		up,
-		left
+		#region Properties
+
+		public bool IsEmpty
+		{
+			get { return x == null && y == null && z == null; }
+		}
+
+		public Vector3 X
+		{
+			get { return x ?? Vector3.zero; }
+		}
+
+		public Vector3 Y
+		{
+			get { return y ?? Vector3.zero; }
+		}
+
+		public Vector3 Z
+		{
+			get { return x ?? Vector3.zero; }
+		}
+
+		#endregion
+
+		#region Constructor
+
+		public TrackerDirection(Vector3 x, Vector3 y, Vector3 z)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+
+		public TrackerDirection(Axis axis, Vector3 direction)
+		{
+			this.x = null;
+			this.y = null;
+			this.z = null;
+
+			switch (axis)
+			{
+				case Axis.X:
+					x = direction;
+					break;
+				case Axis.Y:
+					y = direction;
+					break;
+				case Axis.Z:
+					z = direction;
+					break;
+			}
+		}
+
+		#endregion
+
+		#region Public Methods
+
+		public void SetAxis(Axis axis, Vector3 direction)
+		{
+			switch (axis)
+			{
+				case Axis.X:
+					x = direction;
+					break;
+				case Axis.Y:
+					y = direction;
+					break;
+				case Axis.Z:
+					z = direction;
+					break;
+			}
+		}
+
+		public bool RemoveAxis(Axis axis)
+		{
+			switch (axis)
+			{
+				case Axis.X:
+					x = null;
+					break;
+				case Axis.Y:
+					y = null;
+					break;
+				case Axis.Z:
+					z = null;
+					break;
+			}
+
+			return IsEmpty;
+		}
+
+		#endregion
 	}
 }

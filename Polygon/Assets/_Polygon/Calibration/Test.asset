@@ -28,7 +28,7 @@ MonoBehaviour:
     useParentTracker: 1
     parentTracker: 2
   arcData:
-  - dataType: 0
+  - dataType: 3
     trackerOffset: 1
     arcPositionIndex: 0
     measurement: 0
@@ -46,10 +46,9 @@ MonoBehaviour:
       tracker: 0
       useLocalOffset: 1
       offset: 0
-    trackerType: 0
-    arcDirection:
-      directionType: 0
-      arcDirectionIndices: 
+    directionTrackerType: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
   - dataType: 3
     trackerOffset: 1
     arcPositionIndex: 0
@@ -68,7 +67,6 @@ MonoBehaviour:
       tracker: 0
       useLocalOffset: 0
       offset: 0
-    trackerType: 0
-    arcDirection:
-      directionType: 0
-      arcDirectionIndices: 
+    directionTrackerType: 1
+    directionAxis: 0
+    arcDirectionIndex: 1
