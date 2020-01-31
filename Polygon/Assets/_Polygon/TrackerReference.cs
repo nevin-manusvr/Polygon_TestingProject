@@ -29,6 +29,11 @@ namespace Manus.Polygon
 
 		#region Properties
 
+		public VRTrackerType[] RequiredTrackers
+		{
+			get { return requiredTrackers; }
+		}
+
 		public bool AreAllRequiredTrackersConnected
 		{
 			get { return areAllRequiredTrackersConnected; }
@@ -59,7 +64,7 @@ namespace Manus.Polygon
 
 			Matrix4x4 parentMatrix = Matrix4x4.identity;
 			if (addToLocal)
-				parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+				parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
 
 			foreach (Tracker tracker in trackers.Values)
 			{
@@ -93,13 +98,13 @@ namespace Manus.Polygon
 			UpdateTrackerReferences();
 		}
 
-		public TransformValues GetTracker(VRTrackerType type)
+		public TransformValues? GetTracker(VRTrackerType type) // TODO: clean up with out variables
 		{
 			if (trackers.ContainsKey(type))
 			{
 				if (addToLocal)
 				{
-					Matrix4x4 parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
+					Matrix4x4 parentMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
 					Vector3 trackerLocalPosition = parentMatrix.MultiplyPoint3x4(trackers[type].position);
 					Quaternion trackerLocalRotation = parentMatrix.rotation * trackers[type].rotation;
 
@@ -109,7 +114,25 @@ namespace Manus.Polygon
 				return new TransformValues(trackers[type].position, trackers[type].rotation);
 			}
 
-			return new TransformValues(Vector3.zero, Quaternion.identity);
+			return null;
+		}
+
+		public TransformValues? GetTrackerWithOffset(VRTrackerType type, Vector3 localPosition, Quaternion localRotation)
+		{
+			if (trackers.ContainsKey(type))
+			{
+				TransformValues? trackerTransform = GetTracker(type);
+				if (trackerTransform == null) return null;
+
+				Matrix4x4 trackerMatrix = Matrix4x4.TRS(trackerTransform.Value.position, trackerTransform.Value.rotation, addToLocal ? transform.lossyScale : Vector3.one);
+
+				Vector3 pos = trackerMatrix.MultiplyPoint3x4(localPosition);
+				Quaternion rot = trackerMatrix.rotation * localRotation;
+
+				return new TransformValues(pos, rot);
+			}
+
+			return null;
 		}
 
 		#endregion
