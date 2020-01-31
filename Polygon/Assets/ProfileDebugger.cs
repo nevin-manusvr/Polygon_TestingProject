@@ -37,6 +37,7 @@ namespace Manus.Polygon
 		{
 			VisualizeTrackers();
 			VisualizeTrackerOffsets();
+			VisualizeDirection();
 		}
 
 		private void VisualizeTrackers()
@@ -116,7 +117,7 @@ namespace Manus.Polygon
 
 		private void VisualizeDirection()
 		{
-			for (int i = 0; i < profile.trackerOffsets.Keys.Count; i++)
+			for (int i = 0; i < profile.trackerDirections.Keys.Count; i++)
 			{
 				if (trackerOffsetVisuals.Count < i + 1)
 				{
