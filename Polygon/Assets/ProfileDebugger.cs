@@ -19,6 +19,8 @@ namespace Manus.Polygon
 
 		[Header("Models")]
 		public GameObject trackerModel;
+		public GameObject leftHandModel, rightHandModel;
+		public GameObject leftFootModel, rightFootModel;
 
 		private void Start()
 		{
