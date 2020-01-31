@@ -2,76 +2,80 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using System.Text.RegularExpressions;
+using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
-	//[CustomPropertyDrawer(typeof(ArcCalibrationStep.ArcSettings))]
-	//public class ArcSettingsPropertyDrawer : PropertyDrawer
-	//{
-		//public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-		//{
-		//	// Using BeginProperty / EndProperty on the parent property means that
-		//	// __prefab__ override logic works on the entire property.
+	[CustomPropertyDrawer(typeof(ArcCalibrationStep.ArcSettings))]
+	public class ArcSettingsPropertyDrawer : PropertyDrawer
+	{
+		private int lineHeight = 4;
 
-		//	EditorGUI.BeginProperty(position, label, property);
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		{
+			// Using BeginProperty / EndProperty on the parent property means that
+			// __prefab__ override logic works on the entire property.
 
-		//	// Draw label
-		//	label.text = "property"; // TODO: change name according to the data
-		//	EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+			EditorGUI.BeginProperty(position, label, property);
 
-		//	// Don't make child fields be indented
-		//	var indent = EditorGUI.indentLevel;
-		//	// EditorGUI.indentLevel = 0;
-		//	EditorGUI.indentLevel++;
+			// Get variables
+			var localOffset = property.FindPropertyRelative("useTrackerLocal");
+			var parent = property.FindPropertyRelative("useParentTracker");
 
-		//	// Calculate rects
-		//	var trackerLabel = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + 2f, position.width * .2f, EditorGUIUtility.singleLineHeight);
-		//	var trackerEnum = new Rect(position.x + position.width * 0.2f, position.y + EditorGUIUtility.singleLineHeight + 2f, position.width * 0.4f, EditorGUIUtility.singleLineHeight);
-		//	var localLabel = new Rect(position.x + position.width * 0.65f, position.y + EditorGUIUtility.singleLineHeight + 2f, position.width * 0.2f, EditorGUIUtility.singleLineHeight);
-		//	var localBool = new Rect(position.x + position.width * 0.85f, position.y + EditorGUIUtility.singleLineHeight + 2f, position.width * 0.15f, EditorGUIUtility.singleLineHeight);
+			// Draw label
+			string arrayIndex = Regex.Replace(property.displayName, "[^0-9]", string.Empty);
+			VRTrackerType trackerName = (VRTrackerType)property.FindPropertyRelative("tracker").intValue;
+			OffsetsToTrackers offsetName = (OffsetsToTrackers)property.FindPropertyRelative("localOffset").intValue;
+			VRTrackerType parentName = (VRTrackerType)property.FindPropertyRelative("parentTracker").intValue;
 
-		//	var positionOffsetLabel = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 2, position.width * .2f, EditorGUIUtility.singleLineHeight);
-		//	var positionOffsetBool = new Rect(position.x + position.width * .2f, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 2, position.width * .15f, EditorGUIUtility.singleLineHeight);
+			label.text = (arrayIndex.Length > 0 ? $"{arrayIndex} - " : string.Empty) +
+			             $"{trackerName} Tracker" +
+			             (localOffset.boolValue ? $" - (Local: {offsetName})" : string.Empty) +
+						 (parent.boolValue ? $" - (Parent: {parentName})" : string.Empty);
 
-		//	var parentTrackerLabel = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 3, position.width * .2f, EditorGUIUtility.singleLineHeight);
-		//	var parentTrackerEnum = new Rect(position.x + position.width * .2f, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 3, position.width * .4f, EditorGUIUtility.singleLineHeight);
-		//	var offsetEnum = new Rect(position.x + position.width * .6f, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 3, position.width * .4f, EditorGUIUtility.singleLineHeight);
+			// Foldout group
+			var expendRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+			property.isExpanded = EditorGUI.Foldout(expendRect, property.isExpanded, label);
 
-		//	var measurementLabel = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 3, position.width * .2f, EditorGUIUtility.singleLineHeight);
-		//	var measurementEnum = new Rect(position.x + position.width * .2f, position.y + (EditorGUIUtility.singleLineHeight + 2f) * 3, position.width * .66f, EditorGUIUtility.singleLineHeight);
+			// Don't make child fields be indented
+			var indent = EditorGUI.indentLevel;
+			EditorGUI.indentLevel += 2;
 
-		//	// Draw fields
-		//	EditorGUI.LabelField(trackerLabel, new GUIContent("tracker : "));
-		//	EditorGUI.PropertyField(trackerEnum, property.FindPropertyRelative("tracker"), GUIContent.none);
-		//	EditorGUI.LabelField(localLabel, new GUIContent("use local : "));
-		//	EditorGUI.PropertyField(localBool, property.FindPropertyRelative("useTrackerWithOffsets"), GUIContent.none);
+			// Calculate rects
+			var trackerRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + lineHeight, position.width, EditorGUIUtility.singleLineHeight);
+			var useLocalRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width * .45f, EditorGUIUtility.singleLineHeight);
+			var useLocalEnumRect = new Rect(position.x + position.width * .45f, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 2, position.width * .55f, EditorGUIUtility.singleLineHeight);
 
-		//	EditorGUI.LabelField(positionOffsetLabel, new GUIContent("Add offset : "));
-		//	EditorGUI.PropertyField(positionOffsetBool, property.FindPropertyRelative("getPositionOffset"), GUIContent.none);
+			var useParentRect = new Rect(position.x, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width * .45f, EditorGUIUtility.singleLineHeight);
+			var useParentEnumRect = new Rect(position.x + position.width * .45f, position.y + (EditorGUIUtility.singleLineHeight + lineHeight) * 3, position.width * .55f, EditorGUIUtility.singleLineHeight);
 
-		//	var positionOffset = property.FindPropertyRelative("getPositionOffset");
-		//	if (positionOffset.boolValue)
-		//	{
-		//		EditorGUI.LabelField(parentTrackerLabel, new GUIContent("Parent tracker : "));
-		//		EditorGUI.PropertyField(parentTrackerEnum, property.FindPropertyRelative("parentTracker"), GUIContent.none);
-		//		EditorGUI.PropertyField(offsetEnum, property.FindPropertyRelative("offsetToTracker"), GUIContent.none);
-		//	}
-		//	else
-		//	{
-		//		EditorGUI.LabelField(measurementLabel, new GUIContent("Measurement : "));
-		//		EditorGUI.PropertyField(measurementEnum, property.FindPropertyRelative("bodyMeasurement"), GUIContent.none);
-		//	}
+			// Draw fields
+			if (property.isExpanded)
+			{
+				EditorGUI.PropertyField(trackerRect, property.FindPropertyRelative("tracker"), new GUIContent("Tracker"));
+				EditorGUI.PropertyField(useLocalRect, property.FindPropertyRelative("useTrackerLocal"), new GUIContent("Use tracker local"));
 
-		//	// Set indent back to what it was
-		//	EditorGUI.indentLevel = indent;
+				if (localOffset.boolValue)
+					EditorGUI.PropertyField(useLocalEnumRect, property.FindPropertyRelative("localOffset"), GUIContent.none);
 
-		//	EditorGUI.EndProperty();
-		//}
+				EditorGUI.PropertyField(useParentRect, property.FindPropertyRelative("useParentTracker"), new GUIContent("Use parent"));
 
-		//public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		//{
-		//	// The 6 comes from extra spacing between the fields (2px each)
-		//	return EditorGUIUtility.singleLineHeight * 4 + 6;
-		//}
-	//}
+				if (parent.boolValue)
+					EditorGUI.PropertyField(useParentEnumRect, property.FindPropertyRelative("parentTracker"), GUIContent.none);
+			}
+
+			// Set indent back to what it was
+			EditorGUI.indentLevel = indent;
+			EditorGUI.EndProperty();
+		}
+
+		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+		{
+			// The 6 comes from extra spacing between the fields (2px each)
+			return property.isExpanded
+				       ? (EditorGUIUtility.singleLineHeight + lineHeight) * 4 - lineHeight
+				       : (EditorGUIUtility.singleLineHeight + lineHeight) * 1 - lineHeight;
+		}
+	}
 }

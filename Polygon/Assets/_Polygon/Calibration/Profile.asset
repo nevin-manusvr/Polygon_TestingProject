@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac82804e3dceda418a88845d641207b, type: 3}
   m_Name: Profile
   m_EditorClassIdentifier: 
+  profileRequirements:
+    requiredTrackerOffsets: 0600000001000000020000000300000004000000
+    requiredBoneMeasurements: 06000000

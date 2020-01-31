@@ -47,7 +47,7 @@ namespace Manus.Polygon
 			this.trackers = null;
 		}
 
-		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType)
+		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType) // TODO: add local offset
 		{
 			this.arcPoints = new List<ArcPoint>();
 			this.trackers = trackers;
@@ -60,7 +60,8 @@ namespace Manus.Polygon
 		{
 			if (arcPoints.Count == 0 || Vector3.Distance(arcPoints[arcPoints.Count - 1].point, point) > minPointDistance)
 			{
-				arcPoints.Add(new ArcPoint(point, trackers?.GetTracker(parentTracker)));
+				TransformValues? trackerTransform = trackers?.GetTracker(parentTracker);
+				arcPoints.Add(new ArcPoint(point, trackerTransform));
 			}
 		}
 
@@ -77,7 +78,7 @@ namespace Manus.Polygon
 		{
 			if (trackers == null) return Vector3.zero;
 
-			Transform trackerTransform = new GameObject("trackerPosition").transform;
+			// Transform trackerTransform = new GameObject("trackerPosition").transform;
 			var offsetsToTracker = new List<Vector3>();
 
 			foreach (ArcPoint value in arcPoints)
@@ -85,16 +86,41 @@ namespace Manus.Polygon
 				if (value.parent == null) continue;
 				TransformValues parentValues = (TransformValues)value.parent;
 
-				trackerTransform.position = parentValues.position;
-				trackerTransform.rotation = parentValues.rotation;
+				Matrix4x4 trackerMatrix = Matrix4x4.TRS(parentValues.position, parentValues.rotation, Vector3.one);
+				trackerMatrix = trackerMatrix.inverse;
 
-				Vector3 pointOffset = trackerTransform.InverseTransformPoint(intersectionPoint);
+				//trackerTransform.position = parentValues.position;
+				//trackerTransform.rotation = parentValues.rotation;
+
+				Vector3 pointOffset = trackerMatrix.MultiplyPoint3x4(intersectionPoint);// trackerTransform.InverseTransformPoint(intersectionPoint);
 				offsetsToTracker.Add(pointOffset);
 			}
 
-			MonoBehaviour.Destroy(trackerTransform.gameObject);
+			// MonoBehaviour.Destroy(trackerTransform.gameObject); // TODO: remove all transform stuff
 
 			return AverageVector(offsetsToTracker.ToArray());
+		}
+
+		public Vector3 GetArcNormalFromTracker()
+		{
+			if (trackers == null) return Vector3.zero;
+
+			var normalsFromTracker = new List<Vector3>();
+
+			foreach (ArcPoint value in arcPoints)
+			{
+				if (value.parent == null) continue;
+				TransformValues parentValues = (TransformValues)value.parent;
+
+				Matrix4x4 trackerMatrix = Matrix4x4.TRS(parentValues.position, parentValues.rotation, Vector3.one);
+				trackerMatrix = trackerMatrix.inverse;
+
+
+				Vector3 trackerNormal = trackerMatrix.MultiplyVector(normal);
+				normalsFromTracker.Add(trackerNormal);
+			}
+
+			return AverageVector(normalsFromTracker.ToArray());
 		}
 
 		public float GetArcRadius()
