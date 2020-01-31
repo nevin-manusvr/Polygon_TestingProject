@@ -90,15 +90,18 @@ namespace Manus.Polygon
 		public void AddTrackerDirection(VRTrackerType type, Axis axis, Vector3 direction)
 		{
 			Debug.LogWarning($"Add tracker direction: {type} - {axis}");
+			Debug.Log($"{type} - {axis} - {direction}");
 
 			if (!trackerDirections.ContainsKey(type))
 			{
-				trackerDirections.Add(type, new TrackerDirection(axis, direction));
+				trackerDirections.Add(type, new TrackerDirection(axis, direction.normalized));
 			}
 			else
 			{
-				trackerDirections[type].SetAxis(axis, direction);
+				trackerDirections[type].SetAxis(axis, direction.normalized);
 			}
+
+			Debug.Log($"{type} - {axis} - {trackerDirections[type].Y}");
 		}
 
 		public void RemoveTrackerDirection(VRTrackerType trackerType, Axis type)
@@ -132,6 +135,61 @@ namespace Manus.Polygon
 
 
 		#endregion
+
+		public static VRTrackerType? GetMatchingTrackerFromOffset(OffsetsToTrackers offsetType)
+		{
+			switch (offsetType)
+			{
+				case OffsetsToTrackers.HeadTrackerToHead:
+					return VRTrackerType.Head;
+				case OffsetsToTrackers.LeftHandTrackerToWrist:
+					return VRTrackerType.LeftHand;
+				case OffsetsToTrackers.RightHandTrackerToWrist:
+					return VRTrackerType.RightHand;
+				case OffsetsToTrackers.LeftElbowTrackerToElbow:
+					return null;
+				case OffsetsToTrackers.RightElbowTrackerToElbow:
+					return null;
+				case OffsetsToTrackers.LeftElbowTrackerToShoulder:
+					return null;
+				case OffsetsToTrackers.RightElbowTrackerToShoulder:
+					return null;
+				case OffsetsToTrackers.HipTrackerToHip:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.HipTrackerToLeftLeg:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.HipTrackerToRightLeg:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.LeftFootTrackerToAnkle:
+					return VRTrackerType.LeftFoot;
+				case OffsetsToTrackers.RightFootTrackerToAnkle:
+					return VRTrackerType.RightFoot;
+				default:
+					return null;
+			}
+		}
+
+		public static OffsetsToTrackers? GetMatchingTrackerOffsetForTracker(VRTrackerType trackerType)
+		{
+			switch (trackerType)
+			{
+				case VRTrackerType.Head:
+					return OffsetsToTrackers.HeadTrackerToHead;
+				case VRTrackerType.LeftHand:
+					return OffsetsToTrackers.LeftHandTrackerToWrist;
+				case VRTrackerType.RightHand:
+					return OffsetsToTrackers.RightHandTrackerToWrist;
+				case VRTrackerType.Waist:
+					return OffsetsToTrackers.HipTrackerToHip;
+				case VRTrackerType.LeftFoot:
+					return OffsetsToTrackers.LeftFootTrackerToAnkle;
+				case VRTrackerType.RightFoot:
+					return OffsetsToTrackers.RightFootTrackerToAnkle;
+				default:
+					Debug.LogError($"Tracking type: {trackerType} is currently not supported, please add this");
+					return null;
+			}
+		}
 	}
 
 	[System.Serializable]
@@ -241,12 +299,12 @@ namespace Manus.Polygon
 
 		public Vector3 Y
 		{
-			get { return y ?? Vector3.zero; }
+			get { if (y != null) Debug.Log("test"); return y ?? Vector3.zero; }
 		}
 
 		public Vector3 Z
 		{
-			get { return x ?? Vector3.zero; }
+			get { return z ?? Vector3.zero; }
 		}
 
 		#endregion
@@ -289,13 +347,13 @@ namespace Manus.Polygon
 			switch (axis)
 			{
 				case Axis.X:
-					x = direction;
+					this.x = direction;
 					break;
 				case Axis.Y:
-					y = direction;
+					this.y = direction;
 					break;
 				case Axis.Z:
-					z = direction;
+					this.z = direction;
 					break;
 			}
 		}

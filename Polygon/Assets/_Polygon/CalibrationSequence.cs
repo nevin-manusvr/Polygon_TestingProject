@@ -16,33 +16,35 @@ namespace Manus.Polygon
 
 		private MonoBehaviour mono;
 
-		public void StartCalibrationSequence(CalibrationProfile profile, TrackerReference trackers, MonoBehaviour mono)
+		public void SetupCalibrationSequence(CalibrationProfile profile, TrackerReference trackers, MonoBehaviour mono)
 		{
 			this.profile = profile;
 			this.trackers = trackers;
 			this.mono = mono;
 
+			// TMP:
+			currentIndex = 0;
 			Debug.Log("Setup Sequence");
-
-			StartCalibrationStep();
 		}
 
-		private int currentIndex = 0;
+		private int currentIndex;
 
-		private void StartCalibrationStep()
+		public void NextCalibrationStep()
 		{
-			mono.StartCoroutine(CalibrateThings());
+			mono.StartCoroutine(CalibrateThings(currentIndex));
+
+			currentIndex++;
 		}
 
-		private IEnumerator CalibrateThings()
+		private IEnumerator CalibrateThings(int index)
 		{
 			Debug.Log("Setup Step");
-			calibrationSteps[currentIndex].Setup(profile, trackers);
+			calibrationSteps[index].Setup(profile, trackers);
 			Debug.Log("Start Countdown");
 			yield return new WaitForSeconds(1f);
 			Debug.Log("Start Calibration");
 
-			mono.StartCoroutine(calibrationSteps[currentIndex].Start());
+			mono.StartCoroutine(calibrationSteps[index].Start());
 		}
 	}
 }

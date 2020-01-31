@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Manus.Core.Utility;
+using System.Linq;
 
 namespace Manus.Polygon
 {
-	using System.Linq;
-
 	[CreateAssetMenu(fileName = "new Arc Calibration Step", menuName = "ManusVR/Polygon/Calibration/Arc Calibration Step", order = 10)]
 	public class ArcCalibrationStep : CalibrationStep
 	{
@@ -26,20 +25,6 @@ namespace Manus.Polygon
 								  ? new Arc(trackers, arcSettings[i].parentTracker)
 					              : arcArray[i] = new Arc();
 			}
-		}
-
-		public override IEnumerator Start()
-		{
-			float timer = 0;
-
-			while (timer < time)
-			{
-				timer += Time.deltaTime;
-				Update();
-				yield return new WaitForEndOfFrame();
-			}
-
-			End();
 		}
 
 		protected override void Update()
@@ -130,11 +115,6 @@ namespace Manus.Polygon
 						break;
 				}
 			}
-		}
-
-		public override void Revert()
-		{
-			// TODO: implement this
 		}
 
 		#region enums
