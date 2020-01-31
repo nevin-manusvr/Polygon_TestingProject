@@ -37,6 +37,7 @@ namespace Manus.Polygon
 		{
 			VisualizeTrackers();
 			VisualizeTrackerOffsets();
+			VisualizeDirection();
 		}
 
 		private void VisualizeTrackers()
@@ -75,14 +76,59 @@ namespace Manus.Polygon
 				if (trackerOffsetVisuals.Count < i + 1)
 				{
 					trackerOffsetVisuals.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+					trackerOffsetVisuals[i].GetComponent<MeshRenderer>().material.color = Color.black;
 					trackerOffsetVisuals[i].transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 					trackerOffsetVisuals[i].transform.SetParent(transform);
 				}
 
-
-
 				OffsetsToTrackers offsetType = profile.trackerOffsets.Keys.ToArray()[i];
 				
+				VRTrackerType type = VRTrackerType.Other;
+				switch (offsetType)
+				{
+					case OffsetsToTrackers.LeftHandTrackerToWrist:
+						type = VRTrackerType.LeftHand;
+						break;
+					case OffsetsToTrackers.RightHandTrackerToWrist:
+						type = VRTrackerType.RightHand;
+						break;
+					default:
+						Debug.LogError($"OffsetsToTracker type : {offsetType} not implemented");
+						break;
+				}
+
+				TrackerOffset offset = profile.trackerOffsets[offsetType];
+
+				TransformValues? trackerWithOffset = trackers.GetTrackerWithOffset(type, offset.Position, offset.Rotation);
+
+				if (trackerWithOffset == null)
+				{
+					if (trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(false);
+					continue;
+				}
+
+				if (!trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(true);
+
+				trackerOffsetVisuals[i]?.transform.SetPositionAndRotation(
+					trackerWithOffset.Value.position,
+					trackerWithOffset.Value.rotation);
+			}
+		}
+
+		private void VisualizeDirection()
+		{
+			for (int i = 0; i < profile.trackerDirections.Keys.Count; i++)
+			{
+				if (trackerOffsetVisuals.Count < i + 1)
+				{
+					trackerOffsetVisuals.Add(GameObject.CreatePrimitive(PrimitiveType.Cube));
+					trackerOffsetVisuals[i].GetComponent<MeshRenderer>().sharedMaterial.color = Color.white;
+					trackerOffsetVisuals[i].transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+					trackerOffsetVisuals[i].transform.SetParent(transform);
+				}
+
+				OffsetsToTrackers offsetType = profile.trackerOffsets.Keys.ToArray()[i];
+
 				VRTrackerType type = VRTrackerType.Other;
 				switch (offsetType)
 				{
