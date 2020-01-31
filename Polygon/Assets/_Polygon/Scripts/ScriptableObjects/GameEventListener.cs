@@ -30,6 +30,7 @@ public class GameEventListener : MonoBehaviour
 
 	public void StartCountDownRaised(float countdownTime)
 	{
+		Debug.Log("started");
 		startCountdownResponse?.Invoke(countdownTime);
 	}
 

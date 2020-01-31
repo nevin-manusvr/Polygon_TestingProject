@@ -13,7 +13,9 @@ namespace Manus.Polygon
 		[Header("Main")]
 		[SerializeField] private Text currentStep;
 		[SerializeField] private CanvasGroup currentStepGroup;
-		[SerializeField] private CanvasGroup titleGroup;
+		[SerializeField] private CanvasGroup mainTitleGroup;
+
+		[SerializeField] private CanvasGroup subtitleGroup;
 
 		[SerializeField] private CanvasGroup ui;
 
@@ -24,6 +26,7 @@ namespace Manus.Polygon
 
 		[Header("Slider")]
 		[SerializeField] private CanvasGroup timeCanvas;
+		[SerializeField] private CanvasGroup timeTitleGroup;
 		[SerializeField] private Slider timer;
 
 		[Header("Settings")]
@@ -33,7 +36,8 @@ namespace Manus.Polygon
 		{
 			ui.alpha = 1;
 
-			titleGroup.alpha = 0;
+			mainTitleGroup.alpha = 0;
+			subtitleGroup.alpha = 0;
 			currentStepGroup.alpha = 0;
 			currentStep.text = string.Empty;
 
@@ -42,10 +46,11 @@ namespace Manus.Polygon
 			number3.alpha = 0;
 
 			timeCanvas.alpha = 0;
+			timeTitleGroup.alpha = 0;
 			timer.value = 0;
 
 			// Test code
-			// Calibrate("Mom's Spaghetti!", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Done"); });
+			Calibrate("Wrists", 5f, () => { Debug.Log("Start"); }, () => { Debug.Log("Calibrating"); }, () => { Debug.Log("Done"); });
 		}
 
 		public void ToggleUI(bool tf)
@@ -57,7 +62,8 @@ namespace Manus.Polygon
 		{
 			// TODO: put this mess inside of a coroutine or a sequence
 
-			titleGroup.DOFade(1, .5f).SetEase(Ease.InCubic);
+			mainTitleGroup.DOFade(1, .5f).SetEase(Ease.InCubic);
+			subtitleGroup.DOFade(1, .5f).SetEase(Ease.InCubic);
 			currentStepGroup.DOFade(1, .5f).SetDelay(0.1f).SetEase(Ease.InCubic);
 			currentStep.text = step;
 
@@ -68,6 +74,9 @@ namespace Manus.Polygon
 						startCallback?.Invoke();
 
 						timeCanvas.DOFade(1, 0.5f).SetEase(Ease.InCubic).OnComplete(() => { timeCanvas.DOFade(0, 0.5f).SetDelay(time - 0.5f).SetEase(Ease.OutCubic); });
+						subtitleGroup.DOFade(0, .5f).SetEase(Ease.OutCubic);
+						timeTitleGroup.DOFade(1, 0.5f).SetEase(Ease.OutCubic);
+						//Animator.setTrigger("Trigger name")
 
 						DOVirtual.Float(0, 1, time,
 							value =>
@@ -79,7 +88,7 @@ namespace Manus.Polygon
 							{
 								endCallback?.Invoke();
 
-								titleGroup.DOFade(0, .5f).SetEase(Ease.OutCubic);
+								mainTitleGroup.DOFade(0, .5f).SetEase(Ease.OutCubic);
 								currentStepGroup.DOFade(0, .5f).SetDelay(0.1f).SetEase(Ease.OutCubic);
 							});
 					})));
