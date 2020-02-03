@@ -1,0 +1,192 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
+  m_Name: HandsWristsZ
+  m_EditorClassIdentifier: 
+  description: Create an arc with both hands to calibrate the wrist offset
+  time: 2
+  arcSettings:
+  - tracker: 1
+    useTrackerLocal: 0
+    localOffset: 1
+    useParentTracker: 1
+    parentTracker: 1
+  - tracker: 2
+    useTrackerLocal: 0
+    localOffset: 0
+    useParentTracker: 1
+    parentTracker: 2
+  arcData:
+  - dataType: 1
+    trackerOffset: 1
+    arcPositionIndex: 0
+    onLocalPlane: 1
+    localPlane: 2
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
+    directionClosest:
+      type: 0
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+  - dataType: 1
+    trackerOffset: 2
+    arcPositionIndex: 1
+    onLocalPlane: 1
+    localPlane: 2
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 1
+    directionClosest:
+      type: 0
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+  - dataType: 0
+    trackerOffset: 2
+    arcPositionIndex: 0
+    onLocalPlane: 0
+    localPlane: 0
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 2
+    arcDirectionIndex: 0
+    directionClosest:
+      type: 2
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerTo: 2
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 1, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+  - dataType: 0
+    trackerOffset: 2
+    arcPositionIndex: 0
+    onLocalPlane: 0
+    localPlane: 0
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 2
+    arcDirectionIndex: 1
+    directionClosest:
+      type: 2
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerTo: 2
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 1, z: 0}
+        trackerFrom: 0
+        trackerTo: 0

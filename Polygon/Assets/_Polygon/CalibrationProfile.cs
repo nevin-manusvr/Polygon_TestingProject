@@ -14,6 +14,8 @@ namespace Manus.Polygon
 		public Dictionary<VRTrackerType, TrackerDirection> trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
 		public Dictionary<BodyMeasurements, float> bodyMeasurements = new Dictionary<BodyMeasurements, float>();
 
+		#region Public Methods
+
 		// Main
 		public void Reset()
 		{
@@ -22,7 +24,7 @@ namespace Manus.Polygon
 			bodyMeasurements = new Dictionary<BodyMeasurements, float>();
 		}
 
-		public void Reset(CalibrationProfile newProfile)
+		public void Reset(ProfileData newProfile)
 		{
 			profileRequirements = newProfile.profileRequirements;
 			trackerOffsets = newProfile.trackerOffsets;
@@ -90,7 +92,6 @@ namespace Manus.Polygon
 		public void AddTrackerDirection(VRTrackerType type, Axis axis, Vector3 direction)
 		{
 			Debug.LogWarning($"Add tracker direction: {type} - {axis}");
-			Debug.Log($"{type} - {axis} - {direction}");
 
 			if (!trackerDirections.ContainsKey(type))
 			{
@@ -100,8 +101,6 @@ namespace Manus.Polygon
 			{
 				trackerDirections[type].SetAxis(axis, direction.normalized);
 			}
-
-			Debug.Log($"{type} - {axis} - {trackerDirections[type].Y}");
 		}
 
 		public void RemoveTrackerDirection(VRTrackerType trackerType, Axis type)
@@ -129,6 +128,8 @@ namespace Manus.Polygon
 		{
 			Debug.LogWarning($"Remove body measurement: {type}");
 		}
+
+		#endregion
 
 		#region Serialization
 
@@ -193,26 +194,26 @@ namespace Manus.Polygon
 	}
 
 	[System.Serializable]
-	public struct TrackerOffset
+	public class TrackerOffset
 	{
-		public Vector3? positionOffset;
-		public Quaternion? rotationOffset;
+		public Vector3? position;
+		public Quaternion? rotation;
 
 		#region Properties
 
 		public bool IsEmpty
 		{
-			get { return positionOffset == null && rotationOffset == null; }
+			get { return position == null && rotation == null; }
 		}
 
 		public Vector3 Position
 		{
-			get { return positionOffset ?? Vector3.zero; }
+			get { return position ?? Vector3.zero; }
 		}
 
 		public Quaternion Rotation
 		{
-			get { return rotationOffset ?? Quaternion.identity; }
+			get { return rotation ?? Quaternion.identity; }
 		}
 
 		#endregion
@@ -221,8 +222,8 @@ namespace Manus.Polygon
 
 		public TrackerOffset(Vector3 positionOffset, Quaternion rotationOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetPositionOffset(positionOffset);
 			SetRotationOffset(rotationOffset);
@@ -230,16 +231,16 @@ namespace Manus.Polygon
 
 		public TrackerOffset(Vector3 positionOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetPositionOffset(positionOffset);
 		}
 
 		public TrackerOffset(Quaternion rotationOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetRotationOffset(rotationOffset);
 		}
@@ -250,12 +251,12 @@ namespace Manus.Polygon
 
 		public void SetPositionOffset(Vector3 positionOffset)
 		{
-			this.positionOffset = positionOffset;
+			this.position = positionOffset;
 		}
 
 		public void SetRotationOffset(Quaternion rotatationOffset)
 		{
-			this.rotationOffset = rotatationOffset;
+			this.rotation = rotatationOffset;
 		}
 
 		/// <summary>
@@ -267,10 +268,10 @@ namespace Manus.Polygon
 		public bool RemoveValue(bool removePositionOffset, bool removeRotationOffset)
 		{
 			if (removePositionOffset)
-				positionOffset = null;
+				position = null;
 
 			if (removeRotationOffset)
-				rotationOffset = null;
+				rotation = null;
 
 			return IsEmpty;
 		}
@@ -279,7 +280,7 @@ namespace Manus.Polygon
 	}
 
 	[System.Serializable]
-	public struct TrackerDirection
+	public class TrackerDirection
 	{
 		private Vector3? x;
 		private Vector3? y;
@@ -299,7 +300,7 @@ namespace Manus.Polygon
 
 		public Vector3 Y
 		{
-			get { if (y != null) Debug.Log("test"); return y ?? Vector3.zero; }
+			get { return y ?? Vector3.zero; }
 		}
 
 		public Vector3 Z
@@ -342,6 +343,21 @@ namespace Manus.Polygon
 
 		#region Public Methods
 
+		public Vector3? GetAxis(Axis axis)
+		{
+			switch (axis)
+			{
+				case Axis.X:
+					return x;
+				case Axis.Y:
+					return y;
+				case Axis.Z:
+					return z;
+			}
+
+			return null;
+		}
+
 		public void SetAxis(Axis axis, Vector3 direction)
 		{
 			switch (axis)
@@ -377,5 +393,23 @@ namespace Manus.Polygon
 		}
 
 		#endregion
+	}
+
+	[System.Serializable]
+	public class ProfileData
+	{
+		public ProfileRequirements profileRequirements;
+
+		public Dictionary<OffsetsToTrackers, TrackerOffset> trackerOffsets = new Dictionary<OffsetsToTrackers, TrackerOffset>();
+		public Dictionary<VRTrackerType, TrackerDirection> trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
+		public Dictionary<BodyMeasurements, float> bodyMeasurements = new Dictionary<BodyMeasurements, float>();
+
+		public ProfileData(CalibrationProfile newProfile)
+		{
+			profileRequirements = newProfile.profileRequirements;
+			trackerOffsets = newProfile.trackerOffsets;
+			trackerDirections = newProfile.trackerDirections;
+			bodyMeasurements = newProfile.bodyMeasurements;
+		}
 	}
 }

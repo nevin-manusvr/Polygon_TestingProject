@@ -15,7 +15,7 @@ MonoBehaviour:
   description: Allign the hands to face the same direction
   time: 1
   settings:
-  - dataType: 0
+  - dataType: 1
     getAxisData:
     - tracker: 1
       axis: 1
@@ -34,6 +34,7 @@ MonoBehaviour:
       useToLocal: 1
       toLocalOffset: 2
     axisToAlign: 0
-    alignTracker1: 0
-    alignTracker2: 0
+    alignTracker1: 1
+    invertTracker1Axis: 0
+    alignTracker2: 2
     axisToCalculate: 0

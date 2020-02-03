@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   calibrationSteps:
   - {fileID: 11400000, guid: 3c103259d6577b04885b18fbc285932c, type: 2}
+  - {fileID: 11400000, guid: 811a78b5196431b40a50658822499144, type: 2}
   - {fileID: 11400000, guid: c7c0c5ea8218d6a47abe115436a1402a, type: 2}

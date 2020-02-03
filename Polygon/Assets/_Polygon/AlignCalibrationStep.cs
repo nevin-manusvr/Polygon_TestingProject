@@ -8,7 +8,7 @@ namespace Manus.Polygon
 	[CreateAssetMenu(fileName = "new Align Calibration Step", menuName = "ManusVR/Polygon/Calibration/Align Calibration Step", order = 10)]
 	public class AlignCalibrationStep : CalibrationStep
 	{
-		public AlignSettings[] settings;
+		public Settings[] settings;
 
 		//public override void Setup(CalibrationProfile profile, TrackerReference trackers)
 		//{
@@ -21,13 +21,13 @@ namespace Manus.Polygon
 
 		protected override void End()
 		{
-			foreach (AlignSettings setting in settings)
+			foreach (Settings setting in settings)
 			{
 				switch (setting.dataType)
 				{
 					case AlignType.GetAxis:
 
-						foreach (GetAxisData axisData in setting.getAxisData)
+						foreach (Data axisData in setting.getAxisData)
 						{
 							TransformValues fromTrackerTransform = trackers.GetTracker(axisData.fromTracker)
 							                                       ?? new TransformValues(Vector3.zero, Quaternion.identity);
@@ -98,17 +98,18 @@ namespace Manus.Polygon
 		#region classes
 
 		[System.Serializable]
-		public class AlignSettings
+		public class Settings
 		{
 			public AlignType dataType;
 
 			[Header("Get Axis")]
-			public GetAxisData[] getAxisData;
+			public Data[] getAxisData;
 
 			[Header("Align Axis")]
 			public Axis axisToAlign;
 
 			public VRTrackerType alignTracker1;
+			public bool invertTracker1Axis;
 			public VRTrackerType alignTracker2;
 
 			[Header("Calculate axis")]
@@ -117,7 +118,7 @@ namespace Manus.Polygon
 		}
 		
 		[System.Serializable]
-		public class GetAxisData
+		public class Data
 		{
 			public VRTrackerType tracker;
 			public Axis axis;
