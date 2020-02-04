@@ -34,7 +34,7 @@ namespace Manus.Polygon
 			End();
 		}
 
-		protected abstract void Update(); // Accumulate data for the calibration step
+		protected virtual void Update() {} // Accumulate data for the calibration step
 
 		protected abstract void End(); // Apply calibration step data to the profile
 	}

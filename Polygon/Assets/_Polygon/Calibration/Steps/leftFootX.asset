@@ -10,24 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
-  m_Name: ArmWave
+  m_Name: leftFootX
   m_EditorClassIdentifier: 
-  description: Wave your arms sideways of your body (like a birb)
+  description: 
   time: 3
   settings:
-  - tracker: 1
-    useTrackerLocal: 1
-    localOffset: 1
+  - tracker: 3
+    useTrackerLocal: 0
+    localOffset: 0
     useParentTracker: 1
-    parentTracker: 5
-  - tracker: 2
-    useTrackerLocal: 1
-    localOffset: 2
-    useParentTracker: 1
-    parentTracker: 5
+    parentTracker: 3
   allData:
   - dataType: 1
-    trackerOffset: 8
+    trackerOffset: 10
     arcPositionIndex: 0
     onLocalPlane: 0
     localPlane: 0
@@ -67,10 +62,10 @@ MonoBehaviour:
         worldDirection: {x: 0, y: 0, z: 0}
         trackerFrom: 0
         trackerTo: 0
-  - dataType: 1
-    trackerOffset: 9
-    arcPositionIndex: 1
-    onLocalPlane: 0
+  - dataType: 0
+    trackerOffset: 10
+    arcPositionIndex: 0
+    onLocalPlane: 1
     localPlane: 0
     measurement: 0
     arcMeasurementIndices: 
@@ -90,14 +85,14 @@ MonoBehaviour:
     directionAxis: 0
     arcDirectionIndex: 0
     directionClosest:
-      type: 0
+      type: 1
       trackerType: 0
       inverseTracker: 0
       singleDirection:
-        type: 0
+        type: 1
         worldDirection: {x: 0, y: 0, z: 0}
-        trackerFrom: 0
-        trackerTo: 0
+        trackerFrom: 3
+        trackerTo: 4
       crossDirection1:
         type: 0
         worldDirection: {x: 0, y: 0, z: 0}

@@ -10,26 +10,62 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
-  m_Name: ArmWave
+  m_Name: RightLegSwingZ
   m_EditorClassIdentifier: 
-  description: Wave your arms sideways of your body (like a birb)
-  time: 3
+  description: 
+  time: 1
   settings:
-  - tracker: 1
+  - tracker: 4
     useTrackerLocal: 1
-    localOffset: 1
-    useParentTracker: 1
-    parentTracker: 5
-  - tracker: 2
-    useTrackerLocal: 1
-    localOffset: 2
+    localOffset: 11
     useParentTracker: 1
     parentTracker: 5
   allData:
   - dataType: 1
+    trackerOffset: 9
+    arcPositionIndex: 0
+    onLocalPlane: 1
+    localPlane: 2
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
+    directionClosest:
+      type: 0
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+  - dataType: 0
     trackerOffset: 8
     arcPositionIndex: 0
-    onLocalPlane: 0
+    onLocalPlane: 1
     localPlane: 0
     measurement: 0
     arcMeasurementIndices: 
@@ -46,7 +82,7 @@ MonoBehaviour:
       tracker: 0
       useLocalOffset: 0
       offset: 0
-    directionAxis: 0
+    directionAxis: 2
     arcDirectionIndex: 0
     directionClosest:
       type: 0
@@ -58,53 +94,12 @@ MonoBehaviour:
         trackerFrom: 0
         trackerTo: 0
       crossDirection1:
-        type: 0
+        type: 1
         worldDirection: {x: 0, y: 0, z: 0}
-        trackerFrom: 0
-        trackerTo: 0
+        trackerFrom: 3
+        trackerTo: 2
       crossDirection2:
         type: 0
-        worldDirection: {x: 0, y: 0, z: 0}
-        trackerFrom: 0
-        trackerTo: 0
-  - dataType: 1
-    trackerOffset: 9
-    arcPositionIndex: 1
-    onLocalPlane: 0
-    localPlane: 0
-    measurement: 0
-    arcMeasurementIndices: 
-    distanceMeasurement: 0
-    point1:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    point2:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    directionAxis: 0
-    arcDirectionIndex: 0
-    directionClosest:
-      type: 0
-      trackerType: 0
-      inverseTracker: 0
-      singleDirection:
-        type: 0
-        worldDirection: {x: 0, y: 0, z: 0}
-        trackerFrom: 0
-        trackerTo: 0
-      crossDirection1:
-        type: 0
-        worldDirection: {x: 0, y: 0, z: 0}
-        trackerFrom: 0
-        trackerTo: 0
-      crossDirection2:
-        type: 0
-        worldDirection: {x: 0, y: 0, z: 0}
+        worldDirection: {x: 0, y: 1, z: 0}
         trackerFrom: 0
         trackerTo: 0
