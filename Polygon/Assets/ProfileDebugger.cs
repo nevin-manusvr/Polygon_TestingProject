@@ -17,6 +17,7 @@ namespace Manus.Polygon
 		private List<GameObject> trackerOffsetVisuals;
 		private List<GameObject[]> trackerDirectionVisuals;
 
+		private GameObject hip;
 		private GameObject leftHand, rightHand;
 		private GameObject leftFoot, rightFoot;
 
@@ -24,6 +25,7 @@ namespace Manus.Polygon
 		public GameObject trackerModel;
 		public GameObject leftHandModel, rightHandModel;
 		public GameObject leftFootModel, rightFootModel;
+		public GameObject hipModel;
 
 		private void Start()
 		{
@@ -42,11 +44,13 @@ namespace Manus.Polygon
 			VisualizeTrackerOffsets();
 			VisualizeDirection();
 
-			VisualizeHands(ref leftHand, leftHandModel, VRTrackerType.LeftHand, OffsetsToTrackers.LeftHandTrackerToWrist);
-			VisualizeHands(ref rightHand, rightHandModel, VRTrackerType.RightHand, OffsetsToTrackers.RightHandTrackerToWrist);
+			VisualizeBodyPart(ref leftHand, leftHandModel, VRTrackerType.LeftHand, OffsetsToTrackers.LeftHandTrackerToWrist);
+			VisualizeBodyPart(ref rightHand, rightHandModel, VRTrackerType.RightHand, OffsetsToTrackers.RightHandTrackerToWrist);
 
-			VisualizeFoot(ref leftFoot, leftFootModel, VRTrackerType.LeftFoot, OffsetsToTrackers.LeftFootTrackerToAnkle);
-			VisualizeFoot(ref rightFoot, rightFootModel, VRTrackerType.RightFoot, OffsetsToTrackers.RightFootTrackerToAnkle);
+			VisualizeBodyPart(ref leftFoot, leftFootModel, VRTrackerType.LeftFoot, OffsetsToTrackers.LeftFootTrackerToAnkle);
+			VisualizeBodyPart(ref rightFoot, rightFootModel, VRTrackerType.RightFoot, OffsetsToTrackers.RightFootTrackerToAnkle);
+			
+			VisualizeBodyPart(ref hip, hipModel, VRTrackerType.Waist, OffsetsToTrackers.HipTrackerToHip);
 
 		}
 
@@ -186,12 +190,12 @@ namespace Manus.Polygon
 			}
 		}
 
-		private void VisualizeHands(ref GameObject hand, GameObject handModel, VRTrackerType trackerType, OffsetsToTrackers offset)
+		private void VisualizeBodyPart(ref GameObject obj, GameObject objModel, VRTrackerType trackerType, OffsetsToTrackers offset)
 		{
-			if (hand == null)
+			if (obj == null)
 			{
-				hand = Instantiate(handModel, transform);
-				hand.SetActive(false);
+				obj = Instantiate(objModel, transform);
+				obj.SetActive(false);
 			}
 
 			TransformValues? handTransform = trackers.GetTracker(trackerType);
@@ -204,50 +208,18 @@ namespace Manus.Polygon
 			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Z) == null
 			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Y) == null)
 			{
-				if (hand.activeSelf) hand.SetActive(false);
+				if (obj.activeSelf) obj.SetActive(false);
 				return;
 			}
 
-			if (!hand.activeSelf) hand.SetActive(true);
+			if (!obj.activeSelf) obj.SetActive(true);
 			Matrix4x4 trackerMatrix = Matrix4x4.TRS(handTransform.Value.position, handTransform.Value.rotation, Vector3.one);
 
 			Quaternion rotation = Quaternion.LookRotation(
 				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Z),
 				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Y));
 
-			hand.transform.SetPositionAndRotation(handTransform.Value.position, rotation);
-		}
-
-		private void VisualizeFoot(ref GameObject foot, GameObject footModel, VRTrackerType trackerType, OffsetsToTrackers offset)
-		{
-			if (foot == null)
-			{
-				foot = Instantiate(footModel, transform);
-				foot.SetActive(false);
-			}
-
-			TransformValues? handTransform = trackers.GetTracker(trackerType);
-			if (profile.trackerOffsets.ContainsKey(offset) && profile.trackerOffsets[offset].position != null)
-			{
-				handTransform = trackers.GetTrackerWithOffset(trackerType, profile.trackerOffsets[offset].Position, Quaternion.identity);
-			}
-
-			if (handTransform == null || !profile.trackerDirections.ContainsKey(trackerType)
-			                          || profile.trackerDirections[trackerType].GetAxis(Axis.Z) == null
-			                          || profile.trackerDirections[trackerType].GetAxis(Axis.Y) == null)
-			{
-				if (foot.activeSelf) foot.SetActive(false);
-				return;
-			}
-
-			if (!foot.activeSelf) foot.SetActive(true);
-			Matrix4x4 trackerMatrix = Matrix4x4.TRS(handTransform.Value.position, handTransform.Value.rotation, Vector3.one);
-
-			Quaternion rotation = Quaternion.LookRotation(
-				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Z),
-				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Y));
-
-			foot.transform.SetPositionAndRotation(handTransform.Value.position, rotation);
+			obj.transform.SetPositionAndRotation(handTransform.Value.position, rotation);
 		}
 	}
 }

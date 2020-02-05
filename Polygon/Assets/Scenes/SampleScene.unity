@@ -3078,7 +3078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: 54fbd47f89f72394c9c814240255afc1, type: 2}
-  sequence: {fileID: 11400000, guid: 09311d5397ec6a643972a7bba31f855a, type: 2}
+  sequence: {fileID: 11400000, guid: 3bb1b0b2a7e5f8443b9f806dce944b82, type: 2}
 --- !u!4 &467442242
 Transform:
   m_ObjectHideFlags: 0
@@ -5307,7 +5307,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 2.441e-42, y: 1.02e-43, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -8240,6 +8240,8 @@ MonoBehaviour:
   leftFootModel: {fileID: 2620116473509681311, guid: 1d25061889aa41c4493ebe77feb8066b,
     type: 3}
   rightFootModel: {fileID: 8161887775479683916, guid: 8045b53182857af4e806e58709953a30,
+    type: 3}
+  hipModel: {fileID: 3129791128610541711, guid: 2179fc4179bfec445a19146bff2410a5,
     type: 3}
 --- !u!4 &1407366799
 Transform:

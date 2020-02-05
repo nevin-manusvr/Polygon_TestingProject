@@ -69,8 +69,8 @@ namespace Manus.Polygon
 
 						Vector3 averageTrackerDir = (averageTracker1Dir + averageTracker2Dir) / 2f;
 
-						profile.AddTrackerDirection(data.averageTracker1, data.averageAxis1, averageTracker1Matrix.inverse.MultiplyVector(averageTrackerDir));
-						profile.AddTrackerDirection(data.averageTracker2, data.averageAxis2, averageTracker2Matrix.inverse.MultiplyVector(averageTrackerDir));
+						profile.AddTrackerDirection(data.averageTracker1, data.averageAxis1, averageTracker1Matrix.inverse.MultiplyVector(averageTrackerDir * (data.averageAxisInvert1 ? -1 : 1)));
+						profile.AddTrackerDirection(data.averageTracker2, data.averageAxis2, averageTracker2Matrix.inverse.MultiplyVector(averageTrackerDir * (data.averageAxisInvert2 ? -1 : 1)));
 
 						break;
 					case AlignType.CalculateAxis:

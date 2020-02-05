@@ -1,0 +1,225 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7edf3148b2194354aaf5fab4d2d3b765, type: 3}
+  m_Name: HandAlignStep
+  m_EditorClassIdentifier: 
+  description: 
+  time: 1
+  axisData:
+  - dataType: 2
+    getAxisTracker: 1
+    axisToGet: 1
+    axisDirectionToGet:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 0
+    averageAxis1: 0
+    averageAxisInvert1: 0
+    averageTracker2: 0
+    averageAxis2: 0
+    averageAxisInvert2: 0
+    calculateTracker: 1
+    axisToCalculate: 1
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 2
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 2
+        trackerTo: 1
+        trackerToLocal: 1
+        trackerToLocalOffset: 1
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+  - dataType: 2
+    getAxisTracker: 2
+    axisToGet: 1
+    axisDirectionToGet:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 0
+    averageAxis1: 0
+    averageAxisInvert1: 0
+    averageTracker2: 0
+    averageAxis2: 0
+    averageAxisInvert2: 0
+    calculateTracker: 2
+    axisToCalculate: 1
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 2
+        trackerTo: 2
+        trackerToLocal: 1
+        trackerToLocalOffset: 1
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+  - dataType: 1
+    getAxisTracker: 2
+    axisToGet: 1
+    axisDirectionToGet:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 1
+    averageAxis1: 1
+    averageAxisInvert1: 1
+    averageTracker2: 2
+    averageAxis2: 1
+    averageAxisInvert2: 1
+    calculateTracker: 2
+    axisToCalculate: 1
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 2
+        trackerTo: 2
+        trackerToLocal: 1
+        trackerToLocalOffset: 1
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+  offsetData: []
