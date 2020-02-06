@@ -14,6 +14,8 @@ namespace Manus.Polygon
 		public Dictionary<VRTrackerType, TrackerDirection> trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
 		public Dictionary<BodyMeasurements, float> bodyMeasurements = new Dictionary<BodyMeasurements, float>();
 
+		#region Public Methods
+
 		// Main
 		public void Reset()
 		{
@@ -22,7 +24,7 @@ namespace Manus.Polygon
 			bodyMeasurements = new Dictionary<BodyMeasurements, float>();
 		}
 
-		public void Reset(CalibrationProfile newProfile)
+		public void Reset(ProfileData newProfile)
 		{
 			profileRequirements = newProfile.profileRequirements;
 			trackerOffsets = newProfile.trackerOffsets;
@@ -93,11 +95,11 @@ namespace Manus.Polygon
 
 			if (!trackerDirections.ContainsKey(type))
 			{
-				trackerDirections.Add(type, new TrackerDirection(axis, direction));
+				trackerDirections.Add(type, new TrackerDirection(axis, direction.normalized));
 			}
 			else
 			{
-				trackerDirections[type].SetAxis(axis, direction);
+				trackerDirections[type].SetAxis(axis, direction.normalized);
 			}
 		}
 
@@ -127,34 +129,91 @@ namespace Manus.Polygon
 			Debug.LogWarning($"Remove body measurement: {type}");
 		}
 
+		#endregion
+
 		#region Serialization
 
 
 
 		#endregion
+
+		public static VRTrackerType? GetMatchingTrackerFromOffset(OffsetsToTrackers offsetType)
+		{
+			switch (offsetType)
+			{
+				case OffsetsToTrackers.HeadTrackerToHead:
+					return VRTrackerType.Head;
+				case OffsetsToTrackers.LeftHandTrackerToWrist:
+					return VRTrackerType.LeftHand;
+				case OffsetsToTrackers.RightHandTrackerToWrist:
+					return VRTrackerType.RightHand;
+				case OffsetsToTrackers.LeftElbowTrackerToElbow:
+					return null;
+				case OffsetsToTrackers.RightElbowTrackerToElbow:
+					return null;
+				case OffsetsToTrackers.LeftElbowTrackerToShoulder:
+					return null;
+				case OffsetsToTrackers.RightElbowTrackerToShoulder:
+					return null;
+				case OffsetsToTrackers.HipTrackerToHip:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.HipTrackerToLeftLeg:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.HipTrackerToRightLeg:
+					return VRTrackerType.Waist;
+				case OffsetsToTrackers.LeftFootTrackerToAnkle:
+					return VRTrackerType.LeftFoot;
+				case OffsetsToTrackers.RightFootTrackerToAnkle:
+					return VRTrackerType.RightFoot;
+				default:
+					return null;
+			}
+		}
+
+		public static OffsetsToTrackers? GetMatchingTrackerOffsetForTracker(VRTrackerType trackerType)
+		{
+			switch (trackerType)
+			{
+				case VRTrackerType.Head:
+					return OffsetsToTrackers.HeadTrackerToHead;
+				case VRTrackerType.LeftHand:
+					return OffsetsToTrackers.LeftHandTrackerToWrist;
+				case VRTrackerType.RightHand:
+					return OffsetsToTrackers.RightHandTrackerToWrist;
+				case VRTrackerType.Waist:
+					return OffsetsToTrackers.HipTrackerToHip;
+				case VRTrackerType.LeftFoot:
+					return OffsetsToTrackers.LeftFootTrackerToAnkle;
+				case VRTrackerType.RightFoot:
+					return OffsetsToTrackers.RightFootTrackerToAnkle;
+				default:
+					Debug.LogError($"Tracking type: {trackerType} is currently not supported, please add this");
+					return null;
+			}
+		}
 	}
 
 	[System.Serializable]
-	public struct TrackerOffset
+	public class TrackerOffset
 	{
-		public Vector3? positionOffset;
-		public Quaternion? rotationOffset;
+		public Vector3? position;
+		public Quaternion? rotation;
 
 		#region Properties
 
 		public bool IsEmpty
 		{
-			get { return positionOffset == null && rotationOffset == null; }
+			get { return position == null && rotation == null; }
 		}
 
 		public Vector3 Position
 		{
-			get { return positionOffset ?? Vector3.zero; }
+			get { return position ?? Vector3.zero; }
 		}
 
 		public Quaternion Rotation
 		{
-			get { return rotationOffset ?? Quaternion.identity; }
+			get { return rotation ?? Quaternion.identity; }
 		}
 
 		#endregion
@@ -163,8 +222,8 @@ namespace Manus.Polygon
 
 		public TrackerOffset(Vector3 positionOffset, Quaternion rotationOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetPositionOffset(positionOffset);
 			SetRotationOffset(rotationOffset);
@@ -172,16 +231,16 @@ namespace Manus.Polygon
 
 		public TrackerOffset(Vector3 positionOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetPositionOffset(positionOffset);
 		}
 
 		public TrackerOffset(Quaternion rotationOffset)
 		{
-			this.positionOffset = null;
-			this.rotationOffset = null;
+			this.position = null;
+			this.rotation = null;
 
 			SetRotationOffset(rotationOffset);
 		}
@@ -192,12 +251,12 @@ namespace Manus.Polygon
 
 		public void SetPositionOffset(Vector3 positionOffset)
 		{
-			this.positionOffset = positionOffset;
+			this.position = positionOffset;
 		}
 
 		public void SetRotationOffset(Quaternion rotatationOffset)
 		{
-			this.rotationOffset = rotatationOffset;
+			this.rotation = rotatationOffset;
 		}
 
 		/// <summary>
@@ -209,10 +268,10 @@ namespace Manus.Polygon
 		public bool RemoveValue(bool removePositionOffset, bool removeRotationOffset)
 		{
 			if (removePositionOffset)
-				positionOffset = null;
+				position = null;
 
 			if (removeRotationOffset)
-				rotationOffset = null;
+				rotation = null;
 
 			return IsEmpty;
 		}
@@ -221,7 +280,7 @@ namespace Manus.Polygon
 	}
 
 	[System.Serializable]
-	public struct TrackerDirection
+	public class TrackerDirection
 	{
 		private Vector3? x;
 		private Vector3? y;
@@ -246,7 +305,7 @@ namespace Manus.Polygon
 
 		public Vector3 Z
 		{
-			get { return x ?? Vector3.zero; }
+			get { return z ?? Vector3.zero; }
 		}
 
 		#endregion
@@ -284,18 +343,33 @@ namespace Manus.Polygon
 
 		#region Public Methods
 
+		public Vector3? GetAxis(Axis axis)
+		{
+			switch (axis)
+			{
+				case Axis.X:
+					return x;
+				case Axis.Y:
+					return y;
+				case Axis.Z:
+					return z;
+			}
+
+			return null;
+		}
+
 		public void SetAxis(Axis axis, Vector3 direction)
 		{
 			switch (axis)
 			{
 				case Axis.X:
-					x = direction;
+					this.x = direction;
 					break;
 				case Axis.Y:
-					y = direction;
+					this.y = direction;
 					break;
 				case Axis.Z:
-					z = direction;
+					this.z = direction;
 					break;
 			}
 		}
@@ -319,5 +393,23 @@ namespace Manus.Polygon
 		}
 
 		#endregion
+	}
+
+	[System.Serializable]
+	public class ProfileData
+	{
+		public ProfileRequirements profileRequirements;
+
+		public Dictionary<OffsetsToTrackers, TrackerOffset> trackerOffsets = new Dictionary<OffsetsToTrackers, TrackerOffset>();
+		public Dictionary<VRTrackerType, TrackerDirection> trackerDirections = new Dictionary<VRTrackerType, TrackerDirection>();
+		public Dictionary<BodyMeasurements, float> bodyMeasurements = new Dictionary<BodyMeasurements, float>();
+
+		public ProfileData(CalibrationProfile newProfile)
+		{
+			profileRequirements = newProfile.profileRequirements;
+			trackerOffsets = newProfile.trackerOffsets;
+			trackerDirections = newProfile.trackerDirections;
+			bodyMeasurements = newProfile.bodyMeasurements;
+		}
 	}
 }

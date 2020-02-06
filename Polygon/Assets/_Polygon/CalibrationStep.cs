@@ -20,13 +20,23 @@ namespace Manus.Polygon
 			// Create all data needed for the calibration step
 		}
 
-		public abstract IEnumerator Start();
+		public virtual IEnumerator Start()
+		{
+			float timer = 0;
 
-		protected abstract void Update(); // Accumulate data for the calibration step
+			while (timer < time)
+			{
+				timer += Time.deltaTime;
+				Update();
+				yield return new WaitForEndOfFrame();
+			}
+
+			End();
+		}
+
+		protected virtual void Update() {} // Accumulate data for the calibration step
 
 		protected abstract void End(); // Apply calibration step data to the profile
-
-		public abstract void Revert(); // Remove added profile date
 	}
 }
 

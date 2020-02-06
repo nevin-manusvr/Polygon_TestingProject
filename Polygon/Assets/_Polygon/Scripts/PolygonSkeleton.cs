@@ -16,6 +16,9 @@ namespace Manus.Polygon
 
 		public SkeletonBoneScalers boneScalers;
 
+		// TMP
+		public PolygonIK_TMP ik;
+
 		#region Monobehaviour Callbacks
 
 		private void Awake()
@@ -52,6 +55,8 @@ namespace Manus.Polygon
 		}
 
 		// TODO: place this in another script, maybe the SkeletonBoneReferences or a new one
+		#region TEMP (put in another file)
+
 		private SkeletonBoneReferences CopySkeleton(SkeletonBoneReferences skeleton, Transform parent)
 		{
 			if (!skeleton.IsValid)
@@ -94,14 +99,14 @@ namespace Manus.Polygon
 			skeletonCopy.legLeft.AssignBones(
 				CreateDirectionBone("upperLeg_left", skeleton.legLeft.upperLeg.bone.position, skeleton.legLeft.lowerLeg.bone.position - skeleton.legLeft.upperLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("lowerLeg_left", skeleton.legLeft.lowerLeg.bone.position, skeleton.legLeft.foot.bone.position - skeleton.legLeft.lowerLeg.bone.position, bodyForward, parent),
-				CreateDirectionBone("foot_left", skeleton.legLeft.foot.bone.position, skeleton.legLeft.toes != null ? skeleton.legLeft.toes.bone.position - skeleton.legLeft.foot.bone.position : bodyForward, Vector3.up, parent),
+				CreateDirectionBone("foot_left", skeleton.legLeft.foot.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legLeft.toes == null ? null : CreateDirectionBone("toes_left", skeleton.legLeft.toes.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legLeft.toesEnd == null ? null : CreateDirectionBone("toesEnd_left", skeleton.legLeft.toesEnd.bone.position, bodyForward, Vector3.up, parent));
 
 			skeletonCopy.legRight.AssignBones(
 				CreateDirectionBone("upperLeg_right", skeleton.legRight.upperLeg.bone.position, skeleton.legRight.lowerLeg.bone.position - skeleton.legRight.upperLeg.bone.position, bodyForward, parent),
 				CreateDirectionBone("lowerLeg_right", skeleton.legRight.lowerLeg.bone.position, skeleton.legRight.foot.bone.position - skeleton.legRight.lowerLeg.bone.position, bodyForward, parent),
-				CreateDirectionBone("foot_right", skeleton.legRight.foot.bone.position, skeleton.legRight.toes != null ? skeleton.legRight.toes.bone.position - skeleton.legRight.foot.bone.position : bodyForward, Vector3.up, parent),
+				CreateDirectionBone("foot_right", skeleton.legRight.foot.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legRight.toes == null ? null : CreateDirectionBone("toes_right", skeleton.legRight.toes.bone.position, bodyForward, Vector3.up, parent),
 				skeleton.legRight.toesEnd == null ? null : CreateDirectionBone("toesEnd_right", skeleton.legRight.toesEnd.bone.position, bodyForward, Vector3.up, parent));
 
@@ -283,7 +288,7 @@ namespace Manus.Polygon
 
 			return newBone;
 		}
-		// TODO: end to do
+		#endregion
 
 		#endregion
 

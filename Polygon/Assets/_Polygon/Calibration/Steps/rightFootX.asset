@@ -10,25 +10,63 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
-  m_Name: HandsWrists
+  m_Name: rightFootX
   m_EditorClassIdentifier: 
-  description: Create an arc with both hands to calibrate the wrist offset
-  time: 2
-  arcSettings:
-  - tracker: 1
-    useTrackerLocal: 0
-    localOffset: 1
-    useParentTracker: 1
-    parentTracker: 1
-  - tracker: 2
+  description: 
+  time: 3
+  settings:
+  - tracker: 4
     useTrackerLocal: 0
     localOffset: 0
     useParentTracker: 1
-    parentTracker: 2
-  arcData:
+    parentTracker: 4
+  allData:
+  - dataType: 1
+    trackerOffset: 11
+    arcPositionIndex: 0
+    onLocalPlane: 0
+    localPlane: 0
+    measurement: 0
+    arcMeasurementIndices: 
+    distanceMeasurement: 0
+    point1:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    point2:
+      pointType: 0
+      arcIndex: 0
+      tracker: 0
+      useLocalOffset: 0
+      offset: 0
+    directionAxis: 0
+    arcDirectionIndex: 0
+    directionClosest:
+      type: 0
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
   - dataType: 0
-    trackerOffset: 1
+    trackerOffset: 10
     arcPositionIndex: 0
+    onLocalPlane: 1
+    localPlane: 0
     measurement: 0
     arcMeasurementIndices: 
     distanceMeasurement: 0
@@ -46,63 +84,22 @@ MonoBehaviour:
       offset: 0
     directionAxis: 0
     arcDirectionIndex: 0
-  - dataType: 0
-    trackerOffset: 2
-    arcPositionIndex: 1
-    measurement: 0
-    arcMeasurementIndices: 
-    distanceMeasurement: 0
-    point1:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    point2:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    directionAxis: 0
-    arcDirectionIndex: 0
-  - dataType: 3
-    trackerOffset: 2
-    arcPositionIndex: 0
-    measurement: 0
-    arcMeasurementIndices: 
-    distanceMeasurement: 0
-    point1:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    point2:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    directionAxis: 0
-    arcDirectionIndex: 0
-  - dataType: 3
-    trackerOffset: 2
-    arcPositionIndex: 0
-    measurement: 0
-    arcMeasurementIndices: 
-    distanceMeasurement: 0
-    point1:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    point2:
-      pointType: 0
-      arcIndex: 0
-      tracker: 0
-      useLocalOffset: 0
-      offset: 0
-    directionAxis: 0
-    arcDirectionIndex: 1
+    directionClosest:
+      type: 1
+      trackerType: 0
+      inverseTracker: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 4
+        trackerTo: 3
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerTo: 0

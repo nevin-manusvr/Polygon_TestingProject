@@ -18,7 +18,7 @@ namespace Manus.Polygon
 			EditorGUI.BeginProperty(position, label, property);
 
 			// Get variables
-			var currentType = (ArcCalibrationStep.ArcPointType)property.FindPropertyRelative("pointType").intValue;
+			var currentType = (ArcCalibrationStep.PointType)property.FindPropertyRelative("pointType").intValue;
 			var localOffset = property.FindPropertyRelative("useLocalOffset");
 
 			// Foldout group
@@ -45,10 +45,10 @@ namespace Manus.Polygon
 
 				switch (currentType)
 				{
-					case ArcCalibrationStep.ArcPointType.ArcPoint:
+					case ArcCalibrationStep.PointType.ArcPoint:
 						EditorGUI.PropertyField(arcIndexRect, property.FindPropertyRelative("arcIndex"), new GUIContent("Arc index"));
 						break;
-					case ArcCalibrationStep.ArcPointType.Tracker:
+					case ArcCalibrationStep.PointType.Tracker:
 						EditorGUI.PropertyField(trackerRect, property.FindPropertyRelative("tracker"), new GUIContent("Tracker"));
 						EditorGUI.PropertyField(useLocalRect, property.FindPropertyRelative("useLocalOffset"), new GUIContent("Use local offset"));
 						
@@ -67,16 +67,16 @@ namespace Manus.Polygon
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			// Values
-			var currentType = (ArcCalibrationStep.ArcPointType)property.FindPropertyRelative("pointType").intValue;
+			var currentType = (ArcCalibrationStep.PointType)property.FindPropertyRelative("pointType").intValue;
 			int lines = 0;
 			float extraLength = 0;
 
 			switch (currentType)
 			{
-				case ArcCalibrationStep.ArcPointType.ArcPoint:
+				case ArcCalibrationStep.PointType.ArcPoint:
 					lines = 3;
 					break;
-				case ArcCalibrationStep.ArcPointType.Tracker:
+				case ArcCalibrationStep.PointType.Tracker:
 					lines = 4;
 					break;
 			}
