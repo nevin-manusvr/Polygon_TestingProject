@@ -6,10 +6,10 @@ using UnityEngine.UI;
 using DG.Tweening;
 using Manus.Polygon;
 
-[RequireComponent(typeof(GameEventListener))]
+[RequireComponent(typeof(CalibrationStepEventListener))]
 public class CalibrationController : MonoBehaviour
 {
-    private GameEventListener eventListener;
+    private CalibrationStepEventListener eventListener;
     
     [Header("UI Script")]
     public UIManager uiManager;
@@ -28,26 +28,26 @@ public class CalibrationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        eventListener = GetComponent<GameEventListener>();
+        eventListener = GetComponent<CalibrationStepEventListener>();
 
         model = GameObject.Find("CalibrationInstructionModel");
         modelAnimator = model.GetComponent<Animator>();
         
-        eventListener.startCountdownResponse += OnStartCountdown;
+        eventListener.prepareCalibrationResponse += OnPrepareCalibration;
         eventListener.startCalibrationResponse += OnStartCalibration;
-        eventListener.calibrationFinishedResponse += OnFinishCalibration;
-
+        eventListener.updateCalibrationResponse += OnUpdateCalibration;
+        eventListener.finishCalibrationResponse += OnFinishCalibration;
     }
 
     public void Update()
     {
         if(Input.GetKey(KeyCode.Keypad1))
         {
-            eventListener.StartCountDownRaised(5f);
+            eventListener.CalibrationPrepareRaised();
         }
         else if (Input.GetKey(KeyCode.Keypad2))
         {
-            eventListener.CalibrationStartRaised(8f);
+            eventListener.CalibrationStartRaised();
         }
         else if(Input.GetKey(KeyCode.Keypad3))
         {
@@ -57,36 +57,37 @@ public class CalibrationController : MonoBehaviour
 
     private void OnEnable() 
     {
-        eventListener.startCountdownResponse += OnStartCountdown;
-        
+        eventListener.prepareCalibrationResponse += OnPrepareCalibration;
         eventListener.startCalibrationResponse += OnStartCalibration;
-      
-        eventListener.calibrationFinishedResponse += OnFinishCalibration;
+        eventListener.updateCalibrationResponse += OnUpdateCalibration;
+		eventListener.finishCalibrationResponse += OnFinishCalibration;
     }
 
     private void OnDisable() 
     {
-        eventListener.startCountdownResponse -= OnStartCountdown;
-       
+        eventListener.prepareCalibrationResponse -= OnPrepareCalibration;
         eventListener.startCalibrationResponse -= OnStartCalibration;
-       
-        eventListener.calibrationFinishedResponse -= OnFinishCalibration;
+        eventListener.updateCalibrationResponse -= OnUpdateCalibration;
+        eventListener.finishCalibrationResponse -= OnFinishCalibration;
     }
 
-    public void OnStartCountdown(float time)
+    public void OnPrepareCalibration()
     { 
         //shows ui and starts countdown
         uiManager.UpdateText(calibrationStepName, discriptionCalibration);
         TriggerPoseAnimation(calibrationStepName);
     }
 
-
-
-    public void OnStartCalibration(float time)
+    public void OnStartCalibration()
     {
         Debug.Log("started calibration");
         //ResetTrigger();
         TriggerStartAnimation(calibrationStepName);
+    }
+
+    public void OnUpdateCalibration(float percentage)
+    {
+
     }
 
     public void OnFinishCalibration()
