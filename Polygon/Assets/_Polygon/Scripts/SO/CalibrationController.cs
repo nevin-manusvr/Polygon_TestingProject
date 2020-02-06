@@ -12,13 +12,11 @@ public class CalibrationController : MonoBehaviour
     private GameEventListener eventListener;
     
     [Header("UI Script")]
-    public UICalibration uiCalibration;
+    public UIManager uiManager;
 
     [Header("Calibration step")]
     public string calibrationStepName;
-    public Text currentStepText;
     public string discriptionCalibration;
-    public Text discriptionText;
 
 
     [Header("Animations")]
@@ -32,7 +30,7 @@ public class CalibrationController : MonoBehaviour
     {
         eventListener = GetComponent<GameEventListener>();
 
-        model = GameObject.Find("Robot Kyle");
+        model = GameObject.Find("CalibrationInstructionModel");
         modelAnimator = model.GetComponent<Animator>();
         
         eventListener.startCountdownResponse += OnStartCountdown;
@@ -76,12 +74,9 @@ public class CalibrationController : MonoBehaviour
     }
 
     public void OnStartCountdown(float time)
-    {
-        currentStepText.text = calibrationStepName;
-        discriptionText.text = discriptionCalibration;
-         
+    { 
         //shows ui and starts countdown
-        uiCalibration.StratingCalibration(currentStepText.text, discriptionText.text);
+        uiManager.UpdateText(calibrationStepName, discriptionCalibration);
         TriggerPoseAnimation(calibrationStepName);
     }
 
@@ -90,7 +85,6 @@ public class CalibrationController : MonoBehaviour
     public void OnStartCalibration(float time)
     {
         Debug.Log("started calibration");
-        uiCalibration.Calibrate(time);
         //ResetTrigger();
         TriggerStartAnimation(calibrationStepName);
     }
