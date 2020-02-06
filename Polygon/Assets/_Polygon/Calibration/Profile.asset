@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profileRequirements:
     requiredTrackerOffsets: 0600000001000000020000000300000004000000
-    requiredBoneMeasurements: 06000000
+    requiredBoneMeasurements: 00000000060000000a000000

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Manus.Polygon;
 using UnityEngine;
 using Manus.Core.Utility;
+using System.Linq;
 
 namespace Manus.Polygon
 {
-	using System.Linq;
 
 	public class ProfileDebugger : MonoBehaviour
 	{
@@ -15,12 +15,17 @@ namespace Manus.Polygon
 
 		private List<GameObject> trackerVisuals;
 		private List<GameObject> trackerOffsetVisuals;
-		private List<GameObject> trackerDirectionVisuals;
+		private List<GameObject[]> trackerDirectionVisuals;
+
+		private GameObject hip;
+		private GameObject leftHand, rightHand;
+		private GameObject leftFoot, rightFoot;
 
 		[Header("Models")]
 		public GameObject trackerModel;
 		public GameObject leftHandModel, rightHandModel;
 		public GameObject leftFootModel, rightFootModel;
+		public GameObject hipModel;
 
 		private void Start()
 		{
@@ -30,7 +35,7 @@ namespace Manus.Polygon
 			// Initializing
 			trackerVisuals = new List<GameObject>();
 			trackerOffsetVisuals = new List<GameObject>();
-			trackerDirectionVisuals = new List<GameObject>();
+			trackerDirectionVisuals = new List<GameObject[]>();
 		}
 
 		private void Update()
@@ -38,6 +43,15 @@ namespace Manus.Polygon
 			VisualizeTrackers();
 			VisualizeTrackerOffsets();
 			VisualizeDirection();
+
+			VisualizeBodyPart(ref leftHand, leftHandModel, VRTrackerType.LeftHand, OffsetsToTrackers.LeftHandTrackerToWrist);
+			VisualizeBodyPart(ref rightHand, rightHandModel, VRTrackerType.RightHand, OffsetsToTrackers.RightHandTrackerToWrist);
+
+			VisualizeBodyPart(ref leftFoot, leftFootModel, VRTrackerType.LeftFoot, OffsetsToTrackers.LeftFootTrackerToAnkle);
+			VisualizeBodyPart(ref rightFoot, rightFootModel, VRTrackerType.RightFoot, OffsetsToTrackers.RightFootTrackerToAnkle);
+			
+			VisualizeBodyPart(ref hip, hipModel, VRTrackerType.Waist, OffsetsToTrackers.HipTrackerToHip);
+
 		}
 
 		private void VisualizeTrackers()
@@ -82,24 +96,11 @@ namespace Manus.Polygon
 				}
 
 				OffsetsToTrackers offsetType = profile.trackerOffsets.Keys.ToArray()[i];
-				
-				VRTrackerType type = VRTrackerType.Other;
-				switch (offsetType)
-				{
-					case OffsetsToTrackers.LeftHandTrackerToWrist:
-						type = VRTrackerType.LeftHand;
-						break;
-					case OffsetsToTrackers.RightHandTrackerToWrist:
-						type = VRTrackerType.RightHand;
-						break;
-					default:
-						Debug.LogError($"OffsetsToTracker type : {offsetType} not implemented");
-						break;
-				}
+				VRTrackerType type = CalibrationProfile.GetMatchingTrackerFromOffset(offsetType) ?? VRTrackerType.Other;
 
 				TrackerOffset offset = profile.trackerOffsets[offsetType];
 
-				TransformValues? trackerWithOffset = trackers.GetTrackerWithOffset(type, offset.Position, offset.Rotation);
+				TransformValues? trackerWithOffset = trackers.GetTrackerWithOffset(type, offset.Position, Quaternion.identity);
 
 				if (trackerWithOffset == null)
 				{
@@ -119,47 +120,106 @@ namespace Manus.Polygon
 		{
 			for (int i = 0; i < profile.trackerDirections.Keys.Count; i++)
 			{
-				if (trackerOffsetVisuals.Count < i + 1)
+				if (trackerDirectionVisuals.Count < i + 1)
 				{
-					trackerOffsetVisuals.Add(GameObject.CreatePrimitive(PrimitiveType.Cube));
-					trackerOffsetVisuals[i].GetComponent<MeshRenderer>().sharedMaterial.color = Color.white;
-					trackerOffsetVisuals[i].transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-					trackerOffsetVisuals[i].transform.SetParent(transform);
+					trackerDirectionVisuals.Add(
+						new[]
+							{
+								GameObject.CreatePrimitive(PrimitiveType.Cube),
+								GameObject.CreatePrimitive(PrimitiveType.Cube),
+								GameObject.CreatePrimitive(PrimitiveType.Cube)
+							});
+
+					trackerDirectionVisuals[i][0].GetComponent<MeshRenderer>().material.color = Color.red;
+					trackerDirectionVisuals[i][1].GetComponent<MeshRenderer>().material.color = Color.green;
+					trackerDirectionVisuals[i][2].GetComponent<MeshRenderer>().material.color = Color.blue;
+
+					foreach (GameObject obj in trackerDirectionVisuals[i])
+					{
+						obj.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+						obj.transform.SetParent(transform);
+					}
 				}
 
-				OffsetsToTrackers offsetType = profile.trackerOffsets.Keys.ToArray()[i];
+				VRTrackerType trackerType = profile.trackerDirections.Keys.ToArray()[i];
+				OffsetsToTrackers? offsetType = CalibrationProfile.GetMatchingTrackerOffsetForTracker(trackerType);
 
-				VRTrackerType type = VRTrackerType.Other;
-				switch (offsetType)
+				if (offsetType == null) continue;
+
+				Matrix4x4 trackerMatrix;
+
+				if (profile.trackerOffsets.ContainsKey((OffsetsToTrackers)offsetType))
 				{
-					case OffsetsToTrackers.LeftHandTrackerToWrist:
-						type = VRTrackerType.LeftHand;
-						break;
-					case OffsetsToTrackers.RightHandTrackerToWrist:
-						type = VRTrackerType.RightHand;
-						break;
-					default:
-						Debug.LogError($"OffsetsToTracker type : {offsetType} not implemented");
-						break;
+					TrackerOffset trackerOffset = profile.trackerOffsets[(OffsetsToTrackers)offsetType];
+					TransformValues trackerTransform =
+						trackers.GetTrackerWithOffset(trackerType, trackerOffset.Position, Quaternion.identity)
+						?? new TransformValues(Vector3.zero, Quaternion.identity);
+
+					trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, Vector3.one);
+				}
+				else
+				{
+					TransformValues trackerTransform =
+						trackers.GetTracker(trackerType)
+						?? new TransformValues(Vector3.zero, Quaternion.identity);
+					trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, Vector3.one);
 				}
 
-				TrackerOffset offset = profile.trackerOffsets[offsetType];
+				TrackerDirection trackerDirection = profile.trackerDirections[trackerType];
 
-				TransformValues? trackerWithOffset = trackers.GetTrackerWithOffset(type, offset.Position, offset.Rotation);
-
-				if (trackerWithOffset == null)
+				if (trackerDirection.X != Vector3.zero)
 				{
-					if (trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(false);
-					continue;
-				}
+					trackerDirectionVisuals[i][0].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+					trackerDirectionVisuals[i][0].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.X) * 0.1f;
+				} 
+				else trackerDirectionVisuals[i][0].transform.localScale = Vector3.zero;
 
-				if (!trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(true);
+				if (trackerDirection.Y != Vector3.zero)
+				{
+					trackerDirectionVisuals[i][1].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+					trackerDirectionVisuals[i][1].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Y) * 0.1f;
+				} 
+				else trackerDirectionVisuals[i][1].transform.localScale = Vector3.zero;
 
-				trackerOffsetVisuals[i]?.transform.SetPositionAndRotation(
-					trackerWithOffset.Value.position,
-					trackerWithOffset.Value.rotation);
+				if (trackerDirection.Z != Vector3.zero)
+				{
+					trackerDirectionVisuals[i][2].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+					trackerDirectionVisuals[i][2].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Z) * 0.1f;
+				} 
+				else trackerDirectionVisuals[i][2].transform.localScale = Vector3.zero;
 			}
+		}
+
+		private void VisualizeBodyPart(ref GameObject obj, GameObject objModel, VRTrackerType trackerType, OffsetsToTrackers offset)
+		{
+			if (obj == null)
+			{
+				obj = Instantiate(objModel, transform);
+				obj.SetActive(false);
+			}
+
+			TransformValues? handTransform = trackers.GetTracker(trackerType);
+			if (profile.trackerOffsets.ContainsKey(offset) && profile.trackerOffsets[offset].position != null)
+			{
+				handTransform = trackers.GetTrackerWithOffset(trackerType, profile.trackerOffsets[offset].Position, Quaternion.identity);
+			}
+
+			if (handTransform == null || !profile.trackerDirections.ContainsKey(trackerType)
+			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Z) == null
+			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Y) == null)
+			{
+				if (obj.activeSelf) obj.SetActive(false);
+				return;
+			}
+
+			if (!obj.activeSelf) obj.SetActive(true);
+			Matrix4x4 trackerMatrix = Matrix4x4.TRS(handTransform.Value.position, handTransform.Value.rotation, Vector3.one);
+
+			Quaternion rotation = Quaternion.LookRotation(
+				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Z),
+				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Y));
+
+			obj.transform.SetPositionAndRotation(handTransform.Value.position, rotation);
 		}
 	}
 }
-

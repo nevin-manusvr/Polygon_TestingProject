@@ -17,10 +17,10 @@ namespace Manus.Polygon
 
 		public void ChangeThickness(float thickness)
 		{
-			boneScalers[HumanBodyBones.Hips].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[HumanBodyBones.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
 			boneScalers[HumanBodyBones.Spine].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 			boneScalers[HumanBodyBones.Chest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.UpperChest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[HumanBodyBones.UpperChest].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
 
 			boneScalers[HumanBodyBones.Neck].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 

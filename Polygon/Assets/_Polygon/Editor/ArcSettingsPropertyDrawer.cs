@@ -7,7 +7,7 @@ using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
-	[CustomPropertyDrawer(typeof(ArcCalibrationStep.ArcSettings))]
+	[CustomPropertyDrawer(typeof(ArcCalibrationStep.Settings))]
 	public class ArcSettingsPropertyDrawer : PropertyDrawer
 	{
 		private int lineHeight = 4;

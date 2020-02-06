@@ -14,18 +14,20 @@ namespace Manus.Polygon
 
 		private void Start()
 		{
-			Debug.Log(profile.trackerOffsets.Count);
-
 			trackers = FindObjectOfType<TrackerReference>();
-			StartCalibration();
-		}
 
-		public void StartCalibration()
-		{
 			// TMP:
 			profile.Reset();
 
-			sequence.StartCalibrationSequence(profile, trackers, this);
+			sequence.SetupCalibrationSequence(profile, trackers, this);
+		}
+
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.C))
+			{
+				sequence.NextCalibrationStep();
+			}
 		}
 	}
 }
