@@ -85,9 +85,6 @@ namespace Manus.Polygon
 				m_frameCounter = 0;
 				m_timeCounter = 0.0f;
 			}
-
-			Debug.Log(m_lastFramerate);
-
 		}
 
 		private IEnumerator UpdateCoroutine()
@@ -110,7 +107,8 @@ namespace Manus.Polygon
 
 				yield return new WaitForSeconds(1f / framerate);
 
-				UpdateTrackerTargets();
+				if (updateTrackerPositions)
+					UpdateTrackerTargets();
 			}
 		}
 
@@ -178,8 +176,10 @@ namespace Manus.Polygon
 
 				if (trackerTransform == null || obj == null) continue;
 
-				obj.position = trackerTransform.Value.position;
-				obj.rotation = trackerTransform.Value.rotation;
+				filters[tracker].UpdateFilter(trackerTransform.Value.position, trackerTransform.Value.rotation);
+				
+				obj.position = useKalmanOnTrackerData ? filters[tracker].Position : trackerTransform.Value.position;
+				obj.rotation = useKalmanOnTrackerData ? filters[tracker].Rotation : trackerTransform.Value.rotation;
 			}
 		}
 
@@ -249,6 +249,16 @@ namespace Manus.Polygon
 		public DiscreteKalmanFilter<ConstantVelocity3DModel, Vector3> positionFilter;
 		public DiscreteKalmanFilter<ConstantVelocity3DModel, Vector3> forwardRotationFilter;
 		public DiscreteKalmanFilter<ConstantVelocity3DModel, Vector3> upRotationFilter;
+
+		public Vector3 Position
+		{
+			get { return positionFilter.State.Position; }
+		}
+
+		public Quaternion Rotation
+		{
+			get { return Quaternion.LookRotation(forwardRotationFilter.State.Position, upRotationFilter.State.Position); }
+		}
 
 		public TransformFilter(Vector3 initialPosition, Quaternion initialRotation, int framerate, float noise = 10f, float reliability = 1.3f)
 		{

@@ -30,6 +30,9 @@ namespace Manus.Polygon
 
 				boneScalers = new SkeletonBoneScalers();
 				boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
+
+				ik.InitializeIK(transform, animator, newSkeleton, FindObjectOfType<IKTargets_TMP>());
+				ik.CreateCharacterIK();
 			}
 		}
 

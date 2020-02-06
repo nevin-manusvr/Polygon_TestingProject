@@ -26,7 +26,7 @@ namespace Manus.Polygon
 
 		private float defaultLength = 1;
 
-		public BoneScaler(Transform bone, Quaternion lookRotation, bool counterScaleChildren)
+		public BoneScaler(Transform bone, Quaternion lookRotation, Transform[] childBones)
 		{
 			// Instantiate scale bone
 			scaleBone = new GameObject(bone.name + "_scaleBone").transform;
@@ -45,11 +45,11 @@ namespace Manus.Polygon
 
 			scaleFixBones = new Transform[] { };
 
-			if (counterScaleChildren)
+			if (childBones != null && childBones.Length > 0)
 			{
 				var scaleFixList = new List<Transform>();
 
-				foreach (Transform child in childs)
+				foreach (Transform child in childBones)
 				{
 					Transform scaleFixBone = new GameObject(child.name + "_scaleFixBone").transform;
 
