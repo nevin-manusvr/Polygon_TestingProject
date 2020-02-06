@@ -98,13 +98,13 @@ public class CalibrationController : MonoBehaviour
     void TriggerPoseAnimation(string step)
     {
         Debug.Log("set trigger");
-        string currentStep = step + "CalibrationStartingPose";
+        string currentStep = step + "_CalibrationStartingPose";
         modelAnimator.SetTrigger(currentStep);
     }
     void TriggerStartAnimation(string step)
     {
         Debug.Log("set trigger");
-        string currentStep = step + "CalibrationStart";
+        string currentStep = step + "_CalibrationStart";
         modelAnimator.SetTrigger(currentStep);        
     }
     void ResetTrigger()
