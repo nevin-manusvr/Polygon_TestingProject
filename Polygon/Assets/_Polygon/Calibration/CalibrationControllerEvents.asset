@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4bbf7b40ad98814ba7ead3941ea0aad, type: 3}
-  m_Name: ArmCalibration
+  m_Script: {fileID: 11500000, guid: 310e813763086b5479b201e3e052bd9d, type: 3}
+  m_Name: CalibrationControllerEvents
   m_EditorClassIdentifier: 

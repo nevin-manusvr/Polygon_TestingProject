@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4bbf7b40ad98814ba7ead3941ea0aad, type: 3}
-  m_Name: WristCalibrationEvents
+  m_Name: HandXEvent
   m_EditorClassIdentifier: 

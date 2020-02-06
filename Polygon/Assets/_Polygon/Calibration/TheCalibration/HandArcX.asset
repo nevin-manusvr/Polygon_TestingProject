@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbc29d1bf483c7b438a65bc7078efc31, type: 3}
   m_Name: HandArcX
   m_EditorClassIdentifier: 
+  calibrationEvents: {fileID: 11400000, guid: bcecab650cd34034e9514e644f0be8d0, type: 2}
   description: 
   time: 1
   settings:

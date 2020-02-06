@@ -190,7 +190,145 @@ MonoBehaviour:
     averageAxisInvert1: 1
     averageTracker2: 2
     averageAxis2: 1
-    averageAxisInvert2: 1
+    averageAxisInvert2: 0
+    calculateTracker: 2
+    axisToCalculate: 1
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 2
+        trackerTo: 2
+        trackerToLocal: 1
+        trackerToLocalOffset: 1
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+  - dataType: 1
+    getAxisTracker: 2
+    axisToGet: 1
+    axisDirectionToGet:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 1
+    averageAxis1: 0
+    averageAxisInvert1: 0
+    averageTracker2: 2
+    averageAxis2: 0
+    averageAxisInvert2: 0
+    calculateTracker: 2
+    axisToCalculate: 1
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 2
+        trackerTo: 2
+        trackerToLocal: 1
+        trackerToLocalOffset: 1
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+  - dataType: 1
+    getAxisTracker: 2
+    axisToGet: 1
+    axisDirectionToGet:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 1
+    averageAxis1: 2
+    averageAxisInvert1: 0
+    averageTracker2: 2
+    averageAxis2: 2
+    averageAxisInvert2: 0
     calculateTracker: 2
     axisToCalculate: 1
     calculateDirectionClosestTo:
