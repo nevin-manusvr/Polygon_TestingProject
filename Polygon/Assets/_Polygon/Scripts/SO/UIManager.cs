@@ -75,13 +75,18 @@ public class UIManager : MonoBehaviour
             {
                 case "Start":
                     Continue(m_CurrentCanvas);
-                    //function that instantiates "gameobject" which has the data of which part you're calibrating
+
                     break;
                 case "Continue":
                     Continue(m_CurrentCanvas);
                     break;
                 case "Next":
                     ReturnToStart(m_CurrentCanvas);
+                    //call action next
+                    break;
+                case "Previous":
+                    ReturnToStart(m_CurrentCanvas);
+                    //call action previous
                     break;
                 
             }
