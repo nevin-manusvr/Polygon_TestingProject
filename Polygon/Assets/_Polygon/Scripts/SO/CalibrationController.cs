@@ -16,12 +16,12 @@ public class CalibrationController : MonoBehaviour
 
     [Header("Calibration step")]
     public string calibrationStepName;
-    public string discriptionCalibration;
+    [TextArea] public string discriptionCalibration;
 
 
     [Header("Animations")]
-    [SerializeField] private GameObject model;
-    [SerializeField] private Animator modelAnimator;
+    private GameObject model;
+    private Animator modelAnimator;
 	[SerializeField] private string animationPoseTrigger;
 	[SerializeField] private string animationCalibrationTrigger;
 
