@@ -117,6 +117,36 @@ namespace Manus.Polygon
 						profile.AddTrackerDirection(data.calculateTracker, data.axisToCalculate, calculatedAxis);
 
 						break;
+					case AlignType.GetMeasurement:
+
+						TransformValues? measurementTrackerTransform1 = trackers.GetTracker(data.measurementTracker1);
+						TransformValues? measurementTrackerTransform2 = trackers.GetTracker(data.measurementTracker2);
+
+						if (data.measurementLocal1)
+						{
+							if (profile.trackerOffsets?[data.measurementOffset1].position != null)
+							{
+								measurementTrackerTransform1 = trackers.GetTrackerWithOffset(data.measurementTracker1, profile.trackerOffsets[data.measurementOffset1].Position, Quaternion.identity);
+							}
+						}
+
+						if (data.measurementLocal2)
+						{
+							if (profile.trackerOffsets?[data.measurementOffset2].position != null)
+							{
+								measurementTrackerTransform2 = trackers.GetTrackerWithOffset(data.measurementTracker2, profile.trackerOffsets[data.measurementOffset2].Position, Quaternion.identity);
+							}
+						}
+
+						if (measurementTrackerTransform1 == null || measurementTrackerTransform2 == null)
+						{
+							Debug.LogError("Something went wrong");
+							continue;
+						}
+
+						profile.AddBodyMeasurement(data.measurement, Vector3.Distance(measurementTrackerTransform1.Value.position, measurementTrackerTransform2.Value.position));
+
+						break;
 					default:
 						Debug.LogError("Selected align setting type is not implemented");
 						break;
@@ -164,7 +194,8 @@ namespace Manus.Polygon
 		{
 			GetAxis,
 			AverageTwoAxis,
-			CalculateAxis
+			CalculateAxis,
+			GetMeasurement
 		}
 
 		// Offset enums
@@ -211,6 +242,16 @@ namespace Manus.Polygon
 			public VRTrackerType calculateTracker;
 			public Axis axisToCalculate;
 			public DirectionClosestTo calculateDirectionClosestTo;
+
+			[Header("GetMeasurement")]
+			public BodyMeasurements measurement;
+
+			public VRTrackerType measurementTracker1;
+			public bool measurementLocal1;
+			public OffsetsToTrackers measurementOffset1;
+			public VRTrackerType measurementTracker2;
+			public bool measurementLocal2;
+			public OffsetsToTrackers measurementOffset2;
 		}
 
 		// Offset classes

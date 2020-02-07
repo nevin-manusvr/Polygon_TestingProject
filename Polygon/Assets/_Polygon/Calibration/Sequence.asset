@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecb3fea47577664478031170e7d16157, type: 3}
   m_Name: Sequence
   m_EditorClassIdentifier: 
-  isFinished: 1
+  isFinished: 0
   calibrationSteps:
   - {fileID: 11400000, guid: 8b5396ac277b0474ab12d1de93e6b627, type: 2}
+  - {fileID: 11400000, guid: c8753eb804a349c43a824afdf180a88e, type: 2}
+  - {fileID: 11400000, guid: 028186c3b18089b46a1e69c834c673f4, type: 2}
