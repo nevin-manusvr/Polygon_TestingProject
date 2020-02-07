@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Manus.Polygon
 {
@@ -15,16 +16,16 @@ namespace Manus.Polygon
 
 		protected CalibrationProfile profile;
 		protected TrackerReference trackers;
+		protected Action finishCallback;
 
-		public virtual void Setup(CalibrationProfile profile, TrackerReference trackers)
+		public virtual void Setup(CalibrationProfile profile, TrackerReference trackers, Action finishCallback = null)
 		{
 			if (calibrationEvents != null)
 				calibrationEvents.RaisePrepareCalibration();
 
 			this.profile = profile;
 			this.trackers = trackers;
-
-			// Create all data needed for the calibration step
+			this.finishCallback = finishCallback;
 		}
 
 		public virtual IEnumerator Start()
@@ -49,6 +50,8 @@ namespace Manus.Polygon
 			{
 				calibrationEvents.RaiseUpdateCalibration(1f);
 				calibrationEvents.RaiseFinishedCalibration();
+
+				finishCallback?.Invoke();
 			}
 
 			End();

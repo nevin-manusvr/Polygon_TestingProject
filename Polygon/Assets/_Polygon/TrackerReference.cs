@@ -100,6 +100,8 @@ namespace Manus.Polygon
 
 		public TransformValues? GetTracker(VRTrackerType type) // TODO: clean up with out variables
 		{
+			if (trackers == null) return null;
+
 			if (trackers.ContainsKey(type))
 			{
 				if (addToLocal)

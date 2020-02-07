@@ -15,15 +15,12 @@ public class InputModule : BaseInputModule
     [SerializeField] private GameObject m_LastObject = null;
     private PointerEventData m_Data = null;
 
-
-
-
-
     protected override void Awake()
     {
         base.Awake();
 
-        m_Data = new PointerEventData(eventSystem);
+        m_Camera = Camera.main;
+		m_Data = new PointerEventData(eventSystem);
     }
     public override void Process()
     {
@@ -45,9 +42,9 @@ public class InputModule : BaseInputModule
 
         if(m_CurrentObject != null)
         {
-            Debug.Log(m_CurrentObject);
             m_LastObject = m_CurrentObject;
-            if(m_CurrentObject.CompareTag("Button"))
+            
+            if (m_CurrentObject.CompareTag("Button"))
             {
                 m_UIManager.LookAtButton(m_CurrentObject);
             }

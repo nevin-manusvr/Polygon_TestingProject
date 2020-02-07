@@ -19,29 +19,27 @@ namespace Manus.Polygon
 		{
 			trackers = FindObjectOfType<TrackerReference>();
 			controllerEvents = GetComponent<CalibrationControllerEventListener>();
-
-			// TMP:
-			profile.Reset();
-
-			sequence.SetupCalibrationSequence(profile, trackers, this);
 		}
 
 		private void OnEnable()
 		{
-			controllerEvents.nextCalibrationStepResponse += sequence.NextCalibrationStep;
+			controllerEvents.startCalibrationSequenceResponse += SetupCalibrationSequence;
+			controllerEvents.setupNextCalibrationStepResponse += sequence.SetupNextCalibrationStep;
+			controllerEvents.startNextCalibrationStepResponse += sequence.StartCalibrationStep;
 		}
 
 		private void OnDisable()
 		{
-			controllerEvents.nextCalibrationStepResponse -= sequence.NextCalibrationStep;
+			controllerEvents.startCalibrationSequenceResponse -= SetupCalibrationSequence;
+			controllerEvents.setupNextCalibrationStepResponse -= sequence.SetupNextCalibrationStep;
+			controllerEvents.startNextCalibrationStepResponse -= sequence.StartCalibrationStep;
 		}
 
-		private void Update()
+		private void SetupCalibrationSequence()
 		{
-			if (Input.GetKeyDown(KeyCode.C))
-			{
-				sequence.NextCalibrationStep();
-			}
+			// TMP:
+			profile.Reset();
+			sequence.SetupCalibrationSequence(profile, trackers, this);
 		}
 	}
 }

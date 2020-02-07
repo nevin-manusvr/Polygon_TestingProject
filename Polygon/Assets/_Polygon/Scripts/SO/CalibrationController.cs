@@ -22,26 +22,22 @@ public class CalibrationController : MonoBehaviour
     [Header("Animations")]
     [SerializeField] private GameObject model;
     [SerializeField] private Animator modelAnimator;
+	[SerializeField] private string animationPoseTrigger;
+	[SerializeField] private string animationCalibrationTrigger;
 
-
-    
-    // Start is called before the first frame update
-    void Start()
+	void Awake()
     {
         eventListener = GetComponent<CalibrationStepEventListener>();
 
-        model = GameObject.Find("CalibrationInstructionModel");
+        uiManager = FindObjectOfType<UIManager>();
+
+		model = GameObject.Find("CalibrationInstructionModel");
         modelAnimator = model.GetComponent<Animator>();
-        
-        eventListener.prepareCalibrationResponse += OnPrepareCalibration;
-        eventListener.startCalibrationResponse += OnStartCalibration;
-        eventListener.updateCalibrationResponse += OnUpdateCalibration;
-        eventListener.finishCalibrationResponse += OnFinishCalibration;
     }
 
     public void Update()
     {
-        if(Input.GetKey(KeyCode.Keypad1))
+        if (Input.GetKey(KeyCode.Keypad1))
         {
             eventListener.CalibrationPrepareRaised();
         }
@@ -49,7 +45,7 @@ public class CalibrationController : MonoBehaviour
         {
             eventListener.CalibrationStartRaised();
         }
-        else if(Input.GetKey(KeyCode.Keypad3))
+        else if (Input.GetKey(KeyCode.Keypad3))
         {
             eventListener.CalibrationFinishedRaised();
         }
@@ -80,33 +76,32 @@ public class CalibrationController : MonoBehaviour
 
     public void OnStartCalibration()
     {
-        Debug.Log("started calibration");
-        //ResetTrigger();
         TriggerStartAnimation(calibrationStepName);
     }
 
     public void OnUpdateCalibration(float percentage)
     {
-
+		uiManager.UpdateTimer(percentage);
     }
 
     public void OnFinishCalibration()
     {
         ResetTrigger();
+		uiManager.Continue();
     }
 
     //Set trigger for animations
     void TriggerPoseAnimation(string step)
     {
         Debug.Log("set trigger");
-        string currentStep = step + "CalibrationStartingPose";
-        modelAnimator.SetTrigger(currentStep);
+        string currentStep = step + "_CalibrationStartingPose";
+        modelAnimator.SetTrigger(animationPoseTrigger);
     }
     void TriggerStartAnimation(string step)
     {
         Debug.Log("set trigger");
-        string currentStep = step + "CalibrationStart";
-        modelAnimator.SetTrigger(currentStep);        
+        string currentStep = step + "_CalibrationStart";
+        modelAnimator.SetTrigger(animationCalibrationTrigger);        
     }
     void ResetTrigger()
     {

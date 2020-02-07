@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecb3fea47577664478031170e7d16157, type: 3}
-  m_Name: Sequence
+  m_Script: {fileID: 11500000, guid: c4bbf7b40ad98814ba7ead3941ea0aad, type: 3}
+  m_Name: TPoseEvent
   m_EditorClassIdentifier: 
-  isFinished: 1
-  calibrationSteps:
-  - {fileID: 11400000, guid: 8b5396ac277b0474ab12d1de93e6b627, type: 2}

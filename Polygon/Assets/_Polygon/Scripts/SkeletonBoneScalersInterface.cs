@@ -46,8 +46,8 @@ namespace Manus.Polygon
 			boneScalers.ChangeHandSize(handSize);
 			boneScalers.ChangeFootSize(footSize);
 
-			boneScalers.ChangeFingerLength(fingerLength);
-			boneScalers.ChangeFingerThickness(fingerThickness);
+			// boneScalers.ChangeFingerLength(fingerLength);
+			// boneScalers.ChangeFingerThickness(fingerThickness);
 		}
 
 		[ContextMenu("Randomize all values")]

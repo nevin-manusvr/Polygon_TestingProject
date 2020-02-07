@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13115730844fb9c44a96df4d84444fae, type: 3}
-  m_Name: RightAnklePosition
+  m_Name: HeadPosition
   m_EditorClassIdentifier: 
+  calibrationEvents: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8, type: 2}
   description: 
   time: 1
   pointData:
   - type: 0
-    pointTracker: 4
-    pointTrackerOffset: 11
+    pointTracker: 6
+    pointTrackerOffset: 0
     points:
     - type: 0
       tracker: 1

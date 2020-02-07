@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manus.Core.Utility;
 using System.Linq;
+using System;
 
 namespace Manus.Polygon
 {
+
 	[CreateAssetMenu(fileName = "new Arc Calibration Step", menuName = "ManusVR/Polygon/Calibration/Arc Calibration Step", order = 10)]
 	public class ArcCalibrationStep : CalibrationStep
 	{
@@ -13,9 +15,9 @@ namespace Manus.Polygon
 		public Data[] allData;
 		private Arc[] arcArray;
 
-		public override void Setup(CalibrationProfile profile, TrackerReference trackers)
+		public override void Setup(CalibrationProfile profile, TrackerReference trackers, Action finishCallback = null)
 		{
-			base.Setup(profile, trackers);
+			base.Setup(profile, trackers, finishCallback);
 
 			arcArray = new Arc[settings.Length];
 
