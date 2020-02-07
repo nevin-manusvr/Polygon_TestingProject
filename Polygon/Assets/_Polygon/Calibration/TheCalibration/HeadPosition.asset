@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13115730844fb9c44a96df4d84444fae, type: 3}
   m_Name: HeadPosition
   m_EditorClassIdentifier: 
-  calibrationEvents: {fileID: 0}
+  calibrationEvents: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8, type: 2}
   description: 
   time: 1
   pointData:

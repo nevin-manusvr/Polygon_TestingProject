@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13115730844fb9c44a96df4d84444fae, type: 3}
   m_Name: FootRightPosition
   m_EditorClassIdentifier: 
+  calibrationEvents: {fileID: 11400000, guid: bda16459da9da9343b343ac4f4d1c2b1, type: 2}
   description: 
   time: 1
   pointData:

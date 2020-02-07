@@ -1,15 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Manus.Core.VR;
 
 namespace Manus.Polygon
 {
-	using Manus.Core.VR;
-
 	[CreateAssetMenu(fileName = "new Calibration Sequence", menuName = "ManusVR/Polygon/Calibration/Calibration Sequence", order = 0)]
 	public class CalibrationSequence : ScriptableObject
 	{
+		public bool isFinished = false;
 		public List<CalibrationStep> calibrationSteps;
+
+		public Action calibrationFinished;
 
 		private CalibrationProfile profile;
 		private TrackerReference trackers;
@@ -25,30 +28,31 @@ namespace Manus.Polygon
 			this.mono = mono;
 
 			// TMP:
+			isFinished = false;
 			currentIndex = 0;
-			Debug.Log("Setup Sequence");
 		}
 
 		private int currentIndex;
 
-		public void NextCalibrationStep()
+		public void SetupNextCalibrationStep()
 		{
-			mono.StartCoroutine(CalibrateThings(currentIndex));
-
-			currentIndex++;
+			profileHistory[calibrationSteps[currentIndex]] = new ProfileData(profile);
+			calibrationSteps[currentIndex].Setup(profile, trackers,
+				() =>
+					{
+						Debug.Log(currentIndex);
+						if (currentIndex >= calibrationSteps.Count)
+						{
+							isFinished = true;
+							calibrationFinished?.Invoke();
+						}
+					});
 		}
 
-		private IEnumerator CalibrateThings(int index)
+		public void StartCalibrationStep()
 		{
-			Debug.Log("Setup Step");
-			profileHistory[calibrationSteps[index]] = new ProfileData(profile);
-			calibrationSteps[index].Setup(profile, trackers);
-
-			Debug.Log("Start Countdown");
-			yield return new WaitForSeconds(1f);
-
-			Debug.Log("Start Calibration");
-			mono.StartCoroutine(calibrationSteps[index].Start());
+			mono.StartCoroutine(calibrationSteps[currentIndex].Start());
+			currentIndex++;
 		}
 	}
 }

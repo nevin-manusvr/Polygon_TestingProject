@@ -8,10 +8,22 @@ public class CalibrationControllerEvent : ScriptableObject
 {
 	private readonly List<CalibrationControllerEventListener> eventListeners = new List<CalibrationControllerEventListener>();
 
+	public void StartCalibrationSequence()
+	{
+		for (int i = eventListeners.Count - 1; i >= 0; i--)
+			eventListeners[i].StartCalibrationSequenceRaised();
+	}
+
+	public void RaiseSetupNextStep()
+	{
+		for (int i = eventListeners.Count - 1; i >= 0; i--)
+			eventListeners[i].SetupNextCalibrationStepRaised();
+	}
+
 	public void RaiseStartNextStep()
 	{
 		for (int i = eventListeners.Count - 1; i >= 0; i--)
-			eventListeners[i].NextCalibrationStepRaised();
+			eventListeners[i].StartNextCalibrationStepRaised();
 	}
 
 	public void RaisePreviousStep()

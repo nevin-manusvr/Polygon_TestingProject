@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13115730844fb9c44a96df4d84444fae, type: 3}
   m_Name: HipPosition
   m_EditorClassIdentifier: 
+  calibrationEvents: {fileID: 11400000, guid: d507cdb2199946842b1767c14e212f14, type: 2}
   description: 
   time: 1
   pointData:

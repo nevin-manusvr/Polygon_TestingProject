@@ -10,7 +10,9 @@ public class CalibrationControllerEventListener : MonoBehaviour
 	[SerializeField] private CalibrationControllerEvent controllerEvent;
 
 	[Tooltip("Response to invoke when Event is raised.")]
-	public Action nextCalibrationStepResponse;
+	public Action startCalibrationSequenceResponse;
+	public Action setupNextCalibrationStepResponse;
+	public Action startNextCalibrationStepResponse;
 	public Action previousCalibrationStepResponse;
 
 	#region Monobehaviour Callbacks
@@ -27,9 +29,19 @@ public class CalibrationControllerEventListener : MonoBehaviour
 
 	#endregion
 
-	public void NextCalibrationStepRaised()
+	public void StartCalibrationSequenceRaised()
 	{
-		nextCalibrationStepResponse?.Invoke();
+		startCalibrationSequenceResponse?.Invoke();
+	}
+	
+	public void SetupNextCalibrationStepRaised()
+	{
+		setupNextCalibrationStepResponse?.Invoke();
+	}
+
+	public void StartNextCalibrationStepRaised()
+	{
+		startNextCalibrationStepResponse?.Invoke();
 	}
 
 	public void PreviousCalibrationStepRaised()

@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Manus.Polygon;
 
 public class UIManager : MonoBehaviour
 {
+
+	public CalibrationControllerEvent controllerEvent;
+	public CalibrationSequence sequence;
 
     [Header("MenuCanvas")]
     [SerializeField] private CanvasGroup m_MenuCanvas;
@@ -19,6 +23,7 @@ public class UIManager : MonoBehaviour
 	
 	[Header("Calibration Update Canvas")]
 	[SerializeField] private CanvasGroup m_CalibrationUpdateCanvas;
+	[SerializeField] private Slider m_timer;
     [SerializeField] private Text m_UpdateStep;
     [SerializeField] private Text m_UpdateDiscription;
 
@@ -48,11 +53,11 @@ public class UIManager : MonoBehaviour
            GameObject m_CanvasObject = this.gameObject.transform.GetChild(x).gameObject;
            m_CanvasList[i] = m_CanvasObject.GetComponent<CanvasGroup>();
            
-           if(i >= 1)
-            {
+           if (i >= 1)
+           {
                 m_CanvasList[i].alpha = 0;
                 m_CanvasList[i].blocksRaycasts = false;
-            }
+           }
         }
 
     	m_CurrentCanvasID = 0;
@@ -66,34 +71,50 @@ public class UIManager : MonoBehaviour
     public void LookAtButton(GameObject button)
     {
         button.GetComponent<Image>().fillAmount += 0.3f * Time.deltaTime;
-        if(button.GetComponent<Image>().fillAmount == 1) 
+        if (button.GetComponent<Image>().fillAmount == 1)
         {
-            m_NextCanvasID = m_CurrentCanvasID + 1;
-            string m_buttonName = button.name;
-
-            switch(m_buttonName)
-            {
-                case "Start":
-                    Continue(m_CurrentCanvas);
-
-                    break;
-                case "Continue":
-                    Continue(m_CurrentCanvas);
-                    break;
-                case "Next":
-                    ReturnToStart(m_CurrentCanvas);
-                    //call action next
-                    break;
-                case "Previous":
-                    ReturnToStart(m_CurrentCanvas);
-                    //call action previous
-                    break;
-                
-            }
-            button.GetComponent<Image>().fillAmount = 0;
-            
+	        ButtonFunction(button.name);
+	        button.GetComponent<Image>().fillAmount = 0;
         }
-    }
+	}
+
+    public void ButtonFunction(string buttonName)
+    {
+	    m_NextCanvasID = m_CurrentCanvasID + 1;
+	    string m_buttonName = buttonName;
+
+	    switch (m_buttonName)
+	    {
+		    case "Start":
+			    controllerEvent.StartCalibrationSequence();
+			    controllerEvent.RaiseSetupNextStep();
+			    Continue();
+
+			    break;
+		    case "Continue":
+			    controllerEvent.RaiseStartNextStep();
+			    Continue();
+
+			    break;
+		    case "Next":
+
+			    if (!sequence.isFinished)
+			    {
+				    controllerEvent.RaiseSetupNextStep();
+				    ReturnToStart();
+			    }
+			    else
+			    {
+				    HideUI();
+			    }
+			    //call action next
+			    break;
+		    case "Previous":
+			    ReturnToStart();
+			    //call action previous
+			    break;
+	    }
+	}
 
     public void ResetButton(GameObject button)
     {
@@ -104,24 +125,32 @@ public class UIManager : MonoBehaviour
         button.GetComponent<Image>().fillAmount = 0;
     }
 
+    public void HideUI()
+    {
+	    foreach (CanvasGroup canvasGroup in m_CanvasList)
+	    {
+			Debug.Log(canvasGroup.name);
+		    canvasGroup.DOFade(0, .8f).SetEase(Ease.InOutCubic);
+	    }
+    }
 
-    public void Continue(CanvasGroup current)
+    public void Continue()
     {
         m_NextCanvasID = m_CurrentCanvasID + 1;
         CanvasGroup next = m_CanvasList[m_NextCanvasID];
         
-        UpdateCanvas(current, next);
+        UpdateCanvas(m_CurrentCanvas, next);
         
         m_CurrentCanvas = next;
         m_CurrentCanvasID += 1;
     }
 
-    public void ReturnToStart(CanvasGroup current)
+    public void ReturnToStart()
     {
         CanvasGroup next = m_CanvasList[1];
         m_CurrentCanvasID = 1;
         m_NextCanvasID = 1;
-        UpdateCanvas(current, next);
+        UpdateCanvas(m_CurrentCanvas, next);
     }
 
     public void ReturnToMenu(CanvasGroup current)
@@ -134,12 +163,18 @@ public class UIManager : MonoBehaviour
 
     public void UpdateCanvas(CanvasGroup current, CanvasGroup next)
     {
-        current.DOFade(0, 0.8f).SetEase(Ease.OutCubic).OnComplete( () => next.DOFade(1, 0.8f).SetEase(Ease.InCubic));
+        current.alpha = 0;
+        next.alpha = 1;
 
-        current.blocksRaycasts = false;
+		current.blocksRaycasts = false;
         next.blocksRaycasts = true;
 
         m_CurrentCanvas = next;
+    }
+
+    public void UpdateTimer(float percentage)
+    {
+	    m_timer.value = percentage;
     }
 
     public void UpdateText(string currentStep, string description)
@@ -151,4 +186,22 @@ public class UIManager : MonoBehaviour
         m_UpdateDiscription.text = description;
     }
 
+    [ContextMenu("Start")]
+    private void StartButton()
+    {
+		ButtonFunction("Start");
+    }
+
+    [ContextMenu("Continue")]
+    private void ContinueButton()
+    {
+	    DOVirtual.DelayedCall(1.4f, () => { ButtonFunction("Continue"); });
+
+    }
+
+    [ContextMenu("Next")]
+    private void NextButton()
+    {
+	    ButtonFunction("Next");
+    }
 }

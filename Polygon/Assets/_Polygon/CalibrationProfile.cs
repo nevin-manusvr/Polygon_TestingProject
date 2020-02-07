@@ -101,6 +101,12 @@ namespace Manus.Polygon
 			{
 				trackerDirections[type].SetAxis(axis, direction.normalized);
 			}
+
+			if (trackerDirections[type].GetAxis(Axis.Z) != null && trackerDirections[type].GetAxis(Axis.Y) != null)
+			{
+				trackerOffsets[(OffsetsToTrackers)GetMatchingTrackerOffsetForTracker(type)].SetRotationOffset(
+					Quaternion.LookRotation(trackerDirections[type].Z, trackerDirections[type].Y));
+			}
 		}
 
 		public void RemoveTrackerDirection(VRTrackerType trackerType, Axis type)
