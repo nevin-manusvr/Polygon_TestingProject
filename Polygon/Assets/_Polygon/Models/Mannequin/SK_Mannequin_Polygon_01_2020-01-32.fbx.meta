@@ -6,7 +6,17 @@ ModelImporter:
   - first:
       74: 1827226128182048838
     second: Take 001
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_UE4Man_Body
+    second: {fileID: 2100000, guid: 41fd304de361bfc43a4bc24b703a5afb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_UE4Man_ChestLogo
+    second: {fileID: 2100000, guid: 102a997a7e34c9c4881a0950457d9277, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

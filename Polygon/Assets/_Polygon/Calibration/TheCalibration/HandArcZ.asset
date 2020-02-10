@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   calibrationEvents: {fileID: 11400000, guid: 0a8d1e2be1a3bf24d9e11fec6916a15c, type: 2}
   description: 
-  time: 1
+  time: 3
   settings:
   - tracker: 1
     useTrackerLocal: 0

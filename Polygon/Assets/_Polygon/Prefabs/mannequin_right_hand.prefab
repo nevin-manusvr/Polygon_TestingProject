@@ -72,11 +72,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4153222407538779739, guid: 7c92019cc36a0804f964363d13962520,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: -1
-      objectReference: {fileID: 0}
     - target: {fileID: 6995353977136414490, guid: 7c92019cc36a0804f964363d13962520,
         type: 3}
       propertyPath: type
@@ -681,6 +676,136 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Fingers.Array.data[4].m_Bones.Array.data[3].up.z
       value: 0.106678456
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: handModelType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].right.x
+      value: 0.00000059604645
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].right.y
+      value: 0.55266756
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].right.z
+      value: 0.8334017
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].up.x
+      value: -0.000002015205
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].up.y
+      value: 0.8334015
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[0].up.z
+      value: -0.55266744
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].right.x
+      value: 0.0000012672297
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].right.y
+      value: 0.5570561
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].right.z
+      value: 0.83047473
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].up.x
+      value: 0.00000016542653
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].up.y
+      value: 0.83047456
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[1].up.z
+      value: -0.557056
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].right.x
+      value: 0.12450148
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].right.y
+      value: 0.85957485
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].right.z
+      value: 0.4956112
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].up.x
+      value: 0.09713249
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].up.y
+      value: 0.4865397
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[2].up.z
+      value: -0.86824197
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].right.x
+      value: -0.000111721456
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].right.y
+      value: 0.8671384
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].right.z
+      value: 0.49806693
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].up.x
+      value: 0.00028937287
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].up.y
+      value: 0.49806684
+      objectReference: {fileID: 0}
+    - target: {fileID: 3276184140011080919, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: fingers.Array.data[0].bones.Array.data[3].up.z
+      value: -0.86713815
+      objectReference: {fileID: 0}
+    - target: {fileID: 4153222407538779739, guid: 7c92019cc36a0804f964363d13962520,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c92019cc36a0804f964363d13962520, type: 3}

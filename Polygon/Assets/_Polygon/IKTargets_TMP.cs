@@ -128,7 +128,23 @@ namespace Manus.Polygon
 						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.HeadTrackerToHead))
 						{
 							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.HeadTrackerToHead];
-							trackerTransform = trackers.GetTrackerWithOffset(VRTrackerType.Head, offset.Position, offset.Rotation);
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.Head,
+								offset.Position,
+								offset.Rotation);
+						}
+
+						break;
+					case VRTrackerType.Waist:
+						obj = hip;
+
+						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.HipTrackerToHip))
+						{
+							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.HipTrackerToHip];
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.Waist,
+								offset.Position,
+								offset.Rotation);
 						}
 
 						break;
@@ -138,7 +154,10 @@ namespace Manus.Polygon
 						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.LeftHandTrackerToWrist))
 						{
 							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.LeftHandTrackerToWrist];
-							trackerTransform = trackers.GetTrackerWithOffset(VRTrackerType.LeftHand, offset.Position, offset.Rotation);
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.LeftHand,
+								offset.Position,
+								offset.Rotation);
 						}
 
 						break;
@@ -148,7 +167,10 @@ namespace Manus.Polygon
 						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.RightHandTrackerToWrist))
 						{
 							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.RightHandTrackerToWrist];
-							trackerTransform = trackers.GetTrackerWithOffset(VRTrackerType.RightHand, offset.Position, offset.Rotation);
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.RightHand,
+								offset.Position,
+								offset.Rotation);
 						}
 
 						break;
@@ -158,7 +180,10 @@ namespace Manus.Polygon
 						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.LeftFootTrackerToAnkle))
 						{
 							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.LeftFootTrackerToAnkle];
-							trackerTransform = trackers.GetTrackerWithOffset(VRTrackerType.LeftFoot, offset.Position, offset.Rotation);
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.LeftFoot,
+								offset.Position,
+								offset.Rotation);
 						}
 
 						break;
@@ -168,7 +193,10 @@ namespace Manus.Polygon
 						if (profile.trackerOffsets.ContainsKey(OffsetsToTrackers.RightFootTrackerToAnkle))
 						{
 							TrackerOffset offset = profile.trackerOffsets[OffsetsToTrackers.RightFootTrackerToAnkle];
-							trackerTransform = trackers.GetTrackerWithOffset(VRTrackerType.RightFoot, offset.Position, offset.Rotation);
+							trackerTransform = trackers.GetTrackerWithOffset(
+								VRTrackerType.RightFoot,
+								offset.Position,
+								offset.Rotation);
 						}
 
 						break;
@@ -177,9 +205,23 @@ namespace Manus.Polygon
 				if (trackerTransform == null || obj == null) continue;
 
 				filters[tracker].UpdateFilter(trackerTransform.Value.position, trackerTransform.Value.rotation);
-				
+
 				obj.position = useKalmanOnTrackerData ? filters[tracker].Position : trackerTransform.Value.position;
 				obj.rotation = useKalmanOnTrackerData ? filters[tracker].Rotation : trackerTransform.Value.rotation;
+
+				switch (tracker)
+				{
+					case VRTrackerType.LeftFoot:
+					case VRTrackerType.RightFoot:
+						float _footHeight = 0.1346572f;
+
+						if (obj.position.y < _footHeight)
+						{
+							obj.position = new Vector3(obj.position.x, _footHeight, obj.position.z);
+						}
+
+						break;
+				}
 			}
 		}
 

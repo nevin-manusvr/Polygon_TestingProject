@@ -68,9 +68,28 @@ public class UIManager : MonoBehaviour
         m_CurrentCanvas = m_CanvasList[m_CurrentCanvasID];
         
     }
+
+    private void Update()
+    {
+	    if (Input.GetKeyDown(KeyCode.U))
+	    {
+			StartButton();
+	    }
+
+	    if (Input.GetKeyDown(KeyCode.I))
+	    {
+		    ContinueButton();
+	    }
+
+	    if (Input.GetKeyDown(KeyCode.O))
+	    {
+		    NextButton();
+	    }
+	}
+    
     public void LookAtButton(GameObject button)
     {
-        button.GetComponent<Image>().fillAmount += 0.3f * Time.deltaTime;
+        button.GetComponent<Image>().fillAmount += 1f * Time.deltaTime;
         if (button.GetComponent<Image>().fillAmount == 1)
         {
 	        ButtonFunction(button.name);

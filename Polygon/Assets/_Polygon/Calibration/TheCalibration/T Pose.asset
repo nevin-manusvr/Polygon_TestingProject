@@ -85,6 +85,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 5
     axisToGet: 1
@@ -154,6 +161,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 3
     axisToGet: 1
@@ -223,6 +237,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 3
     axisToGet: 2
@@ -292,6 +313,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 4
     axisToGet: 1
@@ -361,6 +389,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 4
     axisToGet: 2
@@ -430,6 +465,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 6
     axisToGet: 1
@@ -499,6 +541,13 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
   - dataType: 0
     getAxisTracker: 6
     axisToGet: 2
@@ -568,4 +617,87 @@ MonoBehaviour:
         trackerTo: 0
         trackerToLocal: 0
         trackerToLocalOffset: 0
+    measurement: 0
+    measurementTracker1: 0
+    measurementLocal1: 0
+    measurementOffset1: 0
+    measurementTracker2: 0
+    measurementLocal2: 0
+    measurementOffset2: 0
+  - dataType: 3
+    getAxisTracker: 6
+    axisToGet: 2
+    axisDirectionToGet:
+      type: 1
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 1, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 1
+        trackerTo: 2
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 1
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 1
+        trackerFromLocal: 1
+        trackerFromLocalOffset: 1
+        trackerTo: 2
+        trackerToLocal: 1
+        trackerToLocalOffset: 2
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 1, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    averageTracker1: 0
+    averageAxis1: 0
+    averageAxisInvert1: 0
+    averageTracker2: 0
+    averageAxis2: 0
+    averageAxisInvert2: 0
+    calculateTracker: 0
+    axisToCalculate: 0
+    calculateDirectionClosestTo:
+      type: 0
+      singleDirection:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection1:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+      crossDirection2:
+        type: 0
+        worldDirection: {x: 0, y: 0, z: 0}
+        trackerFrom: 0
+        trackerFromLocal: 0
+        trackerFromLocalOffset: 0
+        trackerTo: 0
+        trackerToLocal: 0
+        trackerToLocalOffset: 0
+    measurement: 7
+    measurementTracker1: 1
+    measurementLocal1: 1
+    measurementOffset1: 1
+    measurementTracker2: 2
+    measurementLocal2: 1
+    measurementOffset2: 2
   offsetData: []

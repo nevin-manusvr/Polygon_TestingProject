@@ -37,12 +37,6 @@ namespace Manus.Polygon
 			bone.SetParent(scaleBone, true);
 
 			// Instantiate scale fix bones
-			var childs = new Transform[bone.childCount];
-			for (int i = 0; i < bone.childCount; i++)
-			{
-				childs[i] = bone.GetChild(i);
-			}
-
 			scaleFixBones = new Transform[] { };
 
 			if (childBones != null && childBones.Length > 0)
@@ -69,20 +63,27 @@ namespace Manus.Polygon
 			float smallestAngle = float.MaxValue;
 			Transform lookAtChild = null;
 
-			foreach (Transform child in childs)
+			if (childBones != null)
 			{
-				float angleToChild = Vector3.Angle(child.position - bone.position, lookRotation * Vector3.forward);
-
-				if (angleToChild < smallestAngle && angleToChild < 20)
+				foreach (Transform child in childBones)
 				{
-					smallestAngle = angleToChild;
-					lookAtChild = child;
-				}
-			}
+					float angleToChild = Vector3.Angle(child.position - bone.position, lookRotation * Vector3.forward);
 
-			if (lookAtChild != null)
-			{
-				defaultLength = Vector3.Project(lookAtChild.position - bone.position, lookRotation * Vector3.forward).magnitude;
+					if (angleToChild < smallestAngle && angleToChild < 20)
+					{
+						smallestAngle = angleToChild;
+						lookAtChild = child;
+					}
+				}
+
+				if (lookAtChild != null)
+				{
+					defaultLength = Vector3.Project(lookAtChild.position - bone.position, lookRotation * Vector3.forward).magnitude;
+					if (scaleBone.name == "upperarm_l_scaleBone")
+					{
+						Debug.Log(scaleBone.name + " - " + lookAtChild.name + " - " + defaultLength);
+					}
+				}
 			}
 		}
 
@@ -92,7 +93,7 @@ namespace Manus.Polygon
 
 			if (axis == ScaleAxis.Length && mode == ScaleMode.Length)
 			{
-				// TODO: calculate size to achieve this length
+				size = scale / defaultLength;
 			}
 
 			switch (axis)

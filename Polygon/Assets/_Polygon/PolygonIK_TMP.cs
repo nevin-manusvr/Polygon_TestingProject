@@ -245,11 +245,11 @@ namespace Manus.Polygon
 			float _toeHeight = 0.02811695f;
 			float _toeEndHeight = 0.02812012f;
 
-			float footHeight = _footHeight * bones.legLeft.foot.bone.lossyScale.x;
-			if (footTarget.position.y < footHeight)
-			{
-				footTarget.position = new Vector3(footTarget.position.x, footHeight, footTarget.position.z);
-			}
+			//float footHeight = _footHeight * bones.legLeft.foot.bone.lossyScale.x;
+			//if (footTarget.position.y < footHeight)
+			//{
+			//	footTarget.position = new Vector3(footTarget.position.x, footHeight, footTarget.position.z);
+			//}
 
 
 			float toeHeight = _toeHeight * bones.legLeft.foot.bone.lossyScale.x;
@@ -303,7 +303,7 @@ namespace Manus.Polygon
 		private void OnRightLegPostIK()
 		{
 			EstimateKneePosition(bones.main, bones.legRight.foot, targets.rightKnee, false);
-			//FixFootToGround(targets.rightFootYOffset, bones.rightFoot, bones.rightToes, bones.rightToesEnd);
+			FixFootToGround(targets.rightFoot, bones.legRight.foot, bones.legRight.toes, bones.legRight.toesEnd.bone, false);
 		}
 
 		private void OnLeftArmPostIK()

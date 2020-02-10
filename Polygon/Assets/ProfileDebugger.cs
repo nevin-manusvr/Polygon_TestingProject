@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Manus.Polygon
 {
-
 	public class ProfileDebugger : MonoBehaviour
 	{
+		public bool alsoHead = false;
 		public CalibrationProfile profile;
 		private TrackerReference trackers;
 
@@ -142,6 +142,7 @@ namespace Manus.Polygon
 				}
 
 				VRTrackerType trackerType = profile.trackerDirections.Keys.ToArray()[i];
+				if (alsoHead == false && trackerType == VRTrackerType.Head) continue; 
 				OffsetsToTrackers? offsetType = CalibrationProfile.GetMatchingTrackerOffsetForTracker(trackerType);
 
 				if (offsetType == null) continue;

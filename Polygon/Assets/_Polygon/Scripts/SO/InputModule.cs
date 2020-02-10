@@ -22,6 +22,7 @@ public class InputModule : BaseInputModule
         m_Camera = Camera.main;
 		m_Data = new PointerEventData(eventSystem);
     }
+
     public override void Process()
     {
         // Reset data, set camera
@@ -40,7 +41,7 @@ public class InputModule : BaseInputModule
         // Hover
         HandlePointerExitAndEnter(m_Data, m_CurrentObject);
 
-        if(m_CurrentObject != null)
+        if (m_CurrentObject != null)
         {
             m_LastObject = m_CurrentObject;
             
@@ -53,14 +54,6 @@ public class InputModule : BaseInputModule
         {
             m_UIManager.ResetButton(m_LastObject);
         }
-
-
-
-        // Press
-        
-        // Release
-
-
     }
 
     public PointerEventData GetData()

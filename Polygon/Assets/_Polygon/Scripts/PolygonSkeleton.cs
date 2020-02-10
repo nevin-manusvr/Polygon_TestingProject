@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Manus.Core.Hand;
 
 namespace Manus.Polygon
 {
@@ -33,6 +34,12 @@ namespace Manus.Polygon
 
 				ik.InitializeIK(transform, animator, newSkeleton, FindObjectOfType<IKTargets_TMP>());
 				ik.CreateCharacterIK();
+
+				foreach (HandAnimator anim in GetComponentsInChildren<HandAnimator>())
+				{
+					anim.CalculateAxes();
+					anim.enabled = true;
+				}
 			}
 		}
 

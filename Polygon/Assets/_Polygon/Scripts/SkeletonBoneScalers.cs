@@ -15,6 +15,11 @@ namespace Manus.Polygon
 
 		#region Helper Functions
 
+		public void ChangeHeight(float length)
+		{
+
+		}
+
 		public void ChangeThickness(float thickness)
 		{
 			boneScalers[HumanBodyBones.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
