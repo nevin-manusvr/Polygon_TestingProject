@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Manus.Core.Utility;
+using UnityEngine.UI;
 
 namespace Manus.Polygon
 {
-	using Manus.Core.Utility;
-
 	public class ProfileDataApplier_TMP : MonoBehaviour
 	{
 		private PolygonSkeleton polygon;
@@ -20,6 +20,10 @@ namespace Manus.Polygon
 		public float spineMultiplier = 1f;
 		public float armMultiplier = 1f;
 		public float legMultiplier = 1f;
+
+		public Slider legSlider;
+		public Slider spineSlider;
+		public Slider armSlider;
 
 		private void Start()
 		{
@@ -59,9 +63,9 @@ namespace Manus.Polygon
 			float characterSize = bodyLength / 1.83f;
 
 			polygon.newSkeleton.main.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
-			boneScalers.ChangeSpineLength(spineMultiplier);
-			boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * armMultiplier, bodyLength * 0.15f / characterSize * armMultiplier);
-			boneScalers.ChangeLegLength(bodyLength * 0.23f / characterSize * legMultiplier, bodyLength * 0.22f / characterSize * legMultiplier);
+			boneScalers.ChangeSpineLength(1 + spineSlider.value);
+			boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * (armMultiplier + armSlider.value), bodyLength * 0.15f / characterSize * (armMultiplier + armSlider.value));
+			boneScalers.ChangeLegLength(bodyLength * 0.23f / characterSize * (legMultiplier + legSlider.value), bodyLength * 0.22f / characterSize * (legMultiplier + legSlider.value));
 		}
 
 		private void OnValidate()
