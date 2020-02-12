@@ -26,15 +26,13 @@ namespace Manus.Polygon
 
 						Vector3 axisDirection = DirectionClosestTo.GetDirection(data.axisDirectionToGet, trackers, profile);
 
-						TransformValues? getAxisTracker = trackers.GetTracker(data.getAxisTracker);
-
-						if (getAxisTracker == null)
+						if (!trackers.GetTracker(data.getAxisTracker, out TransformValues getAxisTracker))
 						{
-							Debug.LogError("Not all trackers are connected");
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							continue;
 						}
 
-						Matrix4x4 getAxisTrackerMatrix = Matrix4x4.TRS(getAxisTracker.Value.position, getAxisTracker.Value.rotation, Vector3.one);
+						Matrix4x4 getAxisTrackerMatrix = Matrix4x4.TRS(getAxisTracker.position, getAxisTracker.rotation, Vector3.one);
 						getAxisTrackerMatrix = getAxisTrackerMatrix.inverse;
 
 						profile.AddTrackerDirection(data.getAxisTracker, data.axisToGet, getAxisTrackerMatrix.MultiplyVector(axisDirection));
@@ -42,27 +40,25 @@ namespace Manus.Polygon
 						break;
 					case AlignType.AverageTwoAxis:
 
-						TransformValues? averageTracker1 = trackers.GetTracker(data.averageTracker1);
-						TransformValues? averageTracker2 = trackers.GetTracker(data.averageTracker2);
-
-						if (averageTracker1 == null || averageTracker2 == null)
+						if (!trackers.GetTracker(data.averageTracker1, out TransformValues averageTracker1) || 
+						    !trackers.GetTracker(data.averageTracker1, out TransformValues averageTracker2))
 						{
-							Debug.LogError("Not all trackers are connected");
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							continue;
 						}
 
 						if (!profile.trackerDirections.ContainsKey(data.averageTracker1) || !profile.trackerDirections.ContainsKey(data.averageTracker2)
 						    || profile.trackerDirections[data.averageTracker1].GetAxis(data.averageAxis1) == null || profile.trackerDirections[data.averageTracker2].GetAxis(data.averageAxis2) == null)
 						{
-							Debug.LogError("Not all trackers have required directions");
+							ErrorHandler.LogError(ErrorMessage.NoRequiredData);
 							continue;
 						}
 
 						Vector3 averageTracker1Dir = (Vector3)profile.trackerDirections[data.averageTracker1].GetAxis(data.averageAxis1) * (data.averageAxisInvert1 ? -1 : 1);
 						Vector3 averageTracker2Dir = (Vector3)profile.trackerDirections[data.averageTracker2].GetAxis(data.averageAxis2) * (data.averageAxisInvert2 ? -1 : 1);
 
-						Matrix4x4 averageTracker1Matrix = Matrix4x4.TRS(averageTracker1.Value.position, averageTracker1.Value.rotation, Vector3.one);
-						Matrix4x4 averageTracker2Matrix = Matrix4x4.TRS(averageTracker2.Value.position, averageTracker2.Value.rotation, Vector3.one);
+						Matrix4x4 averageTracker1Matrix = Matrix4x4.TRS(averageTracker1.position, averageTracker1.rotation, Vector3.one);
+						Matrix4x4 averageTracker2Matrix = Matrix4x4.TRS(averageTracker2.position, averageTracker2.rotation, Vector3.one);
 
 						averageTracker1Dir = averageTracker1Matrix.MultiplyVector(averageTracker1Dir);
 						averageTracker2Dir = averageTracker2Matrix.MultiplyVector(averageTracker2Dir);
@@ -75,11 +71,9 @@ namespace Manus.Polygon
 						break;
 					case AlignType.CalculateAxis:
 
-						TransformValues? calculateTrackerTransform = trackers.GetTracker(data.calculateTracker);
-						
-						if (calculateTrackerTransform == null)
+						if (!trackers.GetTracker(data.calculateTracker, out TransformValues calculateTrackerTransform))
 						{
-							Debug.LogError("Not all trackers are connected");
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							continue;
 						}
 
@@ -100,11 +94,11 @@ namespace Manus.Polygon
 						if (!profile.trackerDirections.ContainsKey(data.calculateTracker)
 						    || profile.trackerDirections[data.calculateTracker].GetAxis(axisToUse[0]) == null || profile.trackerDirections[data.calculateTracker].GetAxis(axisToUse[1]) == null)
 						{
-							Debug.LogError("Tracker doesn't have required directions");
+							ErrorHandler.LogError(ErrorMessage.NoRequiredData);
 							continue;
 						}
 
-						Matrix4x4 calucalteTrackerMatrix = Matrix4x4.TRS(calculateTrackerTransform.Value.position, calculateTrackerTransform.Value.rotation, Vector3.one);
+						Matrix4x4 calucalteTrackerMatrix = Matrix4x4.TRS(calculateTrackerTransform.position, calculateTrackerTransform.rotation, Vector3.one);
 						Vector3 calculatedAxis = Vector3.Cross(
 							profile.trackerDirections[data.calculateTracker].GetAxis(axisToUse[0]).Value,
 							profile.trackerDirections[data.calculateTracker].GetAxis(axisToUse[1]).Value);
@@ -119,14 +113,14 @@ namespace Manus.Polygon
 						break;
 					case AlignType.GetMeasurement:
 
-						TransformValues? measurementTrackerTransform1 = trackers.GetTracker(data.measurementTracker1);
-						TransformValues? measurementTrackerTransform2 = trackers.GetTracker(data.measurementTracker2);
+						TrackerOffset measurementTrackerOffset1 = new TrackerOffset(Vector3.zero, Quaternion.identity);
+						TrackerOffset measurementTrackerOffset2 = new TrackerOffset(Vector3.zero, Quaternion.identity);
 
 						if (data.measurementLocal1)
 						{
 							if (profile.trackerOffsets?[data.measurementOffset1].position != null)
 							{
-								measurementTrackerTransform1 = trackers.GetTrackerWithOffset(data.measurementTracker1, profile.trackerOffsets[data.measurementOffset1].Position, Quaternion.identity);
+								measurementTrackerOffset1 = profile.trackerOffsets?[data.measurementOffset1];
 							}
 						}
 
@@ -134,17 +128,18 @@ namespace Manus.Polygon
 						{
 							if (profile.trackerOffsets?[data.measurementOffset2].position != null)
 							{
-								measurementTrackerTransform2 = trackers.GetTrackerWithOffset(data.measurementTracker2, profile.trackerOffsets[data.measurementOffset2].Position, Quaternion.identity);
+								measurementTrackerOffset2 = profile.trackerOffsets?[data.measurementOffset2];
 							}
 						}
 
-						if (measurementTrackerTransform1 == null || measurementTrackerTransform2 == null)
+						if (!trackers.GetTrackerWithOffset(data.measurementTracker1, measurementTrackerOffset1.Position, Quaternion.identity, out TransformValues measurementTrackerTransform1) ||
+							!trackers.GetTrackerWithOffset(data.measurementTracker2, measurementTrackerOffset2.Position, Quaternion.identity, out TransformValues measurementTrackerTransform2))
 						{
-							Debug.LogError("Something went wrong");
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							continue;
 						}
 
-						profile.AddBodyMeasurement(data.measurement, Vector3.Distance(measurementTrackerTransform1.Value.position, measurementTrackerTransform2.Value.position));
+						profile.AddBodyMeasurement(data.measurement, Vector3.Distance(measurementTrackerTransform1.position, measurementTrackerTransform2.position));
 
 						break;
 					default:
@@ -162,26 +157,26 @@ namespace Manus.Polygon
 						if (!profile.trackerOffsets.ContainsKey(data.offsetTracker1) || !profile.trackerOffsets.ContainsKey(data.offsetTracker2)
 						    || profile.trackerOffsets[data.offsetTracker1].position == null || profile.trackerOffsets[data.offsetTracker2].position == null)
 						{
-							Debug.LogError("Not all trackers have required offsets");
+							//Debug.LogError("Not all trackers have required offsets");
 						}
 
 						TrackerOffset offsetTracker1 = profile.trackerOffsets[data.offsetTracker1];
 						TrackerOffset offsetTracker2 = profile.trackerOffsets[data.offsetTracker2];
 
-						TransformValues? offsetTrackerTransform1 = trackers.GetTrackerWithOffset(data.offsetFromTracker1, offsetTracker1.Position, Quaternion.identity);
-						TransformValues? offsetTrackerTransform2 = trackers.GetTrackerWithOffset(data.offsetFromTracker2, offsetTracker2.Position, Quaternion.identity);
+						//TransformValues? offsetTrackerTransform1 = trackers.GetTrackerWithOffset(data.offsetFromTracker1, offsetTracker1.Position, Quaternion.identity);
+						//TransformValues? offsetTrackerTransform2 = trackers.GetTrackerWithOffset(data.offsetFromTracker2, offsetTracker2.Position, Quaternion.identity);
 
-						if (offsetTrackerTransform1 == null || offsetTrackerTransform2 == null)
-						{
-							Debug.LogError("Not all trackers have required directions");
-							continue;
-						}
+						//if (offsetTrackerTransform1 == null || offsetTrackerTransform2 == null)
+						//{
+						//	Debug.LogError("Not all trackers have required directions");
+						//	continue;
+						//}
 
 
 
 						break;
 					default:
-						Debug.LogError("Implement your shit");
+						ErrorHandler.LogError(ErrorMessage.NotImplemented);
 						break;
 				}
 			}
@@ -356,33 +351,34 @@ namespace Manus.Polygon
 					case DirectionType.WorldDirection:
 						return settings.worldDirection;
 					case DirectionType.TrackerDirection:
-						TransformValues? trackerFrom = trackers.GetTracker(settings.trackerFrom);
+
+						TrackerOffset fromOffset = new TrackerOffset(Vector3.zero, Quaternion.identity);
 						if (settings.trackerFromLocal)
 						{
 							if (profile.trackerOffsets.ContainsKey(settings.trackerFromLocalOffset)
 							    && profile.trackerOffsets[settings.trackerFromLocalOffset].position != null)
 							{
-								trackerFrom = trackers.GetTrackerWithOffset(settings.trackerFrom, profile.trackerOffsets[settings.trackerFromLocalOffset].Position, Quaternion.identity);
+								fromOffset = profile.trackerOffsets[settings.trackerFromLocalOffset];
 							}
 						}
 
-						TransformValues? trackerTo = trackers.GetTracker(settings.trackerTo);
+						TrackerOffset toOffset = new TrackerOffset(Vector3.zero, Quaternion.identity);
 						if (settings.trackerToLocal)
 						{
 							if (profile.trackerOffsets.ContainsKey(settings.trackerToLocalOffset)
 							    && profile.trackerOffsets[settings.trackerToLocalOffset].position != null)
 							{
-								trackerTo = trackers.GetTrackerWithOffset(settings.trackerTo, profile.trackerOffsets[settings.trackerToLocalOffset].Position, Quaternion.identity);
+								toOffset = profile.trackerOffsets[settings.trackerFromLocalOffset];
 							}
 						}
-
-						if (trackerFrom == null || trackerTo == null)
+						if (!trackers.GetTrackerWithOffset(settings.trackerFrom, fromOffset.Position, Quaternion.identity, out TransformValues trackerFrom) ||
+						    !trackers.GetTrackerWithOffset(settings.trackerTo, toOffset.Position, Quaternion.identity, out TransformValues trackerTo))
 						{
-							Debug.LogError("Not all trackers are connected");
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							break;
 						}
 
-						return trackerTo.Value.position - trackerFrom.Value.position;
+						return trackerTo.position - trackerFrom.position;
 				}
 
 				return Vector3.zero;

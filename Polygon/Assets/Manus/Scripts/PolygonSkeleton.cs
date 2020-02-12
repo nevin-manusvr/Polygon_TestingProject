@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manus.Core.Hand;
 
-namespace Manus.Polygon
+namespace Manus.Polygon.Skeleton
 {
 	public class PolygonSkeleton : MonoBehaviour
 	{
@@ -310,7 +310,7 @@ namespace Manus.Polygon
 
 				animator = FindValidAnimatorInHierarchy() ?? animator;
 
-				if (animator != null) return false;
+				if (animator == null) return false;
 			}
 
 			return true;

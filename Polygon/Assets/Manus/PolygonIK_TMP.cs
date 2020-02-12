@@ -7,6 +7,8 @@ using DG.Tweening;
 
 namespace Manus.Polygon
 {
+	using Manus.Polygon.Skeleton;
+
 	[System.Serializable]
 	public class PolygonIK_TMP : IDisposable
 	{

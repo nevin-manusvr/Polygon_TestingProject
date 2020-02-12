@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Manus.Polygon
+namespace Manus.Polygon.Skeleton
 {
 	using UnityEngine;
 
@@ -35,8 +35,8 @@ namespace Manus.Polygon
 	{
 		public Bone neck;
 		public Bone head;
-		public Bone eyeLeft;
-		public Bone eyeRight;
+		public OptionalBone eyeLeft;
+		public OptionalBone eyeRight;
 
 		public bool IsValid
 		{
@@ -50,8 +50,8 @@ namespace Manus.Polygon
 
 			if (eyeLeft && eyeRight)
 			{
-				this.eyeLeft = new Bone(eyeLeft);
-				this.eyeRight = new Bone(eyeRight);
+				this.eyeLeft = new OptionalBone(eyeLeft);
+				this.eyeRight = new OptionalBone(eyeRight);
 			}
 		}
 	}
@@ -118,6 +118,10 @@ namespace Manus.Polygon
 			}
 
 			this.toesEnd = new Bone(toesEnd ?? this.toes.bone.GetChild(0));
+
+			Vector3 pos = this.foot.bone.position;
+			pos.y = 0;
+			Debug.DrawRay(pos, Vector3.forward, Color.red, 100f);
 		}
 }
 

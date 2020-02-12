@@ -60,7 +60,10 @@ namespace Manus.Polygon
 		{
 			if (arcPoints.Count == 0 || Vector3.Distance(arcPoints[arcPoints.Count - 1].point, point) > minPointDistance)
 			{
-				TransformValues? trackerTransform = trackers?.GetTracker(parentTracker);
+				TransformValues? trackerTransform = null;
+				if (trackers != null && trackers.GetTracker(parentTracker, out TransformValues parentTrackerTransform))
+					trackerTransform = parentTrackerTransform;
+
 				arcPoints.Add(new ArcPoint(point, trackerTransform));
 			}
 		}

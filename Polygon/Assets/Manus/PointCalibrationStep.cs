@@ -27,14 +27,13 @@ namespace Manus.Polygon
 
 						averagePoint /= data.points.Length;
 
-						TransformValues? pointTrackerTransform = trackers.GetTracker(data.pointTracker);
-						if (pointTrackerTransform == null)
+						if (!trackers.GetTracker(data.pointTracker, out TransformValues pointTrackerTransform))
 						{
 							Debug.LogError("tracker not connected");
 							continue;
 						}
 
-						Matrix4x4 pointTrackerMatrix = Matrix4x4.TRS(pointTrackerTransform.Value.position, pointTrackerTransform.Value.rotation, Vector3.one);
+						Matrix4x4 pointTrackerMatrix = Matrix4x4.TRS(pointTrackerTransform.position, pointTrackerTransform.rotation, Vector3.one);
 						profile.AddTrackerOffset(data.pointTrackerOffset, pointTrackerMatrix.inverse.MultiplyPoint3x4(averagePoint));
 
 						break;
@@ -89,28 +88,26 @@ namespace Manus.Polygon
 				{
 					case PointType.Tracker:
 
-						TransformValues? trackerTransform = trackers.GetTracker(settings.tracker);
-
+						Vector3 offset = Vector3.zero;
 						if (settings.useTrackerLocal)
 						{
 							if (!profile.trackerOffsets.ContainsKey(settings.trackerOffset)
 							    || profile.trackerOffsets[settings.trackerOffset].position == null)
 								break;
 
-							trackerTransform = trackers.GetTrackerWithOffset(settings.tracker, profile.trackerOffsets[settings.trackerOffset].Position, Quaternion.identity);
+							offset = profile.trackerOffsets[settings.trackerOffset].Position;
 						}
 
-						if (trackerTransform == null) break;
+						if (!trackers.GetTrackerWithOffset(settings.tracker, offset, Quaternion.identity, out TransformValues trackerTransform)) 
+							break;
 
-						return trackerTransform.Value.position;
-
-						break;
+						return trackerTransform.position;
 					default:
-						Debug.LogError("Not Implemented");
+						ErrorHandler.LogError(ErrorMessage.NotImplemented);
 						break;
 				}
 
-				Debug.LogError("Something went wrong here");
+				ErrorHandler.LogError(ErrorMessage.NoRequiredData);
 
 				return Vector3.zero;
 			}

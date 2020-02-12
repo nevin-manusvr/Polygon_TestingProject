@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 namespace Manus.Polygon
 {
+	using Manus.Polygon.Skeleton;
+
 	public class ProfileDataApplier_TMP : MonoBehaviour
 	{
 		private PolygonSkeleton polygon;
@@ -32,6 +34,8 @@ namespace Manus.Polygon
 
 			debug.SetActive(true);
 			model.SetActive(false);
+
+			ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 		}
 
 		private void OnEnable()

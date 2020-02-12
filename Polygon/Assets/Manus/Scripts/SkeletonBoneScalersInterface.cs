@@ -4,6 +4,8 @@ using UnityEngine;
 
 namespace Manus.Polygon
 {
+	using Manus.Polygon.Skeleton;
+
 	public class SkeletonBoneScalersInterface : MonoBehaviour
 	{
 		private SkeletonBoneScalers boneScalers;

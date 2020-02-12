@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Manus.Polygon
+namespace Manus.Polygon.Skeleton
 {
 	[CustomPropertyDrawer(typeof(Bone))]
 	public class BoneDrawer : PropertyDrawer
@@ -14,17 +14,23 @@ namespace Manus.Polygon
 			EditorGUI.BeginProperty(position, label, property);
 
 			// Draw label
-			position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
+			// position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+			
 			// Don't make child fields be indented
 			var indent = EditorGUI.indentLevel;
-			EditorGUI.indentLevel = 0;
-
+			EditorGUI.indentLevel += 0;
+			
 			// Calculate rects
-			var amountRect = new Rect(position.x, position.y, position.width, position.height);
+			float margin = 3f;
+			float iconSize = EditorGUIUtility.singleLineHeight - margin * 2f;
+
+			var amountRect = new Rect(position.x, position.y, position.width - iconSize - margin, position.height);
+			var optionalRect = new Rect(position.x, position.y + margin, iconSize, iconSize);
 
 			// Draw fields - passs GUIContent.none to each so they are drawn without labels
-			EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("bone"), GUIContent.none);
+			EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("bone"), label);
+
+			EditorGUI.DrawRect(optionalRect, Color.red);
 
 			// Set indent back to what it was
 			EditorGUI.indentLevel = indent;

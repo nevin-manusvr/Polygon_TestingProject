@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Manus.Polygon
+namespace Manus.Polygon.Skeleton.Editor
 {
 	[CustomEditor(typeof(HandSkeleton))]
 	public class HandSkeletonEditor : UnityEditor.Editor

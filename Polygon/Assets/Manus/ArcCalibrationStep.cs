@@ -33,20 +33,19 @@ namespace Manus.Polygon
 		{
 			for (int i = 0; i < settings.Length; i++)
 			{
-				TransformValues? trackerTransform = trackers.GetTracker(settings[i].tracker);
-				if (settings[i].useParentTracker)
+				Vector3 offset = Vector3.zero;
+				if (settings[i].useTrackerLocal)
 				{
 					if (profile.trackerOffsets.ContainsKey(settings[i].localOffset))
 					{
-						Vector3 localOffset = profile.trackerOffsets[settings[i].localOffset].position ?? Vector3.zero;
-						trackerTransform = trackers.GetTrackerWithOffset(settings[i].tracker, localOffset, Quaternion.identity);
+						offset = profile.trackerOffsets[settings[i].localOffset].position ?? Vector3.zero; 
 					}
 				}
 				
-				if (trackerTransform == null) 
+				if (!trackers.GetTrackerWithOffset(settings[i].tracker, offset, Quaternion.identity, out TransformValues trackerTransform))
 					return;
 
-				arcArray[i].AddMeasurement(trackerTransform.Value.position);
+				arcArray[i].AddMeasurement(trackerTransform.position);
 			}
 		}
 
@@ -82,7 +81,11 @@ namespace Manus.Polygon
 								// if profile doesn't contain the required axis ignore
 								if (profile.trackerDirections.ContainsKey(trackerType) && profile.trackerDirections[trackerType].GetAxis(data.localPlane) != null)
 								{
-									TransformValues trackerTransform = (TransformValues)trackers.GetTracker(trackerType);
+									if (!trackers.GetTracker(trackerType, out TransformValues trackerTransform))
+									{
+										ErrorHandler.LogError(ErrorMessage.NoTrackerData);
+										continue;
+									}
 									Matrix4x4 trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, Vector3.one);
 									Matrix4x4 inverseTrackerMatrix = trackerMatrix.inverse;
 
@@ -91,9 +94,6 @@ namespace Manus.Polygon
 									Vector3 newPosition = trackerMatrix.MultiplyPoint3x4((Vector3)offset.position) + Vector3.ProjectOnPlane(newPositionDirection, localAxis);
 									
 									newPosition = inverseTrackerMatrix.MultiplyPoint3x4(newPosition);
-									// Debug.Log(newPosition.magnitude);
-									// Debug.DrawLine(trackerMatrix.MultiplyPoint3x4(arcArray[data.arcPositionIndex].GetOffsetToTracker()), trackerMatrix.MultiplyPoint3x4(arcArray[data.arcPositionIndex].GetOffsetToTracker()), Color.blue, 10f);
-									// Debug.DrawRay(trackerMatrix.MultiplyPoint3x4(arcArray[data.arcPositionIndex].GetOffsetToTracker()), localAxis, Color.red, 10f);
 
 									arcArray[data.arcPositionIndex].GetOffsetToTracker();
 
@@ -158,14 +158,13 @@ namespace Manus.Polygon
 						Vector3 normal = arcArray[data.arcDirectionIndex].GetArcNormalFromTracker();
 						VRTrackerType trackerDirectionType = settings[data.arcDirectionIndex].parentTracker;
 
-						TransformValues? trackerDirectionTransform = trackers.GetTracker(trackerDirectionType);
-						if (trackerDirectionTransform == null)
+						if (!trackers.GetTracker(trackerDirectionType, out TransformValues trackerDirectionTransform))
 						{
-							Debug.Log("Not all trackers are assigned");
-							return;
+							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
+							continue;
 						}
 
-						Matrix4x4 trackerDirectionMatrix = Matrix4x4.TRS(trackerDirectionTransform.Value.position, trackerDirectionTransform.Value.rotation, Vector3.one);
+						Matrix4x4 trackerDirectionMatrix = Matrix4x4.TRS(trackerDirectionTransform.position, trackerDirectionTransform.rotation, Vector3.one);
 						Vector3 worldNormal = trackerDirectionMatrix.MultiplyVector(normal);
 
 						switch (data.directionClosest.type)
@@ -181,23 +180,22 @@ namespace Manus.Polygon
 										dir = dir.normalized;
 										break;
 									case DirectionType.TrackerDirection:
-										TransformValues? trackerFrom = trackers.GetTracker(data.directionClosest.singleDirection.trackerFrom);
-										TransformValues? trackerTo = trackers.GetTracker(data.directionClosest.singleDirection.trackerTo);
 
-										if (trackerFrom == null || trackerTo == null)
+										if (!trackers.GetTracker(data.directionClosest.singleDirection.trackerFrom, out TransformValues trackerFrom) ||
+										    !trackers.GetTracker(data.directionClosest.singleDirection.trackerTo, out TransformValues trackerTo))
 										{
-											Debug.LogError("Not all trackers are connected");
-											return;
+											ErrorHandler.LogError(ErrorMessage.NoTrackerData);
+											continue;
 										}
 
-										dir = trackerTo.Value.position - trackerFrom.Value.position;
+										dir = trackerTo.position - trackerFrom.position;
 										dir = dir.normalized;
 
 										break;
 								}
 
-								Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, worldNormal, Color.magenta, 10f);
-								Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, dir, Color.cyan, 10f);
+								//Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).position, worldNormal, Color.magenta, 10f);
+								//Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).position, dir, Color.cyan, 10f);
 
 								if (Vector3.Distance(dir, worldNormal) > Vector3.Distance(dir, worldNormal * -1))
 								{
@@ -217,16 +215,15 @@ namespace Manus.Polygon
 										crossDir1 = data.directionClosest.crossDirection1.worldDirection;
 										break;
 									case DirectionType.TrackerDirection:
-										TransformValues? trackerFrom = trackers.GetTracker(data.directionClosest.crossDirection1.trackerFrom);
-										TransformValues? trackerTo = trackers.GetTracker(data.directionClosest.crossDirection1.trackerTo);
 
-										if (trackerFrom == null || trackerTo == null)
+										if (!trackers.GetTracker(data.directionClosest.crossDirection1.trackerFrom, out TransformValues trackerFrom) ||
+											!trackers.GetTracker(data.directionClosest.crossDirection1.trackerTo, out TransformValues trackerTo))
 										{
-											Debug.LogError("Not all trackers are connected");
+											ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 											return;
 										}
 
-										crossDir1 = trackerTo.Value.position - trackerFrom.Value.position;
+										crossDir1 = trackerTo.position - trackerFrom.position;
 										break;
 								}
 
@@ -236,16 +233,14 @@ namespace Manus.Polygon
 										crossDir2 = data.directionClosest.crossDirection2.worldDirection;
 										break;
 									case DirectionType.TrackerDirection:
-										TransformValues? trackerFrom = trackers.GetTracker(data.directionClosest.crossDirection2.trackerFrom);
-										TransformValues? trackerTo = trackers.GetTracker(data.directionClosest.crossDirection2.trackerTo);
-
-										if (trackerFrom == null || trackerTo == null)
+										if (!trackers.GetTracker(data.directionClosest.crossDirection2.trackerFrom, out TransformValues trackerFrom) ||
+										    !trackers.GetTracker(data.directionClosest.crossDirection2.trackerTo, out TransformValues trackerTo))
 										{
-											Debug.LogError("Not all trackers are connected");
+											ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 											return;
 										}
 
-										crossDir2 = trackerTo.Value.position - trackerFrom.Value.position;
+										crossDir2 = trackerTo.position - trackerFrom.position;
 										break;
 								}
 
@@ -256,12 +251,12 @@ namespace Manus.Polygon
 									normal *= -1f;
 								}
 
-								Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, worldNormal, Color.magenta, 10f);
-								Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, cross, Color.cyan, 10f);
+								//Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, worldNormal, Color.magenta, 10f);
+								//Debug.DrawRay(trackers.GetTracker(VRTrackerType.LeftHand).Value.position, cross, Color.cyan, 10f);
 
 								break;
 							default:
-								Debug.LogError("Implement your shit");
+								ErrorHandler.LogError(ErrorMessage.NotImplemented);
 								break;
 						}
 

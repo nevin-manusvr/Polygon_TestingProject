@@ -98,11 +98,9 @@ namespace Manus.Polygon
 			UpdateTrackerReferences();
 		}
 
-		public TransformValues? GetTracker(VRTrackerType type) // TODO: clean up with out variables
+		public bool GetTracker(VRTrackerType type, out TransformValues transformValues)
 		{
-			if (trackers == null) return null;
-
-			if (trackers.ContainsKey(type))
+			if (trackers != null && trackers.ContainsKey(type))
 			{
 				if (addToLocal)
 				{
@@ -110,31 +108,36 @@ namespace Manus.Polygon
 					Vector3 trackerLocalPosition = parentMatrix.MultiplyPoint3x4(trackers[type].position);
 					Quaternion trackerLocalRotation = parentMatrix.rotation * trackers[type].rotation;
 
-					return new TransformValues(trackerLocalPosition, trackerLocalRotation);
+					transformValues = new TransformValues(trackerLocalPosition, trackerLocalRotation);
+					return true;
 				}
 
-				return new TransformValues(trackers[type].position, trackers[type].rotation);
+				transformValues = new TransformValues(trackers[type].position, trackers[type].rotation);
+				return true;
 			}
 
-			return null;
+			transformValues = new TransformValues(Vector3.zero, Quaternion.identity);
+			return false;
 		}
 
-		public TransformValues? GetTrackerWithOffset(VRTrackerType type, Vector3 localPosition, Quaternion localRotation)
+		public bool GetTrackerWithOffset(VRTrackerType type, Vector3 localPosition, Quaternion localRotation, out TransformValues transformValues)
 		{
-			if (trackers.ContainsKey(type))
+			if (trackers != null && trackers.ContainsKey(type))
 			{
-				TransformValues? trackerTransform = GetTracker(type);
-				if (trackerTransform == null) return null;
+				if (GetTracker(type, out TransformValues trackerTransform))
+				{
+					Matrix4x4 trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, addToLocal ? transform.lossyScale : Vector3.one);
 
-				Matrix4x4 trackerMatrix = Matrix4x4.TRS(trackerTransform.Value.position, trackerTransform.Value.rotation, addToLocal ? transform.lossyScale : Vector3.one);
+					Vector3 pos = trackerMatrix.MultiplyPoint3x4(localPosition);
+					Quaternion rot = trackerMatrix.rotation * localRotation;
 
-				Vector3 pos = trackerMatrix.MultiplyPoint3x4(localPosition);
-				Quaternion rot = trackerMatrix.rotation * localRotation;
-
-				return new TransformValues(pos, rot);
+					transformValues = new TransformValues(pos, rot);
+					return true;
+				}
 			}
 
-			return null;
+			transformValues = new TransformValues(Vector3.zero, Quaternion.identity);
+			return false;
 		}
 
 		#endregion
