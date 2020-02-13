@@ -36,7 +36,7 @@ namespace Manus.Polygon.Skeleton.Editor
 			if (skeleton == null || !skeleton.boneReferences.IsValid) return;
 
 			SkeletonBoneReferences bones = skeleton.boneReferences;
-			if (skeleton.newSkeleton.IsValid) bones = skeleton.newSkeleton;
+			// if (skeleton.newSkeleton.IsValid) bones = skeleton.newSkeleton;
 
 			if (skeleton.boneReferences.IsValid) 
 				DrawHumanoidSkeletonBones(bones);
@@ -47,14 +47,6 @@ namespace Manus.Polygon.Skeleton.Editor
 
 		private void DrawHumanoidSkeletonBones(SkeletonBoneReferences bones)
 		{
-			// Draw Skeleton
-			ConnectBones(bones.main, bones.legLeft.upperLeg);
-			ConnectBones(bones.main, bones.legRight.upperLeg);
-
-			// Draw Bones
-			DrawBone(bones.main, size);
-
-
 			// Draw whole skeleton
 			DrawBodyAndHead(bones.body, bones.head);
 
@@ -80,8 +72,8 @@ namespace Manus.Polygon.Skeleton.Editor
 
 			ConnectBones(body.spine[body.spine.Length - 1], head.neck);
 			ConnectBones(head.neck, head.head);
-			if (head.eyeLeft?.bone != null) ConnectBones(head.head, head.eyeLeft);
-			if (head.eyeRight?.bone != null) ConnectBones(head.head, head.eyeRight);
+			//if (head.eyeLeft?.bone != null) ConnectBones(head.head, head.eyeLeft);
+			//if (head.eyeRight?.bone != null) ConnectBones(head.head, head.eyeRight);
 
 			// Draw Bones
 			DrawBone(body.hip, size);
@@ -92,8 +84,8 @@ namespace Manus.Polygon.Skeleton.Editor
 
 			DrawBone(head.neck, size);
 			DrawBone(head.head, size);
-			if (head.eyeLeft?.bone != null) DrawBone(head.eyeLeft, size);
-			if (head.eyeRight?.bone != null) DrawBone(head.eyeRight, size);
+			//if (head.eyeLeft?.bone != null) DrawBone(head.eyeLeft, size);
+			//if (head.eyeRight?.bone != null) DrawBone(head.eyeRight, size);
 		}
 
 		private void DrawArm(Arm arm, Body body)

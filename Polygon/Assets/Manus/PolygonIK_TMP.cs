@@ -78,24 +78,24 @@ namespace Manus.Polygon
 			List<IK> ikComponents = new List<IK>();
 
 			ikComponents.Add(hipIK = ikContainer.AddComponent<SingleBoneIK>());
-			hipIK.solver.SetChain(bones.main.bone, bones.main.bone);
+			hipIK.solver.SetChain(bones.body.hip.bone, bones.body.hip.bone);
 			hipIK.solver.target = targets.hip;
 
 			spineIK = new LimbIK[bones.body.spine.Length];
 			spineIKWeight = new float[bones.body.spine.Length];
 			for (int i = 0; i < bones.body.spine.Length; i++)
 			{
-				ikComponents.Add(spineIK[i] = CreateIKChain(bones.main.bone, bones.body.spine[i].bone, bones.head.head.bone, bones.main.bone, ikContainer, targets.head.GetChild(0), targets.spine));
+				ikComponents.Add(spineIK[i] = CreateIKChain(bones.body.hip.bone, bones.body.spine[i].bone, bones.head.head.bone, bones.body.hip.bone, ikContainer, targets.head.GetChild(0), targets.spine));
 				spineIK[i].solver.IKPositionWeight = (1 - 0.2f) / bones.body.spine.Length * (i + 1);
 				spineIKWeight[i] = (1 - 0.2f) / bones.body.spine.Length * (i + 1);
 			}
 
-			ikComponents.Add(neckIK = CreateIKChain(bones.main.bone, bones.head.neck.bone, bones.head.head.bone, bones.main.bone, ikContainer, targets.head, targets.spine));
+			ikComponents.Add(neckIK = CreateIKChain(bones.body.hip.bone, bones.head.neck.bone, bones.head.head.bone, bones.body.hip.bone, ikContainer, targets.head, targets.spine));
 
-			ikComponents.Add(leftArmIK = CreateIKChain(bones.armLeft.upperArm.bone, bones.armLeft.lowerArm.bone, bones.armLeft.hand.wrist.bone, bones.main.bone, ikContainer, targets.leftHand, targets.leftElbow));
-			ikComponents.Add(rightArmIK = CreateIKChain(bones.armRight.upperArm.bone, bones.armRight.lowerArm.bone, bones.armRight.hand.wrist.bone, bones.main.bone, ikContainer, targets.rightHand, targets.rightElbow));
-			ikComponents.Add(leftLegIK = CreateIKChain(bones.legLeft.upperLeg.bone, bones.legLeft.lowerLeg.bone, bones.legLeft.foot.bone, bones.main.bone, ikContainer, targets.leftFoot, targets.leftKnee));
-			ikComponents.Add(rightLegIK = CreateIKChain(bones.legRight.upperLeg.bone, bones.legRight.lowerLeg.bone, bones.legRight.foot.bone, bones.main.bone, ikContainer, targets.rightFoot, targets.rightKnee));
+			ikComponents.Add(leftArmIK = CreateIKChain(bones.armLeft.upperArm.bone, bones.armLeft.lowerArm.bone, bones.armLeft.hand.wrist.bone, bones.body.hip.bone, ikContainer, targets.leftHand, targets.leftElbow));
+			ikComponents.Add(rightArmIK = CreateIKChain(bones.armRight.upperArm.bone, bones.armRight.lowerArm.bone, bones.armRight.hand.wrist.bone, bones.body.hip.bone, ikContainer, targets.rightHand, targets.rightElbow));
+			ikComponents.Add(leftLegIK = CreateIKChain(bones.legLeft.upperLeg.bone, bones.legLeft.lowerLeg.bone, bones.legLeft.foot.bone, bones.body.hip.bone, ikContainer, targets.leftFoot, targets.leftKnee));
+			ikComponents.Add(rightLegIK = CreateIKChain(bones.legRight.upperLeg.bone, bones.legRight.lowerLeg.bone, bones.legRight.foot.bone, bones.body.hip.bone, ikContainer, targets.rightFoot, targets.rightKnee));
 
 			order.IKComponents = ikComponents.ToArray();
 
@@ -293,18 +293,18 @@ namespace Manus.Polygon
 
 		private void OnHipPostIK()
 		{
-			EstimateSpineAim(bones.main, bones.head.head, targets.spine);
+			EstimateSpineAim(bones.body.hip, bones.head.head, targets.spine);
 		}
 
 		private void OnLeftLegPostIK()
 		{
-			EstimateKneePosition(bones.main, bones.legLeft.foot, targets.leftKnee, true);
+			EstimateKneePosition(bones.body.hip, bones.legLeft.foot, targets.leftKnee, true);
 			FixFootToGround(targets.leftFoot, bones.legLeft.foot, bones.legLeft.toes, bones.legLeft.toesEnd.bone, true);
 		}
 
 		private void OnRightLegPostIK()
 		{
-			EstimateKneePosition(bones.main, bones.legRight.foot, targets.rightKnee, false);
+			EstimateKneePosition(bones.body.hip, bones.legRight.foot, targets.rightKnee, false);
 			FixFootToGround(targets.rightFoot, bones.legRight.foot, bones.legRight.toes, bones.legRight.toesEnd.bone, false);
 		}
 

@@ -42,6 +42,6 @@ public class CharacterFollower : MonoBehaviour
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawRay(target.position, (target.rotation * dir).normalized);
+		// Gizmos.DrawRay(target.position, (target.rotation * dir).normalized);
 	}
 }

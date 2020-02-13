@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using Manus.ToBeHermes.Skeleton;
 
 namespace Manus.Polygon.Skeleton
 {
 	[System.Serializable]
 	public class Bone
 	{
+		public BoneType type;
 		public Transform bone;
 
-		public Bone(Transform bone)
+		public Bone(BoneType type, Transform bone)
 		{
 			if (bone == null) return;
+
+			this.type = type;
 			this.bone = bone;
 		}
 	}
@@ -17,9 +21,6 @@ namespace Manus.Polygon.Skeleton
 	[System.Serializable]
 	public class OptionalBone : Bone
 	{
-		public OptionalBone(Transform bone) : base(bone)
-		{
-
-		}
+		public OptionalBone(BoneType type, Transform bone) : base(type, bone) { }
 	}
 }
