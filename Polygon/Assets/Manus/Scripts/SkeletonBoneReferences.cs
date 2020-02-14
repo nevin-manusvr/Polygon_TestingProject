@@ -148,6 +148,7 @@ namespace Manus.Polygon.Skeleton
 
 		public void Populate(Animator animator)
 		{
+			this.root = new Bone(BoneType.Root, animator.GetBoneTransform(HumanBodyBones.Hips).parent);
 			this.head.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.Neck),
 				animator.GetBoneTransform(HumanBodyBones.Head),

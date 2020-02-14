@@ -41,7 +41,7 @@ namespace Manus.Polygon.Skeleton
 
 		public bool IsValid
 		{
-			get { return wrist?.bone && index.IsValid && middle.IsValid && ring.IsValid && pinky.IsValid && thumb.IsValid; }
+			get { return wrist?.bone; } // && index.IsValid && middle.IsValid && ring.IsValid && pinky.IsValid && thumb.IsValid; }
 		}
 
 		public void PopulateBones(Transform lowerArm)

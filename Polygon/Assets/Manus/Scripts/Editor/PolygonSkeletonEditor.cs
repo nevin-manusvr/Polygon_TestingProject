@@ -3,13 +3,15 @@ using UnityEngine;
 
 namespace Manus.Polygon.Skeleton.Editor
 {
+	using Accord;
+
 	[CustomEditor(typeof(PolygonSkeleton))]
 	public class PolygonSkeletonEditor : UnityEditor.Editor
 	{
 		private float size = 0.03f;
 
 		private Color handlesColor = Color.cyan;
-		private Transform selectedBone;
+		private Bone selectedBone;
 
 		public override void OnInspectorGUI()
 		{
@@ -25,6 +27,11 @@ namespace Manus.Polygon.Skeleton.Editor
 			if (GUILayout.Button("Clear Bone References"))
 			{
 				script.ClearBoneReferences();
+			}
+
+			if (GUILayout.Button("Calculatettteette"))
+			{
+				script.Calculateeee();
 			}
 		}
 
@@ -42,7 +49,7 @@ namespace Manus.Polygon.Skeleton.Editor
 				DrawHumanoidSkeletonBones(bones);
 
 			if (Selection.activeGameObject != skeleton.gameObject) selectedBone = null;
-			if (selectedBone != null) DrawRotationGizmo(selectedBone);
+			if (selectedBone != null) DrawRotationGizmo(selectedBone, size);
 		}
 
 		private void DrawHumanoidSkeletonBones(SkeletonBoneReferences bones)
@@ -125,11 +132,11 @@ namespace Manus.Polygon.Skeleton.Editor
 		{
 			DrawBone(hand.wrist, size);
 
-			DrawFinger(hand.index, hand);
-			DrawFinger(hand.middle, hand);
-			DrawFinger(hand.ring, hand);
-			DrawFinger(hand.pinky, hand);
-			DrawFinger(hand.thumb, hand);
+			//DrawFinger(hand.index, hand);
+			//DrawFinger(hand.middle, hand);
+			//DrawFinger(hand.ring, hand);
+			//DrawFinger(hand.pinky, hand);
+			//DrawFinger(hand.thumb, hand);
 		}
 
 		private void DrawFinger(Finger finger, HandBoneReferences hand)
@@ -156,6 +163,14 @@ namespace Manus.Polygon.Skeleton.Editor
 		private void DrawBone(Bone bone, float size)
 		{
 			Handles.color = handlesColor;
+
+			if (selectedBone == bone)
+			{
+				Handles.SphereHandleCap(0, bone.bone.position, Quaternion.identity, size, EventType.Repaint);
+				DrawDirectionBone(bone, size);
+				return;
+			}
+
 			if (Handles.Button(bone.bone.position, Quaternion.identity, size, size, Handles.SphereHandleCap))
 			{
 				if (Event.current.control)
@@ -165,7 +180,7 @@ namespace Manus.Polygon.Skeleton.Editor
 				else
 				{
 					Selection.activeGameObject = (target as PolygonSkeleton)?.gameObject;
-					selectedBone = bone.bone;
+					selectedBone = bone;
 				}
 			}
 
@@ -174,29 +189,45 @@ namespace Manus.Polygon.Skeleton.Editor
 
 		private void DrawDirectionBone(Bone bone, float size)
 		{
+			
+			if (!IsQuaternionValid(bone.desiredRotation)) return;
+
 			Handles.color = Handles.zAxisColor;
-			Handles.ArrowHandleCap(0, bone.bone.position, bone.bone.rotation, size, EventType.Repaint);
+			Handles.ArrowHandleCap(0, bone.bone.position, bone.desiredRotation, size, EventType.Repaint);
 
 			Handles.color = Handles.yAxisColor;
-			Handles.DrawLine(bone.bone.position, bone.bone.position + bone.bone.up * size);
-
-			Handles.CylinderHandleCap(0, bone.bone.position + bone.bone.up * size, bone.bone.rotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
+			Handles.ArrowHandleCap(0, bone.bone.position, bone.desiredRotation * Quaternion.Euler(-90f, 0f, 0f), size, EventType.Repaint);
 		}
 
-		private void DrawRotationGizmo(Transform bone)
+		private void DrawRotationGizmo(Bone bone, float size)
 		{
+			if (!IsQuaternionValid(bone.desiredRotation) || bone.bone == null) return;
+			
+			Handles.color = Handles.yAxisColor;
+			Handles.CylinderHandleCap(0, bone.bone.position + bone.desiredRotation * Vector3.up * size, bone.desiredRotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
+
 			EditorGUI.BeginChangeCheck();
-			Quaternion rot = Handles.RotationHandle(bone.rotation, bone.position);
+			
+			Quaternion rot = Handles.Disc(bone.desiredRotation, bone.bone.position, bone.desiredRotation * Vector3.forward, size, false, 0.01f);
 			if (EditorGUI.EndChangeCheck())
 			{
-				Undo.RecordObject(bone, "Rotated Bone");
-				bone.rotation = rot;
+				Debug.Log("Record");
+				Undo.RecordObject(target, "Rotated Bone");
+				bone.desiredRotation = rot;
 			}
 
 			// TODO: implement this for the rotating of the bones
 			//float snap = 0.1f;
 			//Vector3 newTargetPosition = Handles.Slider2D(bone.position, bone.forward, bone.right, bone.up, size, Handles.CircleHandleCap, snap);
 			//bone.position = newTargetPosition;
+		}
+
+		private bool IsQuaternionValid(Quaternion rotation)
+		{
+			return    !(Mathf.Approximately(rotation.x, 0) 
+			         && Mathf.Approximately(rotation.y, 0) 
+			         && Mathf.Approximately(rotation.z, 0) 
+			         && Mathf.Approximately(rotation.w, 0));
 		}
 
 		#endregion

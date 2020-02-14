@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Manus.Polygon.Utilities
+namespace Manus.Polygon.Skeleton.Utilities
 {
 	public static class SkeletonUtilities
 	{

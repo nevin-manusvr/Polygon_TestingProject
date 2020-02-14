@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Manus.Core.Hand;
+using Manus.Polygon.Skeleton.Utilities;
 
 namespace Manus.Polygon.Skeleton
 {
@@ -41,6 +41,37 @@ namespace Manus.Polygon.Skeleton
 			//		anim.enabled = true;
 			//	}
 			//}
+		}
+
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.A))
+			{
+				Calculateeee();
+			}
+		}
+
+		public void Calculateeee()
+		{
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.root, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.body.hip, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.head.head, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.upperLeg, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.lowerLeg, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.foot, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.toes, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.toesEnd, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.head.neck, boneReferences);
+
+			foreach (Bone spineBone in boneReferences.body.spine)
+			{
+				SkeletonOrientationCalculator.CalculateOrientation(spineBone, boneReferences);
+			}
+
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.shoulder, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.upperArm, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.lowerArm, boneReferences);
+			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.hand.wrist, boneReferences);
 		}
 
 		#endregion
