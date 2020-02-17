@@ -9,7 +9,7 @@ namespace Manus.Polygon.Skeleton
 	{
 		public Animator animator;
 
-		public SkinnedMeshRenderer skinnedMeshes;
+		public SkinnedMeshRenderer[] skinnedMeshes;
 
 		public SkeletonBoneReferences boneReferences;
 
@@ -26,7 +26,7 @@ namespace Manus.Polygon.Skeleton
 
 		private void Awake()
 		{
-			skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>()[0];
+			skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 			//if (boneReferences.IsValid && newSkeleton.IsValid)
 			//{
 			//	ReparentSkeleton(newSkeleton);
@@ -44,8 +44,6 @@ namespace Manus.Polygon.Skeleton
 			//		anim.enabled = true;
 			//	}
 			//}
-
-			Debug.Log(skinnedMeshes.bones.Length + " - " + skinnedMeshes.sharedMesh.bindposes.Length);
 		}
 
 		private void Update()
@@ -58,6 +56,11 @@ namespace Manus.Polygon.Skeleton
 			if (Input.GetKeyDown(KeyCode.S))
 			{
 				boneReferences.UpdateBoneOrientations(skinnedMeshes);
+			}
+
+			if (Input.GetKeyDown(KeyCode.D))
+			{
+				SkeletonOrientator.SetToBindPose(skinnedMeshes, boneReferences.root.bone);
 			}
 		}
 
