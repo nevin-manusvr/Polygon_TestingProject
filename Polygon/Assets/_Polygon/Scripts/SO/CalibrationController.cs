@@ -70,7 +70,7 @@ public class CalibrationController : MonoBehaviour
     public void OnPrepareCalibration()
     { 
         //shows ui and starts countdown
-        uiManager.UpdateText(calibrationStepName, discriptionCalibration);
+        //uiManager.UpdateText(calibrationStepName, discriptionCalibration);
         TriggerPoseAnimation(calibrationStepName);
     }
 
