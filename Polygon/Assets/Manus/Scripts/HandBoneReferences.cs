@@ -7,7 +7,7 @@ namespace Manus.Polygon.Skeleton
 {
 
 	[System.Serializable]
-	public struct Finger
+	public class Finger
 	{
 		public Bone proximal;
 		public Bone middle;
@@ -42,6 +42,15 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return wrist?.bone; } // && index.IsValid && middle.IsValid && ring.IsValid && pinky.IsValid && thumb.IsValid; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+
+			bones.Add(wrist.type, wrist);
+
+			return bones;
 		}
 
 		public void PopulateBones(Transform lowerArm)

@@ -9,7 +9,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 	public static class SkeletonOrientationCalculator
 	{
-		public static void CalculateOrientation(Bone bone, SkeletonBoneReferences skeleton)
+		public static void CalculateOrientation(this Bone bone, SkeletonBoneReferences skeleton)
 		{
 			switch (bone.type)
 			{
@@ -199,6 +199,14 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 					break;
 				case BoneType.RightUpperArm:
+
+					{
+						Vector3 aimDirection = skeleton.armRight.lowerArm.bone.position - bone.bone.position;
+						Vector3 upDirection = Vector3.up;
+
+						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
+					}
+
 					break;
 				case BoneType.LeftLowerArm:
 
@@ -208,13 +216,21 @@ namespace Manus.Polygon.Skeleton.Utilities
 						Vector3 armSide = Vector3.Cross(bone.bone.position - skeleton.armLeft.upperArm.bone.position, Vector3.up).normalized;
 						Vector3 upDirection = Vector3.Cross(armSide, bone.bone.position - skeleton.armLeft.upperArm.bone.position).normalized;
 
-						//Debug.DrawRay(bone.bone.position, upDirection, Color.red, 10f);
-
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
 
 					break;
 				case BoneType.RightLowerArm:
+
+					{
+						Vector3 aimDirection = skeleton.armRight.hand.wrist.bone.position - bone.bone.position;
+
+						Vector3 armSide = Vector3.Cross(bone.bone.position - skeleton.armRight.upperArm.bone.position, Vector3.up).normalized;
+						Vector3 upDirection = Vector3.Cross(armSide, bone.bone.position - skeleton.armRight.upperArm.bone.position).normalized;
+
+						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
+					}
+
 					break;
 				case BoneType.LeftHand:
 					

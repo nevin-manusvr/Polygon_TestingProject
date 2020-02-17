@@ -9,6 +9,8 @@ namespace Manus.Polygon.Skeleton
 	{
 		public Animator animator;
 
+		public SkinnedMeshRenderer skinnedMeshes;
+
 		public SkeletonBoneReferences boneReferences;
 
 		// public SkeletonBoneReferences newSkeleton;
@@ -24,6 +26,7 @@ namespace Manus.Polygon.Skeleton
 
 		private void Awake()
 		{
+			skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>()[0];
 			//if (boneReferences.IsValid && newSkeleton.IsValid)
 			//{
 			//	ReparentSkeleton(newSkeleton);
@@ -41,6 +44,8 @@ namespace Manus.Polygon.Skeleton
 			//		anim.enabled = true;
 			//	}
 			//}
+
+			Debug.Log(skinnedMeshes.bones.Length + " - " + skinnedMeshes.sharedMesh.bindposes.Length);
 		}
 
 		private void Update()
@@ -49,29 +54,19 @@ namespace Manus.Polygon.Skeleton
 			{
 				Calculateeee();
 			}
+
+			if (Input.GetKeyDown(KeyCode.S))
+			{
+				boneReferences.UpdateBoneOrientations(skinnedMeshes);
+			}
 		}
 
 		public void Calculateeee()
 		{
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.root, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.body.hip, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.head.head, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.upperLeg, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.lowerLeg, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.foot, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.toes, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.legLeft.toesEnd, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.head.neck, boneReferences);
-
-			foreach (Bone spineBone in boneReferences.body.spine)
+			foreach (var bone in boneReferences.GatherBones().Values)
 			{
-				SkeletonOrientationCalculator.CalculateOrientation(spineBone, boneReferences);
+				bone.CalculateOrientation(boneReferences);
 			}
-
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.shoulder, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.upperArm, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.lowerArm, boneReferences);
-			SkeletonOrientationCalculator.CalculateOrientation(boneReferences.armLeft.hand.wrist, boneReferences);
 		}
 
 		#endregion

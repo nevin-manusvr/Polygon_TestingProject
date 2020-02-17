@@ -5,6 +5,8 @@ namespace Manus.Polygon.Skeleton.Editor
 {
 	using Accord;
 
+	using Manus.Polygon.Skeleton.Utilities;
+
 	[CustomEditor(typeof(PolygonSkeleton))]
 	public class PolygonSkeletonEditor : UnityEditor.Editor
 	{
@@ -190,7 +192,7 @@ namespace Manus.Polygon.Skeleton.Editor
 		private void DrawDirectionBone(Bone bone, float size)
 		{
 			
-			if (!IsQuaternionValid(bone.desiredRotation)) return;
+			if (!bone.desiredRotation.IsValid()) return;
 
 			Handles.color = Handles.zAxisColor;
 			Handles.ArrowHandleCap(0, bone.bone.position, bone.desiredRotation, size, EventType.Repaint);
@@ -201,7 +203,7 @@ namespace Manus.Polygon.Skeleton.Editor
 
 		private void DrawRotationGizmo(Bone bone, float size)
 		{
-			if (!IsQuaternionValid(bone.desiredRotation) || bone.bone == null) return;
+			if (!bone.desiredRotation.IsValid() || bone.bone == null) return;
 			
 			Handles.color = Handles.yAxisColor;
 			Handles.CylinderHandleCap(0, bone.bone.position + bone.desiredRotation * Vector3.up * size, bone.desiredRotation * Quaternion.Euler(0, 90, 0), size / 3f, EventType.Repaint);
@@ -215,19 +217,6 @@ namespace Manus.Polygon.Skeleton.Editor
 				Undo.RecordObject(target, "Rotated Bone");
 				bone.desiredRotation = rot;
 			}
-
-			// TODO: implement this for the rotating of the bones
-			//float snap = 0.1f;
-			//Vector3 newTargetPosition = Handles.Slider2D(bone.position, bone.forward, bone.right, bone.up, size, Handles.CircleHandleCap, snap);
-			//bone.position = newTargetPosition;
-		}
-
-		private bool IsQuaternionValid(Quaternion rotation)
-		{
-			return    !(Mathf.Approximately(rotation.x, 0) 
-			         && Mathf.Approximately(rotation.y, 0) 
-			         && Mathf.Approximately(rotation.z, 0) 
-			         && Mathf.Approximately(rotation.w, 0));
 		}
 
 		#endregion

@@ -8,7 +8,7 @@ namespace Manus.Polygon.Skeleton
 
 	#region BoneOrganization
 	[System.Serializable]
-	public struct Body
+	public class Body
 	{
 		public Bone hip;
 		public Bone[] spine;
@@ -16,6 +16,18 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return hip?.bone && spine?.Length > 0; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+			bones.Add(hip.type, hip);
+			foreach (Bone spineBone in spine)
+			{
+				bones.Add(spineBone.type, spineBone);
+			}
+
+			return bones;
 		}
 
 		public void AssignBones(Transform hip, Transform spine, Transform chest, Transform upperChest)
@@ -32,7 +44,7 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public struct Head
+	public class Head
 	{
 		public Bone neck;
 		public Bone head;
@@ -42,6 +54,15 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return neck?.bone && head?.bone; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+			bones.Add(neck.type, neck);
+			bones.Add(head.type, head);
+
+			return bones;
 		}
 
 		public void AssignBones(Transform neck, Transform head, Transform eyeLeft, Transform eyeRight)
@@ -58,7 +79,7 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public struct Arm
+	public class Arm
 	{
 		public Bone shoulder;
 		public Bone upperArm;
@@ -68,6 +89,17 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return shoulder?.bone && upperArm?.bone && lowerArm?.bone && hand.IsValid; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+			bones.Add(shoulder.type, shoulder);
+			bones.Add(upperArm.type, upperArm);
+			bones.Add(lowerArm.type, lowerArm);
+			if (hand?.wrist?.bone != null) bones.Add(hand.wrist.type, hand.wrist);
+
+			return bones;
 		}
 
 		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm, bool left)
@@ -84,7 +116,7 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public struct Leg
+	public class Leg
 	{
 		public Bone upperLeg;
 		public Bone lowerLeg;
@@ -95,6 +127,18 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return upperLeg?.bone && lowerLeg?.bone && foot?.bone; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+			bones.Add(upperLeg.type, upperLeg);
+			bones.Add(lowerLeg.type, lowerLeg);
+			bones.Add(foot.type, foot);
+			if (toes?.bone != null) bones.Add(toes.type, toes);
+			if (toesEnd?.bone != null) bones.Add(toesEnd.type, toesEnd);
+
+			return bones;
 		}
 
 		public void AssignBones(Transform upperLeg, Transform lowerLeg, Transform foot, Transform toes, Transform toesEnd, bool left)
@@ -144,6 +188,32 @@ namespace Manus.Polygon.Skeleton
 		public bool IsValid
 		{
 			get { return head.IsValid && body.IsValid && armLeft.IsValid && armRight.IsValid && legLeft.IsValid && legRight.IsValid; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones()
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+			
+			bones.Add(root.type, root);
+			AddToDictionary(body.GatherBones());
+			AddToDictionary(head.GatherBones());
+			AddToDictionary(armLeft.GatherBones());
+			AddToDictionary(armRight.GatherBones());
+			AddToDictionary(legLeft.GatherBones());
+			AddToDictionary(legRight.GatherBones());
+
+			return bones;
+
+			void AddToDictionary(Dictionary<BoneType, Bone> bonesToAdd)
+			{
+				foreach (var bone in bonesToAdd)
+				{
+					if (!bones.ContainsKey(bone.Key))
+					{
+						bones.Add(bone.Key, bone.Value);
+					}
+				}
+			}
 		}
 
 		public void Populate(Animator animator)
