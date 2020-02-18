@@ -20,9 +20,6 @@ public class Trigger : MonoBehaviour
     }
     void OnTriggerEnter(Collider collider)
     {
-
-        
-
         if(this.gameObject.CompareTag("Start"))
         {
             Debug.Log("Continue");
@@ -35,9 +32,6 @@ public class Trigger : MonoBehaviour
             m_UIBehaviour.ButtonFunction(transform.tag);
             //previous step
         }
-
-
-        //this.gameObject.GetComponent<Image>().color = Color.red;
     }
 
     void OnTriggerStay(Collider collider)
@@ -52,10 +46,5 @@ public class Trigger : MonoBehaviour
     {
         Vector3 Startpos =  new Vector3(transform.localPosition.x, 0, 0);
         m_Child.transform.DOLocalMoveX(0, 0.1f);
-    }
-
-    private void Update()
-    {
-
     }
 }

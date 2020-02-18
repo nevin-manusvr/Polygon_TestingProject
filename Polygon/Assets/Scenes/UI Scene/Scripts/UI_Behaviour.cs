@@ -47,7 +47,6 @@ public class UI_Behaviour : MonoBehaviour
     void Update()
     {
         transform.position = new Vector3(m_Camera.transform.position.x, m_Camera.transform.position.y / 1.5f, m_Camera.transform.position.z + 0.35f);
-        //transform.rotation = m_Camera.transform.rotation;
     }
 
 
@@ -95,6 +94,14 @@ public class UI_Behaviour : MonoBehaviour
                                                                 m_PreviousButton.interactable = true;});
     }
 
+
+    public void NextStep()
+    {
+        if(sequence.isFinished)
+        {
+            HideUI();
+        }
+    }
     public void ToggleUIButtons()
     {
         m_ButtonsAreActive = !m_ButtonsAreActive;
