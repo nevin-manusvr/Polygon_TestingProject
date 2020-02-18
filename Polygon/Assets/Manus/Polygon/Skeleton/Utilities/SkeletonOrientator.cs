@@ -6,6 +6,8 @@ using Manus.ToBeHermes.Skeleton;
 
 namespace Manus.Polygon.Skeleton.Utilities
 {
+	using System;
+
 	public static class SkeletonOrientator
 	{
 		public static void SetToBindPose(SkinnedMeshRenderer[] meshes, Transform root)
@@ -19,9 +21,9 @@ namespace Manus.Polygon.Skeleton.Utilities
 			{
 				Debug.DrawRay(rootMatrix.MultiplyPoint3x4(vertex), Vector3.up * 0.01f, Color.red, 10f);
 			}
-			//for (var i = 0; i < meshes.Length; i++)
+			//for (var i = 0; i < renderers.Length; i++)
 			//{
-			//	SkinnedMeshRenderer mesh = meshes[i];
+			//	SkinnedMeshRenderer mesh = renderers[i];
 
 			//	for (var j = 0; j < mesh.bones.Length; j++)
 			//	{
@@ -38,7 +40,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 			//}
 		}
 
-		public static void UpdateBoneOrientations(this SkeletonBoneReferences bones, SkinnedMeshRenderer[] meshes)
+		public static void UpdateBoneOrientations(this SkeletonBoneReferences bones, SkinnedMeshRenderer[] renderers)
 		{
 			var allBones = bones.GatherBones().Values.ToArray();
 
@@ -46,34 +48,73 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 			bones.root.bone.ReorientTransform(bones.root.desiredRotation);
 
-			foreach (SkinnedMeshRenderer rend in meshes)
+			var rendData = new Tuple<SkinnedMeshRenderer, Mesh>[renderers.Length];
+
+			// Save renderer data
+			for (var i = 0; i < renderers.Length; i++)
 			{
-				Mesh t_Mesh = new Mesh();
-				rend.BakeMesh(t_Mesh);
-				var t_Bones = rend.bones;
-				t_Mesh.boneWeights = rend.sharedMesh.boneWeights;
-				
-				var t_BMats = new Matrix4x4[rend.bones.Length];
+				SkinnedMeshRenderer rend = renderers[i];
 
-				for (int i = 0; i < t_Bones.Length; i++)
+				Mesh mesh = new Mesh();
+				rend.BakeMesh(mesh);
+				mesh.boneWeights = rend.sharedMesh.boneWeights;
+
+				rendData[i] = new Tuple<SkinnedMeshRenderer, Mesh>(rend, mesh);
+			}
+
+			// Rotate bones
+			foreach (Bone bone in allBones)
+			{
+				bone.bone.ReorientTransform(bone.desiredRotation);
+			}
+
+			// Assign renderer data
+			foreach (Tuple<SkinnedMeshRenderer, Mesh> data in rendData)
+			{
+				SkinnedMeshRenderer rend = data.Item1;
+				Mesh mesh = data.Item2;
+				Transform[] joints = rend.bones;
+				var bindposes = new Matrix4x4[rend.bones.Length];
+
+				for (int i = 0; i < joints.Length; i++)
 				{
-					foreach (Bone bone in allBones)
-					{
-						if (bone.bone == t_Bones[i])
-						{
-							t_Bones[i].ReorientTransform(bone.desiredRotation);
-						}
-					}
+					bindposes[i] = joints[i].worldToLocalMatrix * rend.transform.localToWorldMatrix;
 				}
 
-				for (int i = 0; i < t_Bones.Length; i++)
-				{
-					t_BMats[i] = t_Bones[i].worldToLocalMatrix * rend.transform.localToWorldMatrix;
-				}
-
-				t_Mesh.bindposes = t_BMats;
+				mesh.bindposes = bindposes;
 				rend.rootBone = bones.root.bone;
-				rend.sharedMesh = t_Mesh;
+				rend.sharedMesh = mesh;
+			}
+
+			// TMP:
+			//foreach (SkinnedMeshRenderer rend in renderers)
+			//{
+			//	Mesh t_Mesh = new Mesh();
+			//	rend.BakeMesh(t_Mesh);
+			//	var t_Bones = rend.bones;
+			//	t_Mesh.boneWeights = rend.sharedMesh.boneWeights;
+				
+			//	var t_BMats = new Matrix4x4[rend.bones.Length];
+
+			//	for (int i = 0; i < t_Bones.Length; i++)
+			//	{
+			//		foreach (Bone bone in allBones)
+			//		{
+			//			if (bone.bone == t_Bones[i])
+			//			{
+			//				t_Bones[i].ReorientTransform(bone.desiredRotation);
+			//			}
+			//		}
+			//	}
+
+			//	for (int i = 0; i < t_Bones.Length; i++)
+			//	{
+			//		t_BMats[i] = t_Bones[i].worldToLocalMatrix * rend.transform.localToWorldMatrix;
+			//	}
+
+			//	t_Mesh.bindposes = t_BMats;
+			//	rend.rootBone = bones.root.bone;
+			//	rend.sharedMesh = t_Mesh;
 
 				//Transform rootTransform = rend.transform;
 				//Matrix4x4 vertexRoot = Matrix4x4.TRS(rend.transform.position, rend.transform.rotation, rend.transform.lossyScale);
@@ -123,7 +164,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 				//rend.bones = rend.bones;
 				//rend.sharedMesh = mesh;
-			}
+			//}
 
 			//foreach (var bone in allBones)
 			//{

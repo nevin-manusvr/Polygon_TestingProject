@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Manus.Core.VR;
 using Manus.Core.Utility;
+using System.IO;
 
 namespace Manus.Polygon
 {
@@ -24,6 +25,11 @@ namespace Manus.Polygon
 
 		// Settings
 		private float minPointDistance = 0.01f;
+
+		private bool writeToFile = false;
+		private string fileName = "";
+
+		private float startTime = -1;
 
 		#endregion
 
@@ -47,11 +53,24 @@ namespace Manus.Polygon
 			this.trackers = null;
 		}
 
-		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType) // TODO: add local offset
+		public Arc(TrackerReference trackers, VRTrackerType parentTrackerType, bool writeToFile = false, string name = "") // TODO: add local offset
 		{
 			this.arcPoints = new List<ArcPoint>();
 			this.trackers = trackers;
 			this.parentTracker = parentTrackerType;
+
+			this.writeToFile = writeToFile;
+			if (this.writeToFile)
+			{
+				int index = 0;
+				while (File.Exists($"{name}_{parentTracker}_{index}.csv"))
+				{
+					index++;
+				}
+				this.fileName = $"{name}_{parentTracker}_{index}";
+
+				File.AppendAllText($"{this.fileName}.csv", $"{name} : {parentTrackerType}");
+			}
 		}
 
 		#region Public Methods
@@ -61,10 +80,22 @@ namespace Manus.Polygon
 			if (arcPoints.Count == 0 || Vector3.Distance(arcPoints[arcPoints.Count - 1].point, point) > minPointDistance)
 			{
 				TransformValues? trackerTransform = null;
-				if (trackers != null && trackers.GetTracker(parentTracker, out TransformValues parentTrackerTransform))
+				TransformValues parentTrackerTransform = new TransformValues(Vector3.zero, Quaternion.identity);
+				if (trackers != null && trackers.GetTracker(parentTracker, out parentTrackerTransform))
 					trackerTransform = parentTrackerTransform;
 
 				arcPoints.Add(new ArcPoint(point, trackerTransform));
+
+				if (writeToFile)
+				{
+					if (startTime < 0f) startTime = Time.unscaledTime;
+					Debug.Log(Time.unscaledTime - startTime + " - " + startTime);
+					File.AppendAllText(
+						$"{fileName}.csv",
+						$"\n{Time.unscaledTime - startTime}, {point.x}, {point.y}, {point.z}, "
+						+ $"{parentTracker}, {parentTrackerTransform.position.x}, {parentTrackerTransform.position.y}, {parentTrackerTransform.position.z}, "
+						+ $"{parentTrackerTransform.rotation.x}, {parentTrackerTransform.rotation.y}, {parentTrackerTransform.rotation.z}, {parentTrackerTransform.rotation.w}");
+				}
 			}
 		}
 

@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manus.Polygon.Skeleton.Utilities;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Manus.Polygon.Skeleton
 {
 	public class PolygonSkeleton : MonoBehaviour
 	{
 		public Animator animator;
 
-		public SkinnedMeshRenderer[] skinnedMeshes;
-
 		public SkeletonBoneReferences boneReferences;
-
-		// public SkeletonBoneReferences newSkeleton;
-
-		private Transform newSkeletonParent;
-
 		public SkeletonBoneScalers boneScalers;
 
 		// TMP
@@ -26,7 +23,6 @@ namespace Manus.Polygon.Skeleton
 
 		private void Awake()
 		{
-			skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 			//if (boneReferences.IsValid && newSkeleton.IsValid)
 			//{
 			//	ReparentSkeleton(newSkeleton);
@@ -48,28 +44,7 @@ namespace Manus.Polygon.Skeleton
 
 		private void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.A))
-			{
-				Calculateeee();
-			}
 
-			if (Input.GetKeyDown(KeyCode.S))
-			{
-				boneReferences.UpdateBoneOrientations(skinnedMeshes);
-			}
-
-			if (Input.GetKeyDown(KeyCode.D))
-			{
-				SkeletonOrientator.SetToBindPose(skinnedMeshes, boneReferences.root.bone);
-			}
-		}
-
-		public void Calculateeee()
-		{
-			foreach (var bone in boneReferences.GatherBones().Values)
-			{
-				bone.CalculateOrientation(boneReferences);
-			}
 		}
 
 		#endregion
@@ -352,6 +327,9 @@ namespace Manus.Polygon.Skeleton
 				boneReferences.Populate(animator);
 			}
 
+			//PolygonSkeleton newVersion = Instantiate(this, transform.position, transform.rotation, transform.parent);
+			//newVersion.transform.SetSiblingIndex(transform.GetSiblingIndex());
+
 			//if (boneReferences.IsValid)
 			//{
 			//	if (newSkeletonParent != null)
@@ -367,6 +345,31 @@ namespace Manus.Polygon.Skeleton
 		public void ClearBoneReferences()
 		{
 			boneReferences.Clear();
+		}
+
+		public void CalculateBoneOrientations()
+		{
+			foreach (var bone in boneReferences.GatherBones().Values)
+			{
+				bone.CalculateOrientation(boneReferences);
+			}
+		}
+
+		public void SetBindPose()
+		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				if (PrefabUtility.GetPrefabAssetType(this.gameObject) != PrefabAssetType.NotAPrefab)
+				{
+					Debug.LogError("The object you are trying to edit is a prefab");
+					return;
+				}
+			}
+#endif
+
+			SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
+			boneReferences.UpdateBoneOrientations(skinnedMeshes);
 		}
 	}
 }

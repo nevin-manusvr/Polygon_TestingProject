@@ -23,17 +23,22 @@ namespace Manus.Polygon.Skeleton.Editor
 
 			if (GUILayout.Button("Populate Bones"))
 			{
-				script.PopulateBoneReferences();
+				script?.PopulateBoneReferences();
 			}
 
 			if (GUILayout.Button("Clear Bone References"))
 			{
-				script.ClearBoneReferences();
+				script?.ClearBoneReferences();
 			}
 
-			if (GUILayout.Button("Calculatettteette"))
+			if (GUILayout.Button("Calculate Bone Orientations"))
 			{
-				script.Calculateeee();
+				script?.CalculateBoneOrientations();
+			}
+
+			if (GUILayout.Button("Set Bind Pose"))
+			{
+				script?.SetBindPose();
 			}
 		}
 

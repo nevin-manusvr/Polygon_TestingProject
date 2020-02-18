@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb3fea47577664478031170e7d16157, type: 3}
+  m_Name: Arcs
+  m_EditorClassIdentifier: 
+  isFinished: 0
+  calibrationSteps:
+  - {fileID: 11400000, guid: eee52a6ce338f5541909555d6dd80cd6, type: 2}
+  - {fileID: 11400000, guid: 824ccc3a8ae274541a590a7b70d581d7, type: 2}
+  - {fileID: 11400000, guid: 389b1afdca71c06489f2aae04deac8bc, type: 2}
+  - {fileID: 11400000, guid: 526787794ca2a2c41b52cf3b42678889, type: 2}
+  - {fileID: 11400000, guid: 6253250415522ec44a2c78c0c9cb377d, type: 2}
