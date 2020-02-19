@@ -36,6 +36,7 @@ namespace Manus.Polygon
 
 		public void SetupNextCalibrationStep()
 		{
+			Debug.Log(currentIndex);
 			profileHistory[calibrationSteps[currentIndex]] = new ProfileData(profile);
 			calibrationSteps[currentIndex].Setup(profile, trackers,
 				() =>

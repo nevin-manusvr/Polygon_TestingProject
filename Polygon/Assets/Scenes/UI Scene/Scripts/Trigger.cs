@@ -12,6 +12,9 @@ public class Trigger : MonoBehaviour
     private Camera m_Camera;
     GameObject m_Child;
 
+    [SerializeField]
+    private bool m_IsColliding;
+
     private void Start()
     {
         m_UIBehaviour = GetComponentInParent<UI_Behaviour>();
@@ -20,6 +23,10 @@ public class Trigger : MonoBehaviour
     }
     void OnTriggerEnter(Collider collider)
     {
+        if(m_IsColliding) return;
+        m_IsColliding = true;
+
+        Debug.Log("colliding with: " + collider);
         if(this.gameObject.CompareTag("Start"))
         {
             Debug.Log("Continue");
@@ -46,5 +53,12 @@ public class Trigger : MonoBehaviour
     {
         Vector3 Startpos =  new Vector3(transform.localPosition.x, 0, 0);
         m_Child.transform.DOLocalMoveX(0, 0.1f);
+        CanCollide();
+    }
+
+
+    void CanCollide()
+    {
+        m_IsColliding = false;
     }
 }
