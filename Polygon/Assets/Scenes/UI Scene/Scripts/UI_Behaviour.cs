@@ -30,6 +30,11 @@ public class UI_Behaviour : MonoBehaviour
     [SerializeField]
     private Image m_SliderImage;
 
+    [SerializeField]
+    private CanvasGroup m_GetReadyText;
+    [SerializeField]
+    private CanvasGroup m_CalibratingText;
+
     private Camera m_Camera;
 
     
@@ -40,6 +45,8 @@ public class UI_Behaviour : MonoBehaviour
         controllerEvent.StartCalibrationSequence();
         m_Camera = Camera.main;
         m_ButtonsAreActive = true;
+        m_GetReadyText.alpha = 0;
+        m_CalibratingText.alpha = 0;
 
     }
 
@@ -66,42 +73,43 @@ public class UI_Behaviour : MonoBehaviour
 			    {
                     HideUI();
 			    }
+
 			    break;
 		    case "Previous":
+
                 controllerEvent.RaisePreviousStep();
                 StartSlider();
-			    break;
+			
+                break;
 	    }
 	}
 
     void StartSlider()
     {
-        m_PlayButton.DOFade(0, 1f);
-        m_PreviousButton.DOFade(0, 1f).OnComplete( () => ToggleUIButtons());
-
-        m_SliderImage.DOFillAmount(1, 6f).OnComplete(() => {controllerEvent.RaiseStartNextStep(); UndoSlider(); });
+        m_PlayButton.DOFade(0, 1f).SetEase(Ease.InOutCubic);
+        m_PreviousButton.DOFade(0, 1f).SetEase(Ease.InOutCubic).OnComplete( () => ToggleUIButtons());
+        m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
+        m_SliderImage.DOFillAmount(1, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {   controllerEvent.RaiseStartNextStep(); 
+                                                                                        m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
+                                                                                        UndoSlider(); 
+                                                                                    });
 
         
     }
 
-    public void UndoSlider()
+    void UndoSlider()
     {
-        m_SliderImage.DOFillAmount(0, 6f).OnComplete(() => {    controllerEvent.RaiseSetupNextStep();
-                                                                ToggleUIButtons(); 
-                                                                m_PlayButton.DOFade(1, 1f);
-                                                                m_PlayButton.interactable = true;
-                                                                m_PreviousButton.DOFade(1, 1f);
-                                                                m_PreviousButton.interactable = true;});
+        m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
+        m_SliderImage.DOFillAmount(0, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {    m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
+                                                                                        controllerEvent.RaiseSetupNextStep();
+                                                                                        ToggleUIButtons(); 
+                                                                                        m_PlayButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+                                                                                        m_PlayButton.interactable = true;
+                                                                                        m_PreviousButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+                                                                                        m_PreviousButton.interactable = true;
+                                                                                    });
     }
 
-
-    public void NextStep()
-    {
-        if(sequence.isFinished)
-        {
-            HideUI();
-        }
-    }
     public void ToggleUIButtons()
     {
         m_ButtonsAreActive = !m_ButtonsAreActive;
