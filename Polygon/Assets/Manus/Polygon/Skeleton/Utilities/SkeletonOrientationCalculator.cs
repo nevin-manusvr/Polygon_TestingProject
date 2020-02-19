@@ -65,7 +65,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine[1]?.bone.position ?? skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.spine.Length > 1 ? skeleton.body.spine[1].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
@@ -81,7 +81,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine[2]?.bone.position ?? skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.spine.Length > 2 ? skeleton.body.spine[2].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);

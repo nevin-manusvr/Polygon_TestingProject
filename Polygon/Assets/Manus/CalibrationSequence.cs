@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Manus.Core.VR;
+using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
+
 	[CreateAssetMenu(fileName = "new Calibration Sequence", menuName = "ManusVR/Polygon/Calibration/Calibration Sequence", order = 0)]
 	public class CalibrationSequence : ScriptableObject
 	{
@@ -19,7 +21,7 @@ namespace Manus.Polygon
 
 		private MonoBehaviour mono;
 
-		private Dictionary<CalibrationStep, ProfileData> profileHistory = new Dictionary<CalibrationStep, ProfileData>();
+		private Dictionary<int, ProfileData> profileHistory = new Dictionary<int, ProfileData>();
 
 		public void SetupCalibrationSequence(CalibrationProfile profile, TrackerReference trackers, MonoBehaviour mono)
 		{
@@ -36,7 +38,7 @@ namespace Manus.Polygon
 
 		public void SetupNextCalibrationStep()
 		{
-			profileHistory[calibrationSteps[currentIndex]] = new ProfileData(profile);
+			profileHistory[currentIndex] = new ProfileData(profile);
 			calibrationSteps[currentIndex].Setup(profile, trackers,
 				() =>
 					{
@@ -52,7 +54,17 @@ namespace Manus.Polygon
 		public void StartCalibrationStep()
 		{
 			mono.StartCoroutine(calibrationSteps[currentIndex].Start());
+			
 			currentIndex++;
+			currentIndex = Mathf.Clamp(currentIndex, 0, calibrationSteps.Count - 1);
+		}
+
+		public void PreviousStep()
+		{
+			currentIndex--;
+			currentIndex = Mathf.Clamp(currentIndex, 0, calibrationSteps.Count - 1);
+
+			profile.Reset(profileHistory[currentIndex]);
 		}
 	}
 }

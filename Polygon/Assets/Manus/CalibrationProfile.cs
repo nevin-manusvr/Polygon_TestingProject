@@ -225,6 +225,12 @@ namespace Manus.Polygon
 
 		#region Constructor
 
+		public TrackerOffset(TrackerOffset offset)
+		{
+			this.position = offset.position;
+			this.rotation = offset.rotation;
+		}
+
 		public TrackerOffset(Vector3 positionOffset, Quaternion rotationOffset)
 		{
 			this.position = null;
@@ -316,6 +322,13 @@ namespace Manus.Polygon
 		#endregion
 
 		#region Constructor
+
+		public TrackerDirection(TrackerDirection direction)
+		{
+			this.x = direction.x;
+			this.y = direction.y;
+			this.z = direction.z;
+		}
 
 		public TrackerDirection(Vector3 x, Vector3 y, Vector3 z)
 		{
@@ -411,10 +424,24 @@ namespace Manus.Polygon
 
 		public ProfileData(CalibrationProfile newProfile)
 		{
-			profileRequirements = newProfile.profileRequirements;
-			trackerOffsets = newProfile.trackerOffsets;
-			trackerDirections = newProfile.trackerDirections;
-			bodyMeasurements = newProfile.bodyMeasurements;
+			profileRequirements = new ProfileRequirements(
+				newProfile.profileRequirements.requiredTrackerOffsets,
+				newProfile.profileRequirements.requiredBoneMeasurements);
+
+			foreach (var offset in newProfile.trackerOffsets)
+			{
+				trackerOffsets.Add(offset.Key, new TrackerOffset(offset.Value));
+			}
+
+			foreach (var dir in newProfile.trackerDirections)
+			{
+				trackerDirections.Add(dir.Key, new TrackerDirection(dir.Value));
+			}
+
+			foreach (var measurement in newProfile.bodyMeasurements)
+			{
+				bodyMeasurements.Add(measurement.Key, measurement.Value);
+			}
 		}
 	}
 }

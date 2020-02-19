@@ -84,6 +84,11 @@ namespace Manus.Polygon
 
 		private void VisualizeTrackerOffsets()
 		{
+			foreach (GameObject offsetVisual in trackerOffsetVisuals)
+			{
+				offsetVisual.SetActive(false);
+			}
+
 			for (int i = 0; i < profile.trackerOffsets.Keys.Count; i++)
 			{
 				if (trackerOffsetVisuals.Count < i + 1)
@@ -112,6 +117,14 @@ namespace Manus.Polygon
 
 		private void VisualizeDirection()
 		{
+			foreach (GameObject[] directionVisual in trackerDirectionVisuals)
+			{
+				foreach (GameObject dir in directionVisual)
+				{
+					dir.SetActive(false);
+				}
+			}
+
 			for (int i = 0; i < profile.trackerDirections.Keys.Count; i++)
 			{
 				if (trackerDirectionVisuals.Count < i + 1)
@@ -159,6 +172,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.X != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][0].SetActive(true);
 					trackerDirectionVisuals[i][0].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][0].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.X) * 0.1f;
 				} 
@@ -166,6 +180,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.Y != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][1].SetActive(true);
 					trackerDirectionVisuals[i][1].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][1].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Y) * 0.1f;
 				} 
@@ -173,6 +188,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.Z != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][2].SetActive(true);
 					trackerDirectionVisuals[i][2].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][2].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Z) * 0.1f;
 				} 

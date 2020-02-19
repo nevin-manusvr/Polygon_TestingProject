@@ -26,6 +26,7 @@ namespace Manus.Polygon
 			controllerEvents.startCalibrationSequenceResponse += SetupCalibrationSequence;
 			controllerEvents.setupNextCalibrationStepResponse += sequence.SetupNextCalibrationStep;
 			controllerEvents.startNextCalibrationStepResponse += sequence.StartCalibrationStep;
+			controllerEvents.previousCalibrationStepResponse += sequence.PreviousStep;
 		}
 
 		private void OnDisable()
@@ -33,6 +34,7 @@ namespace Manus.Polygon
 			controllerEvents.startCalibrationSequenceResponse -= SetupCalibrationSequence;
 			controllerEvents.setupNextCalibrationStepResponse -= sequence.SetupNextCalibrationStep;
 			controllerEvents.startNextCalibrationStepResponse -= sequence.StartCalibrationStep;
+			controllerEvents.previousCalibrationStepResponse -= sequence.PreviousStep;
 		}
 
 		private void SetupCalibrationSequence()

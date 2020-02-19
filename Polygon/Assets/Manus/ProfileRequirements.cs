@@ -6,8 +6,7 @@ using Manus.Core.Utility;
 namespace Manus.Polygon
 {
 	[System.Serializable]
-	//[CreateAssetMenu(fileName = "new Requirements", menuName = "ManusVR/Polygon/Calibration/Requirements")]
-	public class ProfileRequirements// : ScriptableObject
+	public class ProfileRequirements
 	{
 		public VRTrackerType[] requiredTrackerOffsets =
 			{
@@ -17,6 +16,7 @@ namespace Manus.Polygon
 				VRTrackerType.LeftFoot,
 				VRTrackerType.RightFoot
 			};
+
 		public BodyMeasurements[] requiredBoneMeasurements =
 			{
 				BodyMeasurements.PlayerHeight,
@@ -28,6 +28,12 @@ namespace Manus.Polygon
 				BodyMeasurements.HipWidth,
 				BodyMeasurements.ShoulderWidth
 			};
+
+		public ProfileRequirements(VRTrackerType[] trackers, BodyMeasurements[] measurements)
+		{
+			requiredTrackerOffsets = trackers;
+			requiredBoneMeasurements = measurements;
+		}
 	}
 }
 

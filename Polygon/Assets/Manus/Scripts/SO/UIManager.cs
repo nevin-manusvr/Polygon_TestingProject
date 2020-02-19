@@ -223,4 +223,10 @@ public class UIManager : MonoBehaviour
     {
 	    ButtonFunction("Next");
     }
+
+    [ContextMenu("Previous")]
+    private void PreviousButton()
+    {
+		controllerEvent.RaisePreviousStep();
+	}
 }
