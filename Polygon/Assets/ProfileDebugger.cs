@@ -67,8 +67,7 @@ namespace Manus.Polygon
 				VRTrackerType trackerType = trackers.RequiredTrackers[i];
 
 				// Hide tracker when there is no tracker data
-				TransformValues? trackerTransform = trackers.GetTracker(trackerType);
-				if (trackerTransform == null)
+				if (!trackers.GetTracker(trackerType, out TransformValues trackerTransform))
 				{
 					if (trackerVisuals[i].activeSelf) trackerVisuals[i].SetActive(false);
 					continue;
@@ -78,13 +77,18 @@ namespace Manus.Polygon
 				if (!trackerVisuals[i].activeSelf) trackerVisuals[i].SetActive(true);
 
 				trackerVisuals[i]?.transform.SetPositionAndRotation(
-					trackerTransform.Value.position,
-					trackerTransform.Value.rotation);
+					trackerTransform.position,
+					trackerTransform.rotation);
 			}
 		}
 
 		private void VisualizeTrackerOffsets()
 		{
+			foreach (GameObject offsetVisual in trackerOffsetVisuals)
+			{
+				offsetVisual.SetActive(false);
+			}
+
 			for (int i = 0; i < profile.trackerOffsets.Keys.Count; i++)
 			{
 				if (trackerOffsetVisuals.Count < i + 1)
@@ -100,24 +104,27 @@ namespace Manus.Polygon
 
 				TrackerOffset offset = profile.trackerOffsets[offsetType];
 
-				TransformValues? trackerWithOffset = trackers.GetTrackerWithOffset(type, offset.Position, Quaternion.identity);
-
-				if (trackerWithOffset == null)
+				if (!trackers.GetTrackerWithOffset(type, offset.Position, Quaternion.identity, out TransformValues trackerWithOffset))
 				{
 					if (trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(false);
 					continue;
 				}
 
 				if (!trackerOffsetVisuals[i].activeSelf) trackerOffsetVisuals[i].SetActive(true);
-
-				trackerOffsetVisuals[i]?.transform.SetPositionAndRotation(
-					trackerWithOffset.Value.position,
-					trackerWithOffset.Value.rotation);
+				trackerOffsetVisuals[i]?.transform.SetPositionAndRotation(trackerWithOffset.position, trackerWithOffset.rotation);
 			}
 		}
 
 		private void VisualizeDirection()
 		{
+			foreach (GameObject[] directionVisual in trackerDirectionVisuals)
+			{
+				foreach (GameObject dir in directionVisual)
+				{
+					dir.SetActive(false);
+				}
+			}
+
 			for (int i = 0; i < profile.trackerDirections.Keys.Count; i++)
 			{
 				if (trackerDirectionVisuals.Count < i + 1)
@@ -152,17 +159,12 @@ namespace Manus.Polygon
 				if (profile.trackerOffsets.ContainsKey((OffsetsToTrackers)offsetType))
 				{
 					TrackerOffset trackerOffset = profile.trackerOffsets[(OffsetsToTrackers)offsetType];
-					TransformValues trackerTransform =
-						trackers.GetTrackerWithOffset(trackerType, trackerOffset.Position, Quaternion.identity)
-						?? new TransformValues(Vector3.zero, Quaternion.identity);
-
+					trackers.GetTrackerWithOffset(trackerType, trackerOffset.Position, Quaternion.identity, out TransformValues trackerTransform);
 					trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, Vector3.one);
 				}
 				else
 				{
-					TransformValues trackerTransform =
-						trackers.GetTracker(trackerType)
-						?? new TransformValues(Vector3.zero, Quaternion.identity);
+					trackers.GetTracker(trackerType, out TransformValues trackerTransform);
 					trackerMatrix = Matrix4x4.TRS(trackerTransform.position, trackerTransform.rotation, Vector3.one);
 				}
 
@@ -170,6 +172,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.X != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][0].SetActive(true);
 					trackerDirectionVisuals[i][0].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][0].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.X) * 0.1f;
 				} 
@@ -177,6 +180,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.Y != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][1].SetActive(true);
 					trackerDirectionVisuals[i][1].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][1].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Y) * 0.1f;
 				} 
@@ -184,6 +188,7 @@ namespace Manus.Polygon
 
 				if (trackerDirection.Z != Vector3.zero)
 				{
+					trackerDirectionVisuals[i][2].SetActive(true);
 					trackerDirectionVisuals[i][2].transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
 					trackerDirectionVisuals[i][2].transform.position = trackerMatrix.GetPosition() + trackerMatrix.MultiplyVector(trackerDirection.Z) * 0.1f;
 				} 
@@ -199,28 +204,28 @@ namespace Manus.Polygon
 				obj.SetActive(false);
 			}
 
-			TransformValues? handTransform = trackers.GetTracker(trackerType);
+			trackers.GetTracker(trackerType, out TransformValues handTransform);
 			if (profile.trackerOffsets.ContainsKey(offset) && profile.trackerOffsets[offset].position != null)
 			{
-				handTransform = trackers.GetTrackerWithOffset(trackerType, profile.trackerOffsets[offset].Position, Quaternion.identity);
+				trackers.GetTrackerWithOffset(trackerType, profile.trackerOffsets[offset].Position, Quaternion.identity, out handTransform);
 			}
 
-			if (handTransform == null || !profile.trackerDirections.ContainsKey(trackerType)
-			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Z) == null
-			                              || profile.trackerDirections[trackerType].GetAxis(Axis.Y) == null)
+			if (!profile.trackerDirections.ContainsKey(trackerType)
+                || profile.trackerDirections[trackerType].GetAxis(Axis.Z) == null
+                || profile.trackerDirections[trackerType].GetAxis(Axis.Y) == null)
 			{
 				if (obj.activeSelf) obj.SetActive(false);
 				return;
 			}
 
 			if (!obj.activeSelf) obj.SetActive(true);
-			Matrix4x4 trackerMatrix = Matrix4x4.TRS(handTransform.Value.position, handTransform.Value.rotation, Vector3.one);
+			Matrix4x4 trackerMatrix = Matrix4x4.TRS(handTransform.position, handTransform.rotation, Vector3.one);
 
 			Quaternion rotation = Quaternion.LookRotation(
 				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Z),
 				trackerMatrix.MultiplyVector(profile.trackerDirections[trackerType].Y));
 
-			obj.transform.SetPositionAndRotation(handTransform.Value.position, rotation);
+			obj.transform.SetPositionAndRotation(handTransform.position, rotation);
 		}
 	}
 }
