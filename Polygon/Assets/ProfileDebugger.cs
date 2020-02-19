@@ -95,6 +95,7 @@ namespace Manus.Polygon
 				{
 					trackerOffsetVisuals.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
 					trackerOffsetVisuals[i].GetComponent<MeshRenderer>().material.color = Color.black;
+					Destroy(trackerOffsetVisuals[i].GetComponent<SphereCollider>());
 					trackerOffsetVisuals[i].transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 					trackerOffsetVisuals[i].transform.SetParent(transform);
 				}
@@ -140,7 +141,10 @@ namespace Manus.Polygon
 					trackerDirectionVisuals[i][0].GetComponent<MeshRenderer>().material.color = Color.red;
 					trackerDirectionVisuals[i][1].GetComponent<MeshRenderer>().material.color = Color.green;
 					trackerDirectionVisuals[i][2].GetComponent<MeshRenderer>().material.color = Color.blue;
-
+					Destroy(trackerDirectionVisuals[i][0].GetComponent<BoxCollider>());
+					Destroy(trackerDirectionVisuals[i][1].GetComponent<BoxCollider>());
+					Destroy(trackerDirectionVisuals[i][2].GetComponent<BoxCollider>());
+					
 					foreach (GameObject obj in trackerDirectionVisuals[i])
 					{
 						obj.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);

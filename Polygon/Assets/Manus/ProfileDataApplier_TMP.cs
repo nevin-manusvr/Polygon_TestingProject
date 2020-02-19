@@ -34,8 +34,6 @@ namespace Manus.Polygon
 
 			debug.SetActive(true);
 			model.SetActive(false);
-
-			ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 		}
 
 		private void OnEnable()
@@ -63,9 +61,9 @@ namespace Manus.Polygon
 			float characterSize = bodyLength / 1.83f;
 
 			// polygon.newSkeleton.main.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
-			boneScalers.ChangeSpineLength(spineMultiplier + spineSlider.value);
-			boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * (armMultiplier + armSlider.value), bodyLength * 0.15f / characterSize * (armMultiplier + armSlider.value));
-			boneScalers.ChangeLegLength(bodyLength * 0.23f / characterSize * (legMultiplier + legSlider.value), bodyLength * 0.22f / characterSize * (legMultiplier + legSlider.value));
+			// boneScalers.ChangeSpineLength(spineMultiplier + spineSlider.value);
+			// boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * (armMultiplier + armSlider.value), bodyLength * 0.15f / characterSize * (armMultiplier + armSlider.value));
+			// boneScalers.ChangeLegLength(bodyLength * 0.23f / characterSize * (legMultiplier + legSlider.value), bodyLength * 0.22f / characterSize * (legMultiplier + legSlider.value));
 		}
 
 		private void OnValidate()

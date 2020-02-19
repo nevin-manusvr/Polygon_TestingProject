@@ -42,8 +42,7 @@ namespace Manus.Polygon
 			calibrationSteps[currentIndex].Setup(profile, trackers,
 				() =>
 					{
-						Debug.Log(currentIndex);
-						if (currentIndex >= calibrationSteps.Count)
+						if (currentIndex == calibrationSteps.Count)
 						{
 							isFinished = true;
 							calibrationFinished?.Invoke();
@@ -56,13 +55,15 @@ namespace Manus.Polygon
 			mono.StartCoroutine(calibrationSteps[currentIndex].Start());
 			
 			currentIndex++;
-			currentIndex = Mathf.Clamp(currentIndex, 0, calibrationSteps.Count - 1);
+			currentIndex = Mathf.Clamp(currentIndex, 0, calibrationSteps.Count);
 		}
 
 		public void PreviousStep()
 		{
 			currentIndex--;
 			currentIndex = Mathf.Clamp(currentIndex, 0, calibrationSteps.Count - 1);
+
+			if (profileHistory == null || !profileHistory.ContainsKey(currentIndex)) return;
 
 			profile.Reset(profileHistory[currentIndex]);
 		}

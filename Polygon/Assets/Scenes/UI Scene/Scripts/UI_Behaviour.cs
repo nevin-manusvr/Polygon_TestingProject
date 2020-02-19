@@ -78,7 +78,6 @@ public class UI_Behaviour : MonoBehaviour
 		    case "Previous":
 
                 controllerEvent.RaisePreviousStep();
-                StartSlider();
 			
                 break;
 	    }
@@ -101,7 +100,7 @@ public class UI_Behaviour : MonoBehaviour
     {
         m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
         m_SliderImage.DOFillAmount(0, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {    m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
-                                                                                        //controllerEvent.RaiseSetupNextStep();
+                                                                                        controllerEvent.RaiseSetupNextStep();
                                                                                         ToggleUIButtons(); 
                                                                                         m_PlayButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
                                                                                         m_PlayButton.interactable = true;

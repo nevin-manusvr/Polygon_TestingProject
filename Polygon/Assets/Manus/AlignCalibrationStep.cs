@@ -355,7 +355,7 @@ namespace Manus.Polygon
 						TrackerOffset fromOffset = new TrackerOffset(Vector3.zero, Quaternion.identity);
 						if (settings.trackerFromLocal)
 						{
-							if (profile.trackerOffsets.ContainsKey(settings.trackerFromLocalOffset)
+							if (profile.trackerOffsets != null && profile.trackerOffsets.ContainsKey(settings.trackerFromLocalOffset)
 							    && profile.trackerOffsets[settings.trackerFromLocalOffset].position != null)
 							{
 								fromOffset = profile.trackerOffsets[settings.trackerFromLocalOffset];
