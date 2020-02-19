@@ -258,6 +258,97 @@ namespace Manus.Polygon.Skeleton.Utilities
 			}
 		}
 
+		public static Bone GetLookAtBone(this Bone bone, SkeletonBoneReferences skeleton)
+		{
+			switch (bone.type)
+			{
+				case BoneType.Unknown:
+					ErrorHandler.LogError(ErrorMessage.NoRequiredData);
+					break;
+				case BoneType.Root:
+				case BoneType.Head:
+				case BoneType.Hips:
+				case BoneType.LeftFoot:
+				case BoneType.RightFoot:
+				case BoneType.LeftToes:
+				case BoneType.RightToes:
+				case BoneType.LeftToesEnd:
+				case BoneType.RightToesEnd:
+					
+					return null;
+
+				case BoneType.Neck:
+
+					return skeleton.head.head;
+
+				case BoneType.Spine:
+
+					return skeleton.body.spine.Length > 1 ? skeleton.body.spine[1] : skeleton.head.neck;
+
+				case BoneType.Chest:
+
+					return skeleton.body.spine.Length > 2 ? skeleton.body.spine[2] : skeleton.head.neck;
+				
+				case BoneType.UpperChest:
+
+					return skeleton.head.neck;
+				
+				case BoneType.LeftUpperLeg:
+
+					return skeleton.legLeft.lowerLeg;
+
+				case BoneType.RightUpperLeg:
+
+					return skeleton.legRight.lowerLeg;
+
+				case BoneType.LeftLowerLeg:
+
+					return skeleton.legLeft.foot;
+
+				case BoneType.RightLowerLeg:
+
+					return skeleton.legRight.foot;
+
+				case BoneType.LeftShoulder:
+
+					return skeleton.armLeft.upperArm;
+
+				case BoneType.RightShoulder:
+
+					return skeleton.armRight.upperArm;
+
+				case BoneType.LeftUpperArm:
+
+					return skeleton.armLeft.lowerArm;
+
+				case BoneType.RightUpperArm:
+
+					return skeleton.armRight.lowerArm;
+
+				case BoneType.LeftLowerArm:
+
+					return skeleton.armLeft.hand.wrist;
+
+				case BoneType.RightLowerArm:
+
+					return skeleton.armRight.hand.wrist;
+
+				case BoneType.LeftHand:
+
+					return skeleton.armLeft.hand.wrist;
+
+				case BoneType.RightHand:
+
+					return skeleton.armRight.hand.wrist;
+
+				default:
+					ErrorHandler.LogError(ErrorMessage.NotImplemented);
+					break;
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Calculate the forward direction
 		/// </summary>
