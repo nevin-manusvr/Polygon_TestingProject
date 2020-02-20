@@ -125,7 +125,7 @@ namespace Manus.ToBeHermes.Retargeting
 
 		public Vector3 newPosition;
 
-		public List<RetargetChain> chains;
+		public RetargetChain[] chains;
 
 		public RetargetContraint(int priority, Transform retargetBone, Transform targetBone)
 		{
@@ -143,20 +143,20 @@ namespace Manus.ToBeHermes.Retargeting
 
 		public void SolvePosition(float quality)
 		{
-			quality = Mathf.Lerp(1, 0.001f, quality);
-
 			if (chains == null) 
 				return;
 
 			foreach (RetargetChain chain in chains)
 			{
-				float distance = Vector3.Distance(newPosition, chain.endConstraint.newPosition);
-				float difference = chain.maxDistance - distance;
+				float distance = (newPosition - chain.endConstraint.newPosition).sqrMagnitude;
+				float difference = chain.maxDistanceSqr - distance;
 
-				if (chain.directConnection || difference < 0)
+				if (difference < 0 || chain.directConnection)
 				{
+					difference = chain.maxDistance - Mathf.Sqrt(distance);
+
 					Vector3 direction = (chain.endConstraint.newPosition - newPosition).normalized;
-					newPosition = newPosition - direction * difference * (chain.endConstraint.priority > priority ? 1 : 0.5f) * quality;
+					newPosition -= direction * difference * (chain.endConstraint.priority > priority ? 1 : 0.5f) * quality;
 				}
 			}
 		}
@@ -186,11 +186,33 @@ namespace Manus.ToBeHermes.Retargeting
 		{
 			if (retargetBone == root) return;
 
-			chains = new List<RetargetChain>();
-			TraverseHierachy(retargetBone, new List<Transform>(), root, allContraints);
+			List<RetargetChain> allChains = new List<RetargetChain>();
+			TraverseHierachy(retargetBone, new List<Transform>(), root, allContraints, allChains);
+
+			chains = allChains.ToArray();
 		}
 
-		private void TraverseHierachy(Transform currentNode, List<Transform> path, Transform limit, RetargetContraint[] allContraints)
+		//public void AddToChain(Transform transform, RetargetContraint[] allContraints)
+		//{
+		//	RetargetContraint endConstraint = null;
+		//	foreach (RetargetContraint contraint in allContraints)
+		//	{
+		//		if (contraint.retargetBone == transform)
+		//			endConstraint = contraint;
+		//	}
+
+		//	if (endConstraint == null)
+		//		return;
+
+		//	chains = chains.Concat(
+		//		new[]   {
+		//					new RetargetChain(endConstraint, new List<Transform> { retargetBone, transform }, allContraints)
+		//				}).ToArray();
+			
+		//	Debug.Log($"Added {transform.name} to chain of {retargetBone.name}");
+		//}
+
+		private void TraverseHierachy(Transform currentNode, List<Transform> path, Transform limit, RetargetContraint[] allContraints, List<RetargetChain> allChains)
 		{
 			path = new List<Transform>(path);
 			path.Add(currentNode);
@@ -201,7 +223,7 @@ namespace Manus.ToBeHermes.Retargeting
 				{
 					if (contraint.priority >= priority)
 					{
-						chains.Add(new RetargetChain(contraint, path.ToArray(), allContraints));
+						allChains.Add(new RetargetChain(contraint, path, allContraints));
 						return;
 					}
 				}
@@ -209,13 +231,13 @@ namespace Manus.ToBeHermes.Retargeting
 
 			// Continue Path
 			if (!path.Contains(currentNode.parent) && currentNode.parent != limit)
-				TraverseHierachy(currentNode.parent, path, limit, allContraints);
+				TraverseHierachy(currentNode.parent, path, limit, allContraints, allChains);
 
 			for (int i = 0; i < currentNode.childCount; i++)
 			{
 				Transform child = currentNode.GetChild(i);
 				if (!path.Contains(child) && child != limit)
-					TraverseHierachy(child, path, limit, allContraints);
+					TraverseHierachy(child, path, limit, allContraints, allChains);
 			}
 		}
 	}
@@ -225,21 +247,48 @@ namespace Manus.ToBeHermes.Retargeting
 	{
 		public RetargetContraint endConstraint;
 		public float maxDistance;
-
+		public float maxDistanceSqr;
 		public bool directConnection;
 
-		public Transform[] chain;
+		//public Transform[] chain;
 
-		public RetargetChain(RetargetContraint constraint, Transform[] chain, RetargetContraint[] allContraints)
+		public RetargetChain(RetargetContraint constraint, List<Transform> chain, RetargetContraint[] allContraints)
 		{
 			endConstraint = constraint;
-			this.chain = chain;
+			
+			// Take shortcuts to the shortest route
+			if (chain.Count > 2)
+			{
+				var bonesToRemove = new List<Transform>();
+				bool lastWasParent = false;
+				for (var i = 0; i < chain.Count; i++)
+				{
+					if (i == chain.Count - 1) continue;
 
+					if (chain[i].IsChildOf(chain[i + 1]))
+					{
+						lastWasParent = true;
+					}
+					else
+					{
+						if (lastWasParent)
+							bonesToRemove.Add(chain[i]);
+
+						lastWasParent = false;
+					}
+				}
+
+				foreach (Transform boneToRemove in bonesToRemove)
+				{
+					chain.RemoveAt(chain.IndexOf(boneToRemove));
+				}
+			}
+			
 			// Calculate max length
 			float length = 0;
-			for (int i = 0; i < this.chain.Length - 1; i++)
+			for (int i = 0; i < chain.Count - 1; i++)
 			{
-				length += Vector3.Distance(this.chain[i].position, this.chain[i + 1].position);
+				length += Vector3.Distance(chain[i].position, chain[i + 1].position);
 			}
 
 			int constraintCountInChain = 0;
@@ -257,6 +306,7 @@ namespace Manus.ToBeHermes.Retargeting
 
 			directConnection = constraintCountInChain < 3;
 			maxDistance = length;
+			maxDistanceSqr = maxDistance * maxDistance;
 		}
 	}
 
@@ -282,8 +332,8 @@ namespace Manus.ToBeHermes.Retargeting
 		[Space]
 		[Space]
 		[Space]
-		public List<RetargetContraint> orderedRetargetConstraints;
 		private List<RetargetContraint> retargetConstraints;
+		private Dictionary<int, List<RetargetContraint>> orderedRetargetConstraints;
 
 		private void Start()
 		{
@@ -294,55 +344,45 @@ namespace Manus.ToBeHermes.Retargeting
 			retargetBonesCollection = retargetBones.GatherBones();
 
 			retargetConstraints = new List<RetargetContraint>();
+			orderedRetargetConstraints = new Dictionary<int, List<RetargetContraint>>();
 
 			GenerateRetargetConstraints();
 			foreach (RetargetContraint contraint in retargetConstraints)
 			{
 				contraint.FindChains(retargetBones.root.bone, retargetConstraints.ToArray());
 			}
-
-			orderedRetargetConstraints = retargetConstraints.OrderBy(value => -value.priority).ToList();
 		}
 
 		private void Update()
 		{
-
 			PositionBones();
 			SolveBoneLengths();
 			ApplyRetargeting();
-
-
-			//if (Input.GetKeyDown(KeyCode.V))
-			//{
-			//	PositionBones();
-			//}
-
-			//if (Input.GetKeyDown(KeyCode.B))
-			//{
-			//	SolveBoneLengths();
-			//}
-
-			//if (Input.GetKeyDown(KeyCode.N))
-			//{
-			//	ApplyRetargeting();
-			//}
 		}
 
 		private void PositionBones()
 		{
-			foreach (RetargetContraint constraint in orderedRetargetConstraints)
+			foreach (int priority in orderedRetargetConstraints.Keys)
 			{
-				constraint.PositionRetargetBone();
+				foreach (RetargetContraint contraint in orderedRetargetConstraints[priority])
+				{
+					contraint.PositionRetargetBone();
+				}
 			}
 		}
 
 		private void SolveBoneLengths()
 		{
-			foreach (RetargetContraint constraint in orderedRetargetConstraints)
+			float ClampedQuality = Mathf.Lerp(1, 0.001f, quality);
+
+			foreach (int priority in orderedRetargetConstraints.Keys)
 			{
 				for (int i = 0; i < iterations; i++)
 				{
-					constraint.SolvePosition(quality);
+					foreach (RetargetContraint contraint in orderedRetargetConstraints[priority])
+					{
+						contraint.SolvePosition(ClampedQuality);
+					}
 				}
 			}
 		}
@@ -402,10 +442,20 @@ namespace Manus.ToBeHermes.Retargeting
 				{
 					if (bone.Key == mainBone.Key)
 					{
-						retargetConstraints.Add(new RetargetContraint(priorities.BoneTypeToPriority(bone.Key), bone.Value.bone, mainBone.Value.bone));
+						int priority = priorities.BoneTypeToPriority(bone.Key);
+						RetargetContraint constraint = new RetargetContraint(priority, bone.Value.bone, mainBone.Value.bone);
+
+						retargetConstraints.Add(constraint);
+						
+						if (!orderedRetargetConstraints.ContainsKey(priority))
+							orderedRetargetConstraints.Add(priority, new List<RetargetContraint>());
+
+						orderedRetargetConstraints[priority].Add(constraint);
 					}
 				}
 			}
+
+			orderedRetargetConstraints = orderedRetargetConstraints.OrderByDescending(value => value.Key).ToDictionary(value => value.Key, value => value.Value);
 		}
 
 		private void MatchRotations()

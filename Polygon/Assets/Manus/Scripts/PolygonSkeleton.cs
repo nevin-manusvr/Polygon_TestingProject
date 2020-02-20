@@ -11,6 +11,7 @@ namespace Manus.Polygon.Skeleton
 {
 	public class PolygonSkeleton : MonoBehaviour
 	{
+		public bool useIK;
 		public Animator animator;
 
 		public SkeletonBoneReferences boneReferences;
@@ -31,8 +32,7 @@ namespace Manus.Polygon.Skeleton
 			//	boneScalers = new SkeletonBoneScalers();
 			//	boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
 
-			//	ik.InitializeIK(transform, animator, newSkeleton, FindObjectOfType<IKTargets_TMP>());
-			//	ik.CreateCharacterIK();
+			//	
 
 			//	foreach (HandAnimator anim in GetComponentsInChildren<HandAnimator>())
 			//	{
@@ -40,6 +40,11 @@ namespace Manus.Polygon.Skeleton
 			//		anim.enabled = true;
 			//	}
 			//}
+			if (useIK)
+			{
+				ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
+				ik.CreateCharacterIK();
+			}
 		}
 
 		private void Update()
