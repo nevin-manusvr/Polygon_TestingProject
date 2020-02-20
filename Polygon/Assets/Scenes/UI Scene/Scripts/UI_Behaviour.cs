@@ -78,6 +78,7 @@ public class UI_Behaviour : MonoBehaviour
 		    case "Previous":
 
                 controllerEvent.RaisePreviousStep();
+                controllerEvent.RaiseSetupNextStep();
 			
                 break;
 	    }
