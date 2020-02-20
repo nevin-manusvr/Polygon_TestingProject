@@ -39,6 +39,10 @@ public class Trigger : MonoBehaviour
             m_UIBehaviour.ButtonFunction(transform.tag);
             //previous step
         }
+        else if(this.gameObject.CompareTag("Check"))
+        {
+            m_UIBehaviour.ButtonFunction(transform.tag);
+        }
     }
 
     void OnTriggerStay(Collider collider)

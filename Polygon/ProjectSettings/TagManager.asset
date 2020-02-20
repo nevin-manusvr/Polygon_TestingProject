@@ -8,6 +8,7 @@ TagManager:
   - Continue
   - Previous
   - Start
+  - Check
   layers:
   - Default
   - TransparentFX

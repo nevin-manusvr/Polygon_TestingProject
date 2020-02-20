@@ -22,9 +22,17 @@ public class UI_Behaviour : MonoBehaviour
     [SerializeField]
     private bool m_ButtonsAreActive;
     [SerializeField]
+    private bool m_AreSwitched;
+    [SerializeField]
+    private GameObject m_PlayButtonObj;
+    [SerializeField]
     private CanvasGroup m_PlayButton;
     [SerializeField]
     private CanvasGroup m_PreviousButton;
+    [SerializeField]
+    private GameObject m_CheckButtonObj;
+    [SerializeField]
+    private CanvasGroup m_CheckButton;
 
     [Header("Slider")]
     [SerializeField]
@@ -42,11 +50,22 @@ public class UI_Behaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
+
         controllerEvent.StartCalibrationSequence();
         m_Camera = Camera.main;
         m_ButtonsAreActive = true;
+        m_AreSwitched = false;
         m_GetReadyText.alpha = 0;
         m_CalibratingText.alpha = 0;
+
+
+        m_PlayButtonObj = gameObject.transform.GetChild(0).GetChild(2).GetChild(0).gameObject;
+
+        m_CheckButtonObj = gameObject.transform.GetChild(0).GetChild(2).GetChild(2).gameObject;
+        m_CheckButtonObj.SetActive(false);
+        m_CheckButton.alpha = 0;
 
     }
 
@@ -69,17 +88,26 @@ public class UI_Behaviour : MonoBehaviour
 				    controllerEvent.RaiseSetupNextStep();
                     StartSlider();
 			    }
-			    else
-			    {
-                    HideUI();
-			    }
 
 			    break;
 		    case "Previous":
 
                 controllerEvent.RaisePreviousStep();
                 controllerEvent.RaiseSetupNextStep();
-			
+                Debug.Log(sequence.currentIndex);
+                if(sequence.isFinished)
+                {
+                    //sequence.currentIndex -= 1;
+                    sequence.isFinished = false;
+                    SwitchButtons();
+                }
+                
+                break;
+            case "Check":
+
+                HideUI();
+                ToggleUIButtons();
+
                 break;
 	    }
 	}
@@ -100,13 +128,14 @@ public class UI_Behaviour : MonoBehaviour
     void UndoSlider()
     {
         m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
-        m_SliderImage.DOFillAmount(0, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {    m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
-                                                                                        controllerEvent.RaiseSetupNextStep();
+        m_SliderImage.DOFillAmount(0, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {   if(sequence.currentIndex == sequence.calibrationSteps.Count)
+			                                                                            {
+                                                                                            SwitchButtons();
+			                                                                            }
+                                                                                        m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
                                                                                         ToggleUIButtons(); 
                                                                                         m_PlayButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
-                                                                                        m_PlayButton.interactable = true;
                                                                                         m_PreviousButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
-                                                                                        m_PreviousButton.interactable = true;
                                                                                     });
     }
 
@@ -119,6 +148,27 @@ public class UI_Behaviour : MonoBehaviour
     public void HideUI()
     {
         m_Canvas.DOFade(0, 8f).SetEase(Ease.InOutCubic);
+    }
+
+    private void SwitchButtons()
+    {
+        m_AreSwitched = !m_AreSwitched;
+        
+        if (m_AreSwitched)
+        {
+            m_PlayButton.DOFade(0, .2f).OnComplete(() => {  m_PlayButtonObj.SetActive(false); 
+                                                            m_CheckButtonObj.SetActive(true);
+                                                            });
+            m_CheckButton.DOFade(1, .2f).SetDelay(.3f);
+        }
+        else
+        {
+            m_CheckButton.DOFade(0, .2f).OnComplete(() => { m_PlayButtonObj.SetActive(true); 
+                                                            m_CheckButtonObj.SetActive(false);
+                                                        });
+            m_PlayButton.DOFade(1, .2f).SetDelay(.3f);
+        }
+
     }
         
 }

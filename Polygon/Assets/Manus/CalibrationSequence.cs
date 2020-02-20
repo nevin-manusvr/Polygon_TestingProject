@@ -34,7 +34,7 @@ namespace Manus.Polygon
 			currentIndex = 0;
 		}
 
-		private int currentIndex;
+		public int currentIndex;
 
 		public void SetupNextCalibrationStep()
 		{
@@ -42,6 +42,7 @@ namespace Manus.Polygon
 			calibrationSteps[currentIndex].Setup(profile, trackers,
 				() =>
 					{
+						Debug.Log(currentIndex);
 						if (currentIndex == calibrationSteps.Count)
 						{
 							isFinished = true;
