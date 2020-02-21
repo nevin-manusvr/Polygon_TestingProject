@@ -66,6 +66,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 			foreach (Bone bone in allBones)
 			{
 				bone.bone.ReorientTransform(bone.desiredRotation);
+				// if (bone.desiredPosition != Vector3.zero) bone.bone.RePositionTransform(bone.desiredPosition);
 			}
 
 			// Assign renderer data
@@ -192,6 +193,31 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 			// Change rotation
 			transform.rotation = rotation;
+
+			// Re-parent all children
+			foreach (Transform child in children)
+			{
+				child.SetParent(transform);
+			}
+		}
+
+		public static void RePositionTransform(this Transform transform, Vector3 newPosition)
+		{
+			// Find all children
+			var children = new List<Transform>();
+			for (int i = 0; i < transform.childCount; i++)
+			{
+				children.Add(transform.GetChild(i));
+			}
+
+			// Un-parent all children
+			foreach (Transform child in children)
+			{
+				child.SetParent(null);
+			}
+
+			// Change rotation
+			transform.position = newPosition;
 
 			// Re-parent all children
 			foreach (Transform child in children)

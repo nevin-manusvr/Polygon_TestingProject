@@ -170,6 +170,18 @@ namespace Manus.Polygon.Skeleton.Editor
 		private void DrawBone(Bone bone, float size)
 		{
 			Handles.color = handlesColor;
+			// Vector3 position = bone.desiredPosition == Vector3.zero ? bone.bone.position : bone.desiredPosition;
+
+			if (bone.controlPoint != Vector3.zero)
+			{
+				EditorGUI.BeginChangeCheck();
+				Vector3 point = Handles.Slider2D(0, bone.controlPoint, Vector3.zero, Vector3.up, Vector3.forward, Vector3.right, size, Handles.CircleHandleCap, new Vector2(.1f, .1f));
+				if (EditorGUI.EndChangeCheck())
+				{
+					Undo.RecordObject(target, "Moved Control point");
+					bone.controlPoint = point;
+				}
+			}
 
 			if (selectedBone == bone)
 			{
@@ -218,7 +230,6 @@ namespace Manus.Polygon.Skeleton.Editor
 			Quaternion rot = Handles.Disc(bone.desiredRotation, bone.bone.position, bone.desiredRotation * Vector3.forward, size, false, 0.01f);
 			if (EditorGUI.EndChangeCheck())
 			{
-				Debug.Log("Record");
 				Undo.RecordObject(target, "Rotated Bone");
 				bone.desiredRotation = rot;
 			}

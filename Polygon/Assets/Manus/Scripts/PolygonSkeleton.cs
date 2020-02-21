@@ -29,12 +29,12 @@ namespace Manus.Polygon.Skeleton
 			//	boneScalers = new SkeletonBoneScalers();
 			//	boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
 			//}
-
-			ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
 		}
 
 		private void Update()
 		{
+			if (useIK && !ik.isInitialized)
+				ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
 			if (useIK && !ik.ikGenerated)
 				ik.CreateCharacterIK();
 			if (ik.ikGenerated && ik.isInitialized)
@@ -343,6 +343,8 @@ namespace Manus.Polygon.Skeleton
 
 		public void CalculateBoneOrientations()
 		{
+			boneReferences.legLeft.foot.controlPoint = new Vector3(boneReferences.legLeft.foot.bone.position.x, 0, boneReferences.legLeft.foot.bone.position.z);
+			
 			foreach (var bone in boneReferences.GatherBones().Values)
 			{
 				bone.CalculateOrientation(boneReferences);

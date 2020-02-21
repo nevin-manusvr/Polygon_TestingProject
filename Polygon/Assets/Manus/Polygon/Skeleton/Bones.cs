@@ -9,6 +9,7 @@ namespace Manus.Polygon.Skeleton
 		public BoneType type;
 		public Transform bone;
 
+		public Vector3 controlPoint;
 		public Quaternion desiredRotation;
 
 		public Bone(BoneType type, Transform bone)

@@ -246,7 +246,7 @@ namespace Manus.Polygon
 		{
 			if (toeBone == null) return;
 
-			float _footHeight = 0.1346572f;
+			//float _footHeight = 0.1346572f;
 			float _toeHeight = 0.02811695f;
 			float _toeEndHeight = 0.02812012f;
 
