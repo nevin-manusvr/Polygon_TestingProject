@@ -70,7 +70,7 @@ public class CalibrationController : MonoBehaviour
     public void OnPrepareCalibration()
     { 
         //shows ui and starts countdown
-        uiManager.UpdateText(calibrationStepName, discriptionCalibration);
+        //uiManager.UpdateText(calibrationStepName, discriptionCalibration);
         TriggerPoseAnimation(calibrationStepName);
     }
 
@@ -81,31 +81,31 @@ public class CalibrationController : MonoBehaviour
 
     public void OnUpdateCalibration(float percentage)
     {
-		uiManager.UpdateTimer(percentage);
+		//uiManager.UpdateTimer(percentage);
     }
 
     public void OnFinishCalibration()
     {
         ResetTrigger();
-		uiManager.Continue();
+		//uiManager.Continue();
     }
 
     //Set trigger for animations
     void TriggerPoseAnimation(string step)
     {
-        Debug.Log("set trigger");
+        //Debug.Log("set trigger");
         string currentStep = step + "_CalibrationStartingPose";
         modelAnimator.SetTrigger(animationPoseTrigger);
     }
     void TriggerStartAnimation(string step)
     {
-        Debug.Log("set trigger");
+        //Debug.Log("set trigger");
         string currentStep = step + "_CalibrationStart";
         modelAnimator.SetTrigger(animationCalibrationTrigger);        
     }
     void ResetTrigger()
     {
-        Debug.Log("Reset trigger");
+        //Debug.Log("Reset trigger");
         modelAnimator.SetTrigger("IsDone");
     }
 }

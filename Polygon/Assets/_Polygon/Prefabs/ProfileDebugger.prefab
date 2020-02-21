@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1654698124994725969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1654698124994725971}
+  - component: {fileID: 1654698124994725970}
+  m_Layer: 0
+  m_Name: ProfileDebugger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1654698124994725971
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654698124994725969}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.72, y: 0, z: -2.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1654698124994725970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654698124994725969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1f64c17e220d94aa8b1ffbc3016f6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alsoHead: 0
+  profile: {fileID: 11400000, guid: 54fbd47f89f72394c9c814240255afc1, type: 2}
+  trackerModel: {fileID: 182008925443422960, guid: 3b97583792a0fe24c8abbff60e05b2ea,
+    type: 3}
+  leftHandModel: {fileID: 3788161749504858610, guid: 7c92019cc36a0804f964363d13962520,
+    type: 3}
+  rightHandModel: {fileID: 4357297323067930794, guid: 194746f3bc102fc4692d70c863abd229,
+    type: 3}
+  leftFootModel: {fileID: 2620116473509681311, guid: 1d25061889aa41c4493ebe77feb8066b,
+    type: 3}
+  rightFootModel: {fileID: 8161887775479683916, guid: 8045b53182857af4e806e58709953a30,
+    type: 3}
+  hipModel: {fileID: 3129791128610541711, guid: 2179fc4179bfec445a19146bff2410a5,
+    type: 3}
