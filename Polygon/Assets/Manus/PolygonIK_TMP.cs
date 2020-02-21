@@ -14,8 +14,8 @@ namespace Manus.Polygon
 	{
 		#region fields
 
-		private bool isInitialized = false;
-		private bool ikGenerated = false;
+		public bool isInitialized = false;
+		public bool ikGenerated = false;
 
 		private GameObject ikContainer;
 
@@ -37,6 +37,9 @@ namespace Manus.Polygon
 		public Vector2 elbowMinMax = new Vector2(-30, 80);
 		public Vector3 handInfluenceOnElbowRotation = new Vector3(1f, .3f, -1f);
 		public float totalHandInfluenceOnElbowRotation = 2f;
+
+		private Quaternion? defaultToeRotationLeft;
+		private Quaternion? defaultToeRotationRight;
 
 		// IK values
 		[HideInInspector] public SingleBoneIK hipIK;
@@ -270,7 +273,12 @@ namespace Manus.Polygon
 			if (toeEndBone == null) return;
 
 			float toeEndHeight = _toeEndHeight * bones.legLeft.foot.bone.lossyScale.x;
-			toeBone.bone.localRotation = isLeft ? Quaternion.Euler(87.291f, -15.725f, 75.14101f) : Quaternion.Euler(-92.71f, -15.72601f, -75.13998f);
+			if (isLeft && defaultToeRotationLeft == null)
+				defaultToeRotationLeft = bones.legLeft.toes.bone.localRotation;
+
+			if (!isLeft && defaultToeRotationRight == null)
+				defaultToeRotationRight = bones.legRight.toes.bone.localRotation;
+			toeBone.bone.localRotation = isLeft ? defaultToeRotationLeft.Value : defaultToeRotationRight.Value;
 
 			if (toeEndBone.position.y < toeEndHeight)
 			{

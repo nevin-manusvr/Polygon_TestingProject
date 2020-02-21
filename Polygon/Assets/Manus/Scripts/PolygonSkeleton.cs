@@ -26,30 +26,19 @@ namespace Manus.Polygon.Skeleton
 		{
 			//if (boneReferences.IsValid && newSkeleton.IsValid)
 			//{
-			//	ReparentSkeleton(newSkeleton);
-			//	ParentSkeletonToAnotherSkeleton(newSkeleton, boneReferences);
-
 			//	boneScalers = new SkeletonBoneScalers();
 			//	boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
-
-			//	
-
-			//	foreach (HandAnimator anim in GetComponentsInChildren<HandAnimator>())
-			//	{
-			//		anim.CalculateAxes();
-			//		anim.enabled = true;
-			//	}
 			//}
-			if (useIK)
-			{
-				ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
-				ik.CreateCharacterIK();
-			}
+
+			ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
 		}
 
 		private void Update()
 		{
-
+			if (useIK && !ik.ikGenerated)
+				ik.CreateCharacterIK();
+			if (ik.ikGenerated && ik.isInitialized)
+				ik.SetIKWeigth(useIK ? 1 : 0);
 		}
 
 		#endregion
