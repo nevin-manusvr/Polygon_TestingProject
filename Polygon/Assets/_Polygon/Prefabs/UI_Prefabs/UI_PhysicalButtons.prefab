@@ -168,6 +168,228 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!1 &1145234584
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1145234585}
+  - component: {fileID: 1145234588}
+  - component: {fileID: 1145234587}
+  - component: {fileID: 1145234586}
+  m_Layer: 5
+  m_Name: ButtonImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1145234585
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145234584}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1637863109}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_SizeDelta: {x: 130, y: 130}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1145234588
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145234584}
+  m_CullTransparentMesh: 0
+--- !u!114 &1145234587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145234584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 7f3c4ecf1e48ae8479e1d4f96dd8d9e6, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1145234586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1145234584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1145234587}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!1 &1637863108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1637863109}
+  - component: {fileID: 1637863113}
+  - component: {fileID: 1637863112}
+  - component: {fileID: 1637863111}
+  - component: {fileID: 1637863110}
+  m_Layer: 5
+  m_Name: CheckButton
+  m_TagString: Check
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1637863109
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637863108}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1145234585}
+  m_Father: {fileID: 7548521145564178260}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 275, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1637863113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637863108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21a165f241281341bb3344aa3b1608a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsColliding: 0
+--- !u!65 &1637863112
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637863108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 100, y: 100, z: 100}
+  m_Center: {x: 30.65, y: 0, z: 0}
+--- !u!54 &1637863111
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637863108}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!225 &1637863110
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637863108}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1791485592
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,7 +773,7 @@ GameObject:
   - component: {fileID: 7548521145042003980}
   m_Layer: 5
   m_Name: ButtonImage
-  m_TagString: Continue
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -706,7 +928,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.1319}
   m_SizeDelta: {x: 700, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &7548521145162175393
@@ -833,6 +1055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a21a165f241281341bb3344aa3b1608a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_IsColliding: 0
 --- !u!65 &7548521145240593189
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -926,6 +1149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a21a165f241281341bb3344aa3b1608a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_IsColliding: 0
 --- !u!65 &7548521145556480895
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -996,6 +1220,7 @@ RectTransform:
   m_Children:
   - {fileID: 7548521145240593194}
   - {fileID: 7548521145556480893}
+  - {fileID: 1637863109}
   m_Father: {fileID: 7548521145162175392}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1061,8 +1286,12 @@ MonoBehaviour:
   m_Canvas: {fileID: 5059055671170722016}
   m_Buttons: {fileID: 7548521145564178261}
   m_ButtonsAreActive: 0
+  m_AreSwitched: 0
+  m_PlayButtonObj: {fileID: 0}
   m_PlayButton: {fileID: 7548521145240593190}
   m_PreviousButton: {fileID: 7548521145556480889}
+  m_CheckButtonObj: {fileID: 1637863108}
+  m_CheckButton: {fileID: 1637863110}
   m_SliderImage: {fileID: 7548521144040341313}
   m_GetReadyText: {fileID: 1791485594}
   m_CalibratingText: {fileID: 819156852}
@@ -1078,7 +1307,7 @@ GameObject:
   - component: {fileID: 7548521145749445223}
   - component: {fileID: 7548521145749445220}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: BackgroundPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1206,12 +1435,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 0a8d1e2be1a3bf24d9e11fec6916a15c,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1232,6 +1455,12 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Wrist_CalibrationStartZ
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 0a8d1e2be1a3bf24d9e11fec6916a15c,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538058128417290 stripped
@@ -1307,12 +1536,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 88089661daecec14da6fdd073a3a27c8,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1328,6 +1551,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: FootLeft
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 88089661daecec14da6fdd073a3a27c8,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538058223894034 stripped
@@ -1403,12 +1632,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 7ee7675136333a5488f6608a3780dda4,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1425,6 +1648,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: Body_TPose
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ee7675136333a5488f6608a3780dda4,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059126392585 stripped
@@ -1500,12 +1729,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: d507cdb2199946842b1767c14e212f14,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1521,6 +1744,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: Hip
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: d507cdb2199946842b1767c14e212f14,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059095104468 stripped
@@ -1596,12 +1825,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 4717abc0d2b559d44a3303380b28b6e6,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1617,6 +1840,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: Wrist_AlignStartPose
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 4717abc0d2b559d44a3303380b28b6e6,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059192155193 stripped
@@ -1692,12 +1921,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1713,6 +1936,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: Head
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059161389080 stripped
@@ -1788,12 +2017,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: bcecab650cd34034e9514e644f0be8d0,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1814,6 +2037,12 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Wrist_CalibrationStartX
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: bcecab650cd34034e9514e644f0be8d0,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059744806991 stripped
@@ -1889,12 +2118,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: bda16459da9da9343b343ac4f4d1c2b1,
-        type: 2}
     - target: {fileID: 313104196447937125, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: calibrationStepName
@@ -1910,6 +2133,12 @@ PrefabInstance:
       propertyPath: animationPoseTrigger
       value: FootRight
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: bda16459da9da9343b343ac4f4d1c2b1,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059947045565 stripped
