@@ -36,6 +36,12 @@ namespace Manus.Polygon
 			model.SetActive(false);
 		}
 
+		private void Update()
+		{
+			debug.SetActive(!sequence.isFinished);
+			model.SetActive(sequence.isFinished);
+		}
+
 		private void OnEnable()
 		{
 			sequence.calibrationFinished += CalibrateBody;
