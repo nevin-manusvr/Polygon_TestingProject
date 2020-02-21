@@ -91,7 +91,7 @@ namespace Manus.Polygon
 						Vector3 offset = Vector3.zero;
 						if (settings.useTrackerLocal)
 						{
-							if (!profile.trackerOffsets.ContainsKey(settings.trackerOffset)
+							if (profile.trackerOffsets != null && !profile.trackerOffsets.ContainsKey(settings.trackerOffset)
 							    || profile.trackerOffsets[settings.trackerOffset].position == null)
 								break;
 

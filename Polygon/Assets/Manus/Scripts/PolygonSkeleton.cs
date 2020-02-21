@@ -31,8 +31,8 @@ namespace Manus.Polygon.Skeleton
 			//	boneScalers = new SkeletonBoneScalers();
 			//	boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
 
-			//	ik.InitializeIK(transform, animator, newSkeleton, FindObjectOfType<IKTargets_TMP>());
-			//	ik.CreateCharacterIK();
+				ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
+				ik.CreateCharacterIK();
 
 			//	foreach (HandAnimator anim in GetComponentsInChildren<HandAnimator>())
 			//	{
