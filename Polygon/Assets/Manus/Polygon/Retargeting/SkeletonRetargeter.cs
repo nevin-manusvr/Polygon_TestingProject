@@ -340,8 +340,8 @@ namespace Manus.ToBeHermes.Retargeting
 			mainBones = mainSkeleton.boneReferences;
 			retargetBones = retargetSkeleton.boneReferences;
 
-			mainBonesCollection = mainBones.GatherBones();
-			retargetBonesCollection = retargetBones.GatherBones();
+			mainBonesCollection = mainBones.GatherBones(GatherType.Retargeted);
+			retargetBonesCollection = retargetBones.GatherBones(GatherType.Retargeted);
 
 			retargetConstraints = new List<RetargetContraint>();
 			orderedRetargetConstraints = new Dictionary<int, List<RetargetContraint>>();

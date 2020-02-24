@@ -65,7 +65,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine.Length > 1 ? skeleton.body.spine[1].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.chest.bone ? skeleton.body.chest.bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
@@ -81,7 +81,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine.Length > 2 ? skeleton.body.spine[2].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.upperChest.bone ? skeleton.body.upperChest.bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
@@ -233,10 +233,22 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 					break;
 				case BoneType.LeftHand:
-					
+
 					{
-						Vector3 aimDirection = skeleton.armLeft.hand.wrist.bone.position - skeleton.armLeft.lowerArm.bone.position;
-						Vector3 upDirection = Vector3.up;
+						HandBoneReferences hand = skeleton.armLeft.hand;
+
+						// Forward Vector
+						Vector3 aimDirection =
+							((hand.index.proximal.bone.position - hand.wrist.bone.position
+							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
+							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
+							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+
+						// Up Vector
+						Vector3 upDirection =
+							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
@@ -245,8 +257,20 @@ namespace Manus.Polygon.Skeleton.Utilities
 				case BoneType.RightHand:
 					
 					{
-						Vector3 aimDirection = skeleton.armRight.hand.wrist.bone.position - skeleton.armRight.lowerArm.bone.position;
-						Vector3 upDirection = Vector3.up;
+						HandBoneReferences hand = skeleton.armRight.hand;
+
+						// Forward Vector
+						Vector3 aimDirection =
+							((hand.index.proximal.bone.position - hand.wrist.bone.position
+							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
+							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
+							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+
+						// Up Vector
+						Vector3 upDirection =
+							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized * -1f;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
@@ -283,11 +307,11 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 				case BoneType.Spine:
 
-					return skeleton.body.spine.Length > 1 ? skeleton.body.spine[1] : skeleton.head.neck;
+					return skeleton.body.chest.bone ? skeleton.body.chest : skeleton.head.neck;
 
 				case BoneType.Chest:
 
-					return skeleton.body.spine.Length > 2 ? skeleton.body.spine[2] : skeleton.head.neck;
+					return skeleton.body.upperChest.bone ? skeleton.body.upperChest : skeleton.head.neck;
 				
 				case BoneType.UpperChest:
 

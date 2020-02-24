@@ -330,7 +330,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3182238669398226392}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.013316382, y: 0.015654147, z: 0.00020850063, w: 0.9997888}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -339,7 +339,7 @@ Transform:
   - {fileID: 776092593755836231}
   m_Father: {fileID: 200718950921890785}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -1.526, y: 1.794, z: 0}
 --- !u!1 &3290383963064867490
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +412,7 @@ GameObject:
   - component: {fileID: 200718950921890785}
   - component: {fileID: 6995353977136414490}
   - component: {fileID: 3276184140011080919}
+  - component: {fileID: 3641694704150485868}
   m_Layer: 0
   m_Name: mannequin_left_hand
   m_TagString: Untagged
@@ -610,6 +611,108 @@ MonoBehaviour:
   gizmoLength: 0.01
   handModelType: 0
   t_Test: 1
+--- !u!114 &3641694704150485868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3788161749504858610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4cd0177861a385469cd525e3eeae41c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handBoneReferences:
+    wrist:
+      type: 23
+      bone: {fileID: 4153222407538779739}
+      desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+    index:
+      proximal:
+        type: 0
+        bone: {fileID: 3277584575084958066}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      middle:
+        type: 0
+        bone: {fileID: 8503989939465892280}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      distal:
+        type: 0
+        bone: {fileID: 1751734994932602409}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      tip:
+        type: 0
+        bone: {fileID: 3002865521202998418}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+    middle:
+      proximal:
+        type: 0
+        bone: {fileID: 4541544125179720722}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      middle:
+        type: 0
+        bone: {fileID: 9202624843147416241}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      distal:
+        type: 0
+        bone: {fileID: 8369953411624533177}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      tip:
+        type: 0
+        bone: {fileID: 4706269194581849965}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+    ring:
+      proximal:
+        type: 0
+        bone: {fileID: 7127896678572465675}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      middle:
+        type: 0
+        bone: {fileID: 5401645599989864622}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      distal:
+        type: 0
+        bone: {fileID: 1780336035889627923}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      tip:
+        type: 0
+        bone: {fileID: 4853141025728885272}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+    pinky:
+      proximal:
+        type: 0
+        bone: {fileID: 2135271355612211779}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      middle:
+        type: 0
+        bone: {fileID: 2938484434402110874}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      distal:
+        type: 0
+        bone: {fileID: 5650997546387727397}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      tip:
+        type: 0
+        bone: {fileID: 8555532844749367979}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+    thumb:
+      proximal:
+        type: 0
+        bone: {fileID: 3067986468306233356}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      middle:
+        type: 0
+        bone: {fileID: 5648037916184775244}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      distal:
+        type: 0
+        bone: {fileID: 3212889077028948713}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+      tip:
+        type: 0
+        bone: {fileID: 8025890417102266305}
+        desiredRotation: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &4182580398478970953
 GameObject:
   m_ObjectHideFlags: 0

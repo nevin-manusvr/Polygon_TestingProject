@@ -162,10 +162,10 @@ namespace Manus.Polygon
 
 		public void GenerateScalerBonesForBody(SkeletonBoneReferences bones, SkeletonBoneReferences boneRotations)
 		{
-			AddScalerBone(HumanBodyBones.Hips, bones.body.hip.bone, boneRotations.body.hip.bone.rotation, new[] { boneRotations.legLeft.upperLeg.bone, boneRotations.legRight.upperLeg.bone, boneRotations.body.spine[0].bone });
-			AddScalerBone(HumanBodyBones.Spine, bones.body.spine[0].bone, boneRotations.body.spine[0].bone.rotation, (bones.body.spine[1]?.bone != null) ? new [] { boneRotations.body.spine[1].bone } : new [] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
-			if (bones.body.spine[1]?.bone != null) AddScalerBone(HumanBodyBones.Chest, bones.body.spine[1].bone, boneRotations.body.spine[1].bone.rotation, (bones.body.spine[2]?.bone != null) ? new[] { boneRotations.body.spine[2].bone } : new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
-			if (bones.body.spine[2]?.bone != null) AddScalerBone(HumanBodyBones.UpperChest, bones.body.spine[2].bone, boneRotations.body.spine[2].bone.rotation, new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
+			//AddScalerBone(HumanBodyBones.Hips, bones.body.hip.bone, boneRotations.body.hip.bone.rotation, new[] { boneRotations.legLeft.upperLeg.bone, boneRotations.legRight.upperLeg.bone, boneRotations.body.spine[0].bone });
+			//AddScalerBone(HumanBodyBones.Spine, bones.body.spine[0].bone, boneRotations.body.spine[0].bone.rotation, (bones.body.spine[1]?.bone != null) ? new [] { boneRotations.body.spine[1].bone } : new [] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
+			//if (bones.body.spine[1]?.bone != null) AddScalerBone(HumanBodyBones.Chest, bones.body.spine[1].bone, boneRotations.body.spine[1].bone.rotation, (bones.body.spine[2]?.bone != null) ? new[] { boneRotations.body.spine[2].bone } : new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
+			//if (bones.body.spine[2]?.bone != null) AddScalerBone(HumanBodyBones.UpperChest, bones.body.spine[2].bone, boneRotations.body.spine[2].bone.rotation, new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
 
 			AddScalerBone(HumanBodyBones.Neck, bones.head.neck.bone, boneRotations.head.neck.bone.rotation, new[] { boneRotations.head.head.bone });
 			AddScalerBone(HumanBodyBones.Head, bones.head.head.bone, boneRotations.head.head.bone.rotation);
