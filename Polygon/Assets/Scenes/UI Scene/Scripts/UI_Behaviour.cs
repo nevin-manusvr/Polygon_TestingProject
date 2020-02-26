@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Manus.Polygon;
 using DG.Tweening;
+using TMPro;
 
 public class UI_Behaviour : MonoBehaviour
 {
@@ -13,7 +14,10 @@ public class UI_Behaviour : MonoBehaviour
 
     [Header("Canvas")]
     [SerializeField]
-    private CanvasGroup m_Canvas;
+    private CanvasGroup m_MainCanvas;
+    [SerializeField]
+    private CanvasGroup m_UpperCanvas;
+    private CanvasGroup m_LowerCanvas;
 
     [Header("Buttons")]
 
@@ -37,6 +41,12 @@ public class UI_Behaviour : MonoBehaviour
     [Header("Slider")]
     [SerializeField]
     private Image m_SliderImage;
+    [SerializeField]
+    private Image m_CurrentStepSliderImages;
+    private int m_CurrentStep;
+
+    [SerializeField]
+    private TextMeshProUGUI m_CurrentStepText;
 
     [SerializeField]
     private CanvasGroup m_GetReadyText;
@@ -60,10 +70,12 @@ public class UI_Behaviour : MonoBehaviour
         m_GetReadyText.alpha = 0;
         m_CalibratingText.alpha = 0;
 
+        m_CurrentStep = 0;
 
-        m_PlayButtonObj = gameObject.transform.GetChild(0).GetChild(2).GetChild(0).gameObject;
 
-        m_CheckButtonObj = gameObject.transform.GetChild(0).GetChild(2).GetChild(2).gameObject;
+        m_PlayButtonObj = gameObject.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+
+        m_CheckButtonObj = gameObject.transform.GetChild(0).GetChild(1).GetChild(2).gameObject;
         m_CheckButtonObj.SetActive(false);
         m_CheckButton.alpha = 0;
 
@@ -87,6 +99,8 @@ public class UI_Behaviour : MonoBehaviour
 			    {
 				    controllerEvent.RaiseSetupNextStep();
                     StartSlider();
+                    m_CurrentStep += 1;
+                    UpdateCurrentStep();
 			    }
 
 			    break;
@@ -95,9 +109,14 @@ public class UI_Behaviour : MonoBehaviour
                 controllerEvent.RaisePreviousStep();
                 controllerEvent.RaiseSetupNextStep();
                 Debug.Log(sequence.currentIndex);
+                if(m_CurrentStep > 0)
+                {
+                    m_CurrentStep -= 1;
+                }
+                UpdateCurrentStep();
+                Debug.Log(sequence.isFinished);
                 if(sequence.isFinished)
                 {
-                    //sequence.currentIndex -= 1;
                     sequence.isFinished = false;
                     SwitchButtons();
                 }
@@ -147,7 +166,9 @@ public class UI_Behaviour : MonoBehaviour
 
     public void HideUI()
     {
-        m_Canvas.DOFade(0, 8f).SetEase(Ease.InOutCubic);
+        m_MainCanvas.DOFade(0, 3f).SetEase(Ease.InOutCubic);
+        m_UpperCanvas.DOFade(0, 3f).SetEase(Ease.InOutCubic);
+        
     }
 
     private void SwitchButtons()
@@ -169,6 +190,13 @@ public class UI_Behaviour : MonoBehaviour
             m_PlayButton.DOFade(1, .2f).SetDelay(.3f);
         }
 
+    }
+
+    private void UpdateCurrentStep()
+    {
+        float sliderValue = 1f / 8f * m_CurrentStep;
+        m_CurrentStepSliderImages.DOFillAmount(sliderValue, .4f).SetEase(Ease.InOutCubic);
+        m_CurrentStepText.text = m_CurrentStep.ToString();
     }
         
 }
