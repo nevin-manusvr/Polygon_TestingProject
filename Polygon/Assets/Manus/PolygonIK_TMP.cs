@@ -14,8 +14,8 @@ namespace Manus.Polygon
 	{
 		#region fields
 
-		private bool isInitialized = false;
-		private bool ikGenerated = false;
+		public bool isInitialized = false;
+		public bool ikGenerated = false;
 
 		private GameObject ikContainer;
 
@@ -37,6 +37,9 @@ namespace Manus.Polygon
 		public Vector2 elbowMinMax = new Vector2(-30, 80);
 		public Vector3 handInfluenceOnElbowRotation = new Vector3(1f, .3f, -1f);
 		public float totalHandInfluenceOnElbowRotation = 2f;
+
+		private Quaternion? defaultToeRotationLeft;
+		private Quaternion? defaultToeRotationRight;
 
 		// IK values
 		[HideInInspector] public SingleBoneIK hipIK;
@@ -81,13 +84,20 @@ namespace Manus.Polygon
 			hipIK.solver.SetChain(bones.body.hip.bone, bones.body.hip.bone);
 			hipIK.solver.target = targets.hip;
 
-			spineIK = new LimbIK[bones.body.spine.Length];
-			spineIKWeight = new float[bones.body.spine.Length];
-			for (int i = 0; i < bones.body.spine.Length; i++)
+
+			var spineBones = new List<Bone>();
+			spineBones.Add(bones.body.spine);
+			if (bones.body.chest.bone) spineBones.Add(bones.body.chest);
+			if (bones.body.upperChest.bone) spineBones.Add(bones.body.upperChest);
+			Bone[] spines = spineBones.ToArray();
+
+			spineIK = new LimbIK[spines.Length];
+			spineIKWeight = new float[spines.Length];
+			for (int i = 0; i < spines.Length; i++)
 			{
-				ikComponents.Add(spineIK[i] = CreateIKChain(bones.body.hip.bone, bones.body.spine[i].bone, bones.head.head.bone, bones.body.hip.bone, ikContainer, targets.head.GetChild(0), targets.spine));
-				spineIK[i].solver.IKPositionWeight = (1 - 0.2f) / bones.body.spine.Length * (i + 1);
-				spineIKWeight[i] = (1 - 0.2f) / bones.body.spine.Length * (i + 1);
+				ikComponents.Add(spineIK[i] = CreateIKChain(bones.body.hip.bone, spines[i].bone, bones.head.head.bone, bones.body.hip.bone, ikContainer, targets.head.GetChild(0), targets.spine));
+				spineIK[i].solver.IKPositionWeight = (1 - 0.2f) / spines.Length * (i + 1);
+				spineIKWeight[i] = (1 - 0.2f) / spines.Length * (i + 1);
 			}
 
 			ikComponents.Add(neckIK = CreateIKChain(bones.body.hip.bone, bones.head.neck.bone, bones.head.head.bone, bones.body.hip.bone, ikContainer, targets.head, targets.spine));
@@ -243,7 +253,7 @@ namespace Manus.Polygon
 		{
 			if (toeBone == null) return;
 
-			float _footHeight = 0.1346572f;
+			//float _footHeight = 0.1346572f;
 			float _toeHeight = 0.02811695f;
 			float _toeEndHeight = 0.02812012f;
 
@@ -270,7 +280,12 @@ namespace Manus.Polygon
 			if (toeEndBone == null) return;
 
 			float toeEndHeight = _toeEndHeight * bones.legLeft.foot.bone.lossyScale.x;
-			toeBone.bone.localRotation = isLeft ? Quaternion.Euler(87.291f, -15.725f, 75.14101f) : Quaternion.Euler(-92.71f, -15.72601f, -75.13998f);
+			if (isLeft && defaultToeRotationLeft == null)
+				defaultToeRotationLeft = bones.legLeft.toes.bone.localRotation;
+
+			if (!isLeft && defaultToeRotationRight == null)
+				defaultToeRotationRight = bones.legRight.toes.bone.localRotation;
+			toeBone.bone.localRotation = isLeft ? defaultToeRotationLeft.Value : defaultToeRotationRight.Value;
 
 			if (toeEndBone.position.y < toeEndHeight)
 			{
@@ -310,12 +325,18 @@ namespace Manus.Polygon
 
 		private void OnLeftArmPostIK()
 		{
-			EstimateElbowAndShoulderPosition(bones.body.spine[bones.body.spine.Length - 1], bones.armLeft.shoulder, bones.armLeft.hand.wrist, targets.leftElbow, true);
+			Bone highestSpine = bones.body.spine;
+			if (bones.body.chest.bone) highestSpine = bones.body.chest;
+			if (bones.body.upperChest.bone) highestSpine = bones.body.upperChest;
+			EstimateElbowAndShoulderPosition(highestSpine, bones.armLeft.shoulder, bones.armLeft.hand.wrist, targets.leftElbow, true);
 		}
 
 		private void OnRightArmPostIK()
 		{
-			EstimateElbowAndShoulderPosition(bones.body.spine[bones.body.spine.Length - 1], bones.armRight.shoulder, bones.armRight.hand.wrist, targets.rightElbow, false);
+			Bone highestSpine = bones.body.spine;
+			if (bones.body.chest.bone) highestSpine = bones.body.chest;
+			if (bones.body.upperChest.bone) highestSpine = bones.body.upperChest;
+			EstimateElbowAndShoulderPosition(highestSpine, bones.armRight.shoulder, bones.armRight.hand.wrist, targets.rightElbow, false);
 		}
 		#endregion
 

@@ -65,7 +65,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine.Length > 1 ? skeleton.body.spine[1].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.chest.bone ? skeleton.body.chest.bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
@@ -81,7 +81,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
 							};
 
-						Vector3 aimDirection = (skeleton.body.spine.Length > 2 ? skeleton.body.spine[2].bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
+						Vector3 aimDirection = (skeleton.body.upperChest.bone ? skeleton.body.upperChest.bone.position : skeleton.head.neck.bone.position) - bone.bone.position;
 						Vector3 upDirection = -CalculateForward(bones);
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
@@ -233,10 +233,22 @@ namespace Manus.Polygon.Skeleton.Utilities
 
 					break;
 				case BoneType.LeftHand:
-					
+
 					{
-						Vector3 aimDirection = skeleton.armLeft.hand.wrist.bone.position - skeleton.armLeft.lowerArm.bone.position;
-						Vector3 upDirection = Vector3.up;
+						HandBoneReferences hand = skeleton.armLeft.hand;
+
+						// Forward Vector
+						Vector3 aimDirection =
+							((hand.index.proximal.bone.position - hand.wrist.bone.position
+							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
+							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
+							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+
+						// Up Vector
+						Vector3 upDirection =
+							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
@@ -245,8 +257,20 @@ namespace Manus.Polygon.Skeleton.Utilities
 				case BoneType.RightHand:
 					
 					{
-						Vector3 aimDirection = skeleton.armRight.hand.wrist.bone.position - skeleton.armRight.lowerArm.bone.position;
-						Vector3 upDirection = Vector3.up;
+						HandBoneReferences hand = skeleton.armRight.hand;
+
+						// Forward Vector
+						Vector3 aimDirection =
+							((hand.index.proximal.bone.position - hand.wrist.bone.position
+							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
+							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
+							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+
+						// Up Vector
+						Vector3 upDirection =
+							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
+							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized * -1f;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
@@ -256,6 +280,97 @@ namespace Manus.Polygon.Skeleton.Utilities
 					ErrorHandler.LogError(ErrorMessage.NotImplemented);
 					break;
 			}
+		}
+
+		public static Bone GetLookAtBone(this Bone bone, SkeletonBoneReferences skeleton)
+		{
+			switch (bone.type)
+			{
+				case BoneType.Unknown:
+					ErrorHandler.LogError(ErrorMessage.NoRequiredData);
+					break;
+				case BoneType.Root:
+				case BoneType.Head:
+				case BoneType.Hips:
+				case BoneType.LeftFoot:
+				case BoneType.RightFoot:
+				case BoneType.LeftToes:
+				case BoneType.RightToes:
+				case BoneType.LeftToesEnd:
+				case BoneType.RightToesEnd:
+					
+					return null;
+
+				case BoneType.Neck:
+
+					return skeleton.head.head;
+
+				case BoneType.Spine:
+
+					return skeleton.body.chest.bone ? skeleton.body.chest : skeleton.head.neck;
+
+				case BoneType.Chest:
+
+					return skeleton.body.upperChest.bone ? skeleton.body.upperChest : skeleton.head.neck;
+				
+				case BoneType.UpperChest:
+
+					return skeleton.head.neck;
+				
+				case BoneType.LeftUpperLeg:
+
+					return skeleton.legLeft.lowerLeg;
+
+				case BoneType.RightUpperLeg:
+
+					return skeleton.legRight.lowerLeg;
+
+				case BoneType.LeftLowerLeg:
+
+					return skeleton.legLeft.foot;
+
+				case BoneType.RightLowerLeg:
+
+					return skeleton.legRight.foot;
+
+				case BoneType.LeftShoulder:
+
+					return skeleton.armLeft.upperArm;
+
+				case BoneType.RightShoulder:
+
+					return skeleton.armRight.upperArm;
+
+				case BoneType.LeftUpperArm:
+
+					return skeleton.armLeft.lowerArm;
+
+				case BoneType.RightUpperArm:
+
+					return skeleton.armRight.lowerArm;
+
+				case BoneType.LeftLowerArm:
+
+					return skeleton.armLeft.hand.wrist;
+
+				case BoneType.RightLowerArm:
+
+					return skeleton.armRight.hand.wrist;
+
+				case BoneType.LeftHand:
+
+					return skeleton.armLeft.hand.wrist;
+
+				case BoneType.RightHand:
+
+					return skeleton.armRight.hand.wrist;
+
+				default:
+					ErrorHandler.LogError(ErrorMessage.NotImplemented);
+					break;
+			}
+
+			return null;
 		}
 
 		/// <summary>

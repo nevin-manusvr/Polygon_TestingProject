@@ -41,7 +41,7 @@ namespace Manus.Polygon
 					case AlignType.AverageTwoAxis:
 
 						if (!trackers.GetTracker(data.averageTracker1, out TransformValues averageTracker1) || 
-						    !trackers.GetTracker(data.averageTracker1, out TransformValues averageTracker2))
+						    !trackers.GetTracker(data.averageTracker2, out TransformValues averageTracker2))
 						{
 							ErrorHandler.LogError(ErrorMessage.NoTrackerData);
 							continue;

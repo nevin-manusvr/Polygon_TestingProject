@@ -7,39 +7,47 @@ namespace Manus.Polygon.Skeleton
 	using UnityEngine;
 
 	#region BoneOrganization
+
 	[System.Serializable]
 	public class Body
 	{
 		public Bone hip;
-		public Bone[] spine;
+		// public Bone[] spine;
+		public Bone spine;
+		public OptionalBone chest;
+		public OptionalBone upperChest;
 
 		public bool IsValid
 		{
-			get { return hip?.bone && spine?.Length > 0; }
+			get { return hip.bone && spine.bone; }
+		}
+
+		public Body()
+		{
+			hip = new Bone(BoneType.Hips);
+			spine = new Bone(BoneType.Spine);
+			chest = new OptionalBone(BoneType.Chest);
+			upperChest = new OptionalBone(BoneType.UpperChest);
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones()
 		{
 			var bones = new Dictionary<BoneType, Bone>();
 			bones.Add(hip.type, hip);
-			foreach (Bone spineBone in spine)
-			{
-				bones.Add(spineBone.type, spineBone);
-			}
+			bones.Add(spine.type, spine);
 
+			if (chest.bone) bones.Add(chest.type, chest);
+			if (upperChest.bone) bones.Add(upperChest.type, upperChest);
+			
 			return bones;
 		}
 
 		public void AssignBones(Transform hip, Transform spine, Transform chest, Transform upperChest)
 		{
-			this.hip = new Bone(BoneType.Hips, hip);
-
-			var spineBones = new List<Bone>();
-			if (spine) spineBones.Add(new Bone(BoneType.Spine, spine));
-			if (chest) spineBones.Add(new Bone(BoneType.Chest, chest));
-			if (upperChest) spineBones.Add(new Bone(BoneType.UpperChest, upperChest));
-
-			this.spine = spineBones.ToArray();
+			this.hip.AssignTransform(hip);
+			this.spine.AssignTransform(spine);
+			if (chest) this.chest.AssignTransform(chest);
+			if (upperChest) this.upperChest.AssignTransform(upperChest);
 		}
 	}
 
@@ -48,12 +56,19 @@ namespace Manus.Polygon.Skeleton
 	{
 		public Bone neck;
 		public Bone head;
+		
 		//public OptionalBone eyeLeft;
 		//public OptionalBone eyeRight;
 
 		public bool IsValid
 		{
-			get { return neck?.bone && head?.bone; }
+			get { return neck.bone && head.bone; }
+		}
+
+		public Head()
+		{
+			neck = new Bone(BoneType.Neck);
+			head = new Bone(BoneType.Head);
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones()
@@ -67,8 +82,8 @@ namespace Manus.Polygon.Skeleton
 
 		public void AssignBones(Transform neck, Transform head, Transform eyeLeft, Transform eyeRight)
 		{
-			this.neck = new Bone(BoneType.Neck, neck);
-			this.head = new Bone(BoneType.Head, head);
+			this.neck.AssignTransform(neck);
+			this.head.AssignTransform(head);
 
 			if (eyeLeft && eyeRight)
 			{
@@ -81,14 +96,27 @@ namespace Manus.Polygon.Skeleton
 	[System.Serializable]
 	public class Arm
 	{
+		private bool left;
+
 		public Bone shoulder;
 		public Bone upperArm;
 		public Bone lowerArm;
 		public HandBoneReferences hand;
 
+		public Arm(bool left)
+		{
+			this.left = left;
+
+			shoulder = new Bone(left ? BoneType.LeftShoulder : BoneType.RightShoulder);
+			upperArm = new Bone(left ? BoneType.LeftUpperArm : BoneType.RightUpperArm);
+			lowerArm = new Bone(left ? BoneType.LeftLowerArm : BoneType.RightLowerArm);
+
+			hand = new HandBoneReferences(left);
+		}
+
 		public bool IsValid
 		{
-			get { return shoulder?.bone && upperArm?.bone && lowerArm?.bone && hand.IsValid; }
+			get { return shoulder.bone && upperArm.bone && lowerArm.bone && hand.IsValid; }
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones()
@@ -102,14 +130,14 @@ namespace Manus.Polygon.Skeleton
 			return bones;
 		}
 
-		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm, bool left)
+		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm)
 		{
-			this.shoulder = new Bone(left ? BoneType.LeftShoulder : BoneType.RightShoulder, shoulder);
-			this.upperArm = new Bone(left ? BoneType.LeftUpperArm : BoneType.RightUpperArm, upperArm);
-			this.lowerArm = new Bone(left ? BoneType.LeftLowerArm : BoneType.RightLowerArm, lowerArm);
+			this.shoulder.AssignTransform(shoulder);
+			this.upperArm.AssignTransform(upperArm);
+			this.lowerArm.AssignTransform(lowerArm);
 		}
 
-		public void AssignHandBones(Transform lowerArm, Animator animator, bool left)
+		public void AssignHandBones(Transform lowerArm, Animator animator)
 		{
 			this.hand.PopulateBones(animator, lowerArm, left);
 		}
@@ -118,34 +146,53 @@ namespace Manus.Polygon.Skeleton
 	[System.Serializable]
 	public class Leg
 	{
+		private bool left = false;
+
 		public Bone upperLeg;
 		public Bone lowerLeg;
 		public Bone foot;
 		public OptionalBone toes;
 		public OptionalBone toesEnd;
 
-		public bool IsValid
+		public ControlBone heel;
+
+		public Leg(bool left)
 		{
-			get { return upperLeg?.bone && lowerLeg?.bone && foot?.bone; }
+			this.left = left;
+
+			upperLeg = new Bone(left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg);
+			lowerLeg = new Bone(left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg);
+			foot = new Bone(left ? BoneType.LeftFoot : BoneType.RightFoot);
+
+			toes = new OptionalBone(left ? BoneType.LeftToes : BoneType.RightToes);
+			toesEnd = new OptionalBone(left ? BoneType.LeftToesEnd : BoneType.RightToesEnd);
+
+			heel = new ControlBone(ControlPointType.Ground);
 		}
 
-		public Dictionary<BoneType, Bone> GatherBones()
+		public bool IsValid
+		{
+			get { return upperLeg.bone && lowerLeg.bone && foot.bone; }
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
 		{
 			var bones = new Dictionary<BoneType, Bone>();
+
 			bones.Add(upperLeg.type, upperLeg);
 			bones.Add(lowerLeg.type, lowerLeg);
 			bones.Add(foot.type, foot);
-			if (toes?.bone != null) bones.Add(toes.type, toes);
-			if (toesEnd?.bone != null) bones.Add(toesEnd.type, toesEnd);
+			if (gatherType == GatherType.All && toes.bone != null) bones.Add(toes.type, toes);
+			if (gatherType == GatherType.All && toesEnd.bone != null) bones.Add(toesEnd.type, toesEnd);
 
 			return bones;
 		}
 
-		public void AssignBones(Transform upperLeg, Transform lowerLeg, Transform foot, Transform toes, Transform toesEnd, bool left)
+		public void AssignBones(Transform upperLeg, Transform lowerLeg, Transform foot, Transform toes, Transform toesEnd)
 		{
-			this.upperLeg = new Bone(left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg, upperLeg);
-			this.lowerLeg = new Bone(left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg, lowerLeg);
-			this.foot = new Bone(left ? BoneType.LeftFoot : BoneType.RightFoot, foot);
+			this.upperLeg.AssignTransform(upperLeg);
+			this.lowerLeg.AssignTransform(lowerLeg);
+			this.foot.AssignTransform(foot);
 
 			if (toes == null)
 			{
@@ -153,7 +200,7 @@ namespace Manus.Polygon.Skeleton
 				return;
 			}
 			
-			this.toes = new OptionalBone(left ? BoneType.LeftToes : BoneType.RightToes, toes);
+			this.toes.AssignTransform(toes);
 
 			if (toesEnd == null && toes.childCount == 0)
 			{
@@ -161,13 +208,15 @@ namespace Manus.Polygon.Skeleton
 				return;
 			}
 
-			this.toesEnd = new OptionalBone(left ? BoneType.LeftToesEnd : BoneType.RightToesEnd, toesEnd ?? this.toes.bone.GetChild(0));
-
-			Vector3 pos = this.foot.bone.position;
-			pos.y = 0;
-			Debug.DrawRay(pos, Vector3.forward, Color.red, 100f);
+			this.toesEnd.AssignTransform(toesEnd ?? this.toes.bone.GetChild(0));
 		}
 }
+
+	public enum GatherType
+	{
+		All,
+		Retargeted
+	}
 
 	#endregion
 
@@ -175,6 +224,7 @@ namespace Manus.Polygon.Skeleton
 	public class SkeletonBoneReferences
 	{
 		public Bone root;
+		public ControlBone modelHeight;
 
 		public Head head;
 		public Body body;
@@ -182,15 +232,20 @@ namespace Manus.Polygon.Skeleton
 		public Arm armLeft;
 		public Arm armRight;
 
-		public Leg legLeft;
-		public Leg legRight;
+		public Leg legLeft = new Leg(true);
+		public Leg legRight = new Leg(false);
 
 		public bool IsValid
 		{
 			get { return head.IsValid && body.IsValid && armLeft.IsValid && armRight.IsValid && legLeft.IsValid && legRight.IsValid; }
 		}
 
-		public Dictionary<BoneType, Bone> GatherBones()
+		public SkeletonBoneReferences()
+		{
+			Clear();
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
 		{
 			var bones = new Dictionary<BoneType, Bone>();
 			
@@ -199,8 +254,8 @@ namespace Manus.Polygon.Skeleton
 			AddToDictionary(head.GatherBones());
 			AddToDictionary(armLeft.GatherBones());
 			AddToDictionary(armRight.GatherBones());
-			AddToDictionary(legLeft.GatherBones());
-			AddToDictionary(legRight.GatherBones());
+			AddToDictionary(legLeft.GatherBones(gatherType));
+			AddToDictionary(legRight.GatherBones(gatherType));
 
 			return bones;
 
@@ -232,37 +287,40 @@ namespace Manus.Polygon.Skeleton
 			this.armLeft.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.LeftShoulder), 
 				animator.GetBoneTransform(HumanBodyBones.LeftUpperArm),
-				animator.GetBoneTransform(HumanBodyBones.LeftLowerArm), true);
-			this.armLeft.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.LeftLowerArm), animator, true);
+				animator.GetBoneTransform(HumanBodyBones.LeftLowerArm));
+			this.armLeft.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.LeftLowerArm), animator);
 
 			this.armRight.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.RightShoulder),
 				animator.GetBoneTransform(HumanBodyBones.RightUpperArm),
-				animator.GetBoneTransform(HumanBodyBones.RightLowerArm), false);
-			this.armRight.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.RightLowerArm), animator, false);
+				animator.GetBoneTransform(HumanBodyBones.RightLowerArm));
+			this.armRight.AssignHandBones(animator.GetBoneTransform(HumanBodyBones.RightLowerArm), animator);
 
 			this.legLeft.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.LeftUpperLeg),
 				animator.GetBoneTransform(HumanBodyBones.LeftLowerLeg),
 				animator.GetBoneTransform(HumanBodyBones.LeftFoot),
 				animator.GetBoneTransform(HumanBodyBones.LeftToes),
-				null, true);
+				null);
 			this.legRight.AssignBones(
 				animator.GetBoneTransform(HumanBodyBones.RightUpperLeg),
 				animator.GetBoneTransform(HumanBodyBones.RightLowerLeg),
 				animator.GetBoneTransform(HumanBodyBones.RightFoot),
 				animator.GetBoneTransform(HumanBodyBones.RightToes),
-				null, false);
+				null);
 		}
 
 		public void Clear()
 		{
+			root = new Bone(BoneType.Root);
+			modelHeight = new ControlBone(ControlPointType.Height);
+
 			head = new Head();
 			body = new Body();
-			armLeft = new Arm();
-			armRight = new Arm();
-			legLeft = new Leg();
-			legRight = new Leg();
+			armLeft = new Arm(true);
+			armRight = new Arm(false);
+			legLeft = new Leg(true);
+			legRight = new Leg(false);
 		}
 	}
 }
