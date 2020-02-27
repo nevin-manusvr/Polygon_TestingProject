@@ -124,7 +124,6 @@ public class UI_Behaviour : MonoBehaviour
                 break;
             case "Check":
 
-                HideUI();
                 ToggleUIButtons();
 
                 break;
@@ -164,10 +163,18 @@ public class UI_Behaviour : MonoBehaviour
         m_Buttons.SetActive(m_ButtonsAreActive);
     }
 
-    public void HideUI()
+    public void ToggleUI(bool isVisible)
     {
-        m_MainCanvas.DOFade(0, 3f).SetEase(Ease.InOutCubic);
-        m_UpperCanvas.DOFade(0, 3f).SetEase(Ease.InOutCubic);
+        if(isVisible)
+        {
+            m_MainCanvas.DOFade(1, 2f).SetEase(Ease.InOutCubic);
+            m_UpperCanvas.DOFade(1, 2f).SetEase(Ease.InOutCubic);
+        }
+        else
+        {
+            m_MainCanvas.DOFade(0, 2f).SetEase(Ease.InOutCubic);
+            m_UpperCanvas.DOFade(0, 2f).SetEase(Ease.InOutCubic);
+        }
         
     }
 

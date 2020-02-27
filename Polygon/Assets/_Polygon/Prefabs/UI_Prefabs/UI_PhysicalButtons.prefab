@@ -55,6 +55,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsColliding: 0
+  m_IsLocked: 0
+  m_UnlockSprite: {fileID: 0}
+  m_LockSprite: {fileID: 0}
 --- !u!65 &2506867285638824278
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -492,7 +495,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 473d985a218c5134686723cfdc5a2ac0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 211fe82939115bf42b93b1dca8a0acdf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -801,6 +804,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsColliding: 0
+  m_IsLocked: 0
+  m_UnlockSprite: {fileID: 0}
+  m_LockSprite: {fileID: 0}
 --- !u!65 &7852849137242287840
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1547,7 +1553,7 @@ GameObject:
   - component: {fileID: 2109212686098789516}
   m_Layer: 5
   m_Name: Slide_Button
-  m_TagString: Start
+  m_TagString: Slider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1569,7 +1575,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -125, y: 0}
+  m_AnchoredPosition: {x: 125, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7832327927740206296
@@ -1585,6 +1591,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsColliding: 0
+  m_IsLocked: 0
+  m_UnlockSprite: {fileID: 0}
+  m_LockSprite: {fileID: 0}
 --- !u!65 &5834223793187761984
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2031,6 +2040,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsColliding: 0
+  m_IsLocked: 0
+  m_UnlockSprite: {fileID: 0}
+  m_LockSprite: {fileID: 0}
 --- !u!65 &7548521145240593189
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ TagManager:
   - Previous
   - Start
   - Check
+  - Slider
   layers:
   - Default
   - TransparentFX
