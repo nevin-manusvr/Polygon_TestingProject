@@ -190,7 +190,7 @@ namespace Manus.Polygon
 				{
 					case VRTrackerType.LeftFoot:
 					case VRTrackerType.RightFoot:
-						float _footHeight = 0.1346572f;
+						float _footHeight = 0;
 
 						if (obj.position.y < _footHeight)
 						{

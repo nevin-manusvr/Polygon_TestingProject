@@ -23,9 +23,9 @@ namespace Manus.Polygon
 		public float armMultiplier = 1f;
 		public float legMultiplier = 1f;
 
-		public Slider legSlider;
-		public Slider spineSlider;
-		public Slider armSlider;
+		//public Slider legSlider;
+		//public Slider spineSlider;
+		//public Slider armSlider;
 
 		private void Start()
 		{
@@ -74,7 +74,7 @@ namespace Manus.Polygon
 
 		private void OnValidate()
 		{
-			if (sequence.isFinished && Application.isPlaying)
+			if (Application.isPlaying && sequence.isFinished)
 			{
 				CalibrateBody();
 			}

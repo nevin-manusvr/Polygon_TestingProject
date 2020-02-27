@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using GlmSharp;
+using Manus.Core.Utility;
 
 namespace Manus.ToBeHermes.Tracking
 {
 	public class Tracker
 	{
+		public VRTrackerType type;
 		public vec3 position;
 		public quat rotation;
 
 		#region Constructor
 
-		public Tracker(vec3 position, quat rotation)
+		public Tracker(VRTrackerType type, vec3 position, quat rotation)
 		{
 			this.position = position;
 			this.rotation = rotation;
