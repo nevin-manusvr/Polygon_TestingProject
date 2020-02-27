@@ -125,7 +125,7 @@ namespace Manus.ToBeHermes.Retargeting
 
 		public Vector3 newPosition;
 
-		public RetargetChain[] chains;
+		[HideInInspector] public RetargetChain[] chains;
 
 		public RetargetContraint(int priority, Transform retargetBone, Transform targetBone)
 		{
