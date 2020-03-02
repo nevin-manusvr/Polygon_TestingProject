@@ -140,6 +140,31 @@ namespace Manus.Polygon.Skeleton
 				boneReferences.head.modelHeight.position = rootMatrix.MultiplyPoint3x4(new Vector3(rootPos.x, 1.8f, rootPos.z));
 			}
 
+			// Hip Control
+			{
+				Matrix4x4 hipMatrix = Matrix4x4.TRS(
+					boneReferences.body.hip.bone.position,
+					Quaternion.identity, 
+					boneReferences.body.hip.bone.lossyScale).inverse;
+
+				Vector3 hipCenterPos = (boneReferences.legLeft.upperLeg.bone.position + boneReferences.legRight.upperLeg.bone.position) / 2f;
+				boneReferences.body.hipControl.position = hipMatrix.MultiplyPoint3x4(hipCenterPos);
+			}
+
+			// UpperBody Control
+			{
+				Transform highestSpine = boneReferences.body.upperChest.bone ?? boneReferences.body.chest.bone ?? boneReferences.body.spine.bone;
+
+				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
+					highestSpine.position,
+					highestSpine.rotation, 
+					highestSpine.lossyScale).inverse;
+
+				Vector3 upperBodyCenterPos = ((boneReferences.armLeft.upperArm.bone.position + boneReferences.armRight.upperArm.bone.position) / 2f +
+				                             (boneReferences.armLeft.shoulder.bone.position + boneReferences.armRight.shoulder.bone.position) / 2f) / 2f;
+				boneReferences.body.upperBodyControl.position = upperBodyMatrix.MultiplyPoint3x4(upperBodyCenterPos);
+			}
+
 			foreach (var bone in boneReferences.GatherBones(GatherType.All).Values)
 			{
 				bone.CalculateOrientation(boneReferences);

@@ -68,7 +68,6 @@ namespace Manus.Polygon.Skeleton.Editor
 			DrawArm(bones.armRight, bones.body);
 
 			DrawControlPoint(bones.head.modelHeight, bones.root, ControlPointType.Height);
-
 		}
 
 		#region drawing the skeleton bones
@@ -76,13 +75,17 @@ namespace Manus.Polygon.Skeleton.Editor
 		private void DrawBodyAndHead(Body body, Head head)
 		{
 			// Draw Skeleton
+			Bone highestSpine = body.spine;
+
 			ConnectBones(body.hip, body.spine);
 			if (body.chest.bone)
 			{
+				highestSpine = body.chest;
 				ConnectBones(body.spine, body.chest);
 
 				if (body.upperChest.bone)
 				{
+					highestSpine = body.upperChest;
 					ConnectBones(body.chest, body.upperChest);
 					ConnectBones(body.upperChest, head.neck);
 				}
@@ -97,8 +100,6 @@ namespace Manus.Polygon.Skeleton.Editor
 			}
 
 			ConnectBones(head.neck, head.head);
-			//if (head.eyeLeft?.bone != null) ConnectBones(head.head, head.eyeLeft);
-			//if (head.eyeRight?.bone != null) ConnectBones(head.head, head.eyeRight);
 
 			// Draw Bones
 			DrawBone(body.hip, size);
@@ -108,9 +109,9 @@ namespace Manus.Polygon.Skeleton.Editor
 
 			DrawBone(head.neck, size);
 			DrawBone(head.head, size);
-			//if (head.eyeLeft?.bone != null) DrawBone(head.eyeLeft, size);
-			//if (head.eyeRight?.bone != null) DrawBone(head.eyeRight, size);
 
+			DrawControlPoint(body.hipControl, body.hip, ControlPointType.Group);
+			DrawControlPoint(body.upperBodyControl, highestSpine, ControlPointType.Group);
 		}
 
 		private void DrawArm(Arm arm, Body body)
@@ -254,8 +255,30 @@ namespace Manus.Polygon.Skeleton.Editor
 						rootPosition.y = 0;
 
 						Matrix4x4 rootMatrix = Matrix4x4.TRS(rootPosition, root.bone.rotation, Vector3.one);
-						Vector3 point = Handles.Slider(rootMatrix.MultiplyPoint3x4(control.position) + root.bone.rotation * Vector3.up * size * 0.5f, root.bone.rotation * Vector3.up, size, Handles.CubeHandleCap, .001f);
+						Vector3 point = Handles.Slider(
+							rootMatrix.MultiplyPoint3x4(control.position)
+							+ root.bone.rotation * Vector3.up * size * 0.5f,
+							root.bone.rotation * Vector3.up,
+							size,
+							Handles.CubeHandleCap,
+							.001f);
 
+						if (EditorGUI.EndChangeCheck())
+						{
+							Undo.RecordObject(target, "Moved Control point");
+							control.position = rootMatrix.inverse.MultiplyPoint3x4(point);
+						}
+					}
+
+					break;
+				case ControlPointType.Group:
+
+					if (control.position != Vector3.zero)
+					{
+						EditorGUI.BeginChangeCheck();
+
+						Matrix4x4 rootMatrix = Matrix4x4.TRS(root.bone.position, root.bone.rotation, root.bone.lossyScale);
+						Vector3 point = Handles.Slider2D(rootMatrix.MultiplyPoint3x4(control.position), Quaternion.identity * Vector3.up, root.bone.rotation * Vector3.forward, root.bone.rotation * Vector3.right, size * 5, Handles.CircleHandleCap, new Vector2(.001f, .001f));
 						if (EditorGUI.EndChangeCheck())
 						{
 							Undo.RecordObject(target, "Moved Control point");

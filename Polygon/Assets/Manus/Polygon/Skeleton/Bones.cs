@@ -52,6 +52,7 @@ namespace Manus.Polygon.Skeleton
 	public enum ControlPointType
 	{
 		Ground,
-		Height
+		Height,
+		Group
 	}
 }
