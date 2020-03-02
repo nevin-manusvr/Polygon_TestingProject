@@ -42,14 +42,14 @@ namespace Manus.Polygon
 			boneScalers.ChangeHeadSize(headSize);
 
 
-			boneScalers.ChangeArmLength(upperArmLength, lowerArmLength);
-			boneScalers.ChangeLegLength(upperLegLength, lowerLegLength);
+			//boneScalers.ChangeArmLength(upperArmLength, lowerArmLength);
+			//boneScalers.ChangeLegLength(upperLegLength, lowerLegLength);
 
 			boneScalers.ChangeHandSize(handSize);
 			boneScalers.ChangeFootSize(footSize);
 
-			// boneScalers.ChangeFingerLength(fingerLength);
-			// boneScalers.ChangeFingerThickness(fingerThickness);
+			boneScalers.ChangeFingerLength(fingerLength);
+			boneScalers.ChangeFingerThickness(fingerThickness);
 		}
 
 		[ContextMenu("Randomize all values")]

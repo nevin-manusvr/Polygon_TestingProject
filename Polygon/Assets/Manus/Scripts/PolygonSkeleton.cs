@@ -24,11 +24,11 @@ namespace Manus.Polygon.Skeleton
 
 		private void Awake()
 		{
-			//if (boneReferences.IsValid && newSkeleton.IsValid)
-			//{
-			//	boneScalers = new SkeletonBoneScalers();
-			//	boneScalers.GenerateScalerBonesForBody(boneReferences, newSkeleton);
-			//}
+			if (boneReferences.IsValid)
+			{
+				boneScalers = new SkeletonBoneScalers();
+				// boneScalers.GenerateScalerBonesForBody(boneReferences);
+			}
 		}
 
 		private void Update()

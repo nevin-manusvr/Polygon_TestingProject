@@ -5,14 +5,15 @@ using UnityEngine;
 namespace Manus.Polygon
 {
 	using Manus.Polygon.Skeleton;
+	using Manus.ToBeHermes.Skeleton;
 
 	public class SkeletonBoneScalers
 	{
-		public Dictionary<HumanBodyBones, BoneScaler> boneScalers;
+		public Dictionary<BoneType, BoneScaler> boneScalers;
 
 		public SkeletonBoneScalers()
 		{
-			boneScalers = new Dictionary<HumanBodyBones, BoneScaler>();
+			boneScalers = new Dictionary<BoneType, BoneScaler>();
 		}
 
 		#region Helper Functions
@@ -24,209 +25,210 @@ namespace Manus.Polygon
 
 		public void ChangeThickness(float thickness)
 		{
-			boneScalers[HumanBodyBones.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.Spine].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.Chest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.UpperChest].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
+			boneScalers[BoneType.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
+			boneScalers[BoneType.Spine].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.Chest)) boneScalers[BoneType.Chest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.Neck].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.Neck].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.LeftShoulder].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftUpperArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLowerArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftShoulder].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftUpperArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftLowerArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.RightShoulder].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightUpperArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLowerArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.RightShoulder].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.RightUpperArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.RightLowerArm].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.LeftUpperLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLowerLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftUpperLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftLowerLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.RightUpperLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLowerLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.RightUpperLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.RightLowerLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 		}
 
 		public void ChangeSpineLength(float length)
 		{
-			boneScalers[HumanBodyBones.Spine].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.Chest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.UpperChest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			boneScalers[BoneType.Spine].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			boneScalers[BoneType.Chest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			boneScalers[BoneType.UpperChest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 		}
 
 		public void ChangeHeadSize(float scale)
 		{
-			boneScalers[HumanBodyBones.Head].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
+			boneScalers[BoneType.Head].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
 		}
 
 		public void ChangeArmLength(float upperArmLength, float lowerArmLength)
 		{
-			boneScalers[HumanBodyBones.LeftUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[HumanBodyBones.RightUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.RightUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
 
-			boneScalers[HumanBodyBones.LeftLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[HumanBodyBones.RightLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.RightLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
 		}
 
 		public void ChangeLegLength(float upperLegLength, float lowerLegLength)
 		{
-			boneScalers[HumanBodyBones.LeftUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[HumanBodyBones.RightUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.RightUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
 
-			boneScalers[HumanBodyBones.LeftLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[HumanBodyBones.RightLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.RightLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
 		}
 
 		public void ChangeFootSize(float scale)
 		{
-			boneScalers[HumanBodyBones.LeftFoot].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightFoot].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftFoot].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
+			boneScalers[BoneType.RightFoot].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
 		}
 
 		public void ChangeHandSize(float scale)
 		{
-			boneScalers[HumanBodyBones.LeftHand].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightHand].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
+			boneScalers[BoneType.LeftHand].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
+			boneScalers[BoneType.RightHand].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
 		}
 
 		public void ChangeFingerThickness(float thickness)
 		{
-			boneScalers[HumanBodyBones.LeftIndexProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftIndexIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftIndexDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftIndexProximal)) boneScalers[BoneType.LeftIndexProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftIndexMiddle)) boneScalers[BoneType.LeftIndexMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftIndexDistal)) boneScalers[BoneType.LeftIndexDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftMiddleProximal)) boneScalers[BoneType.LeftMiddleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftMiddleMiddle)) boneScalers[BoneType.LeftMiddleMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftMiddleDistal)) boneScalers[BoneType.LeftMiddleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftRingProximal)) boneScalers[BoneType.LeftRingProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftRingMiddle)) boneScalers[BoneType.LeftRingMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftRingDistal)) boneScalers[BoneType.LeftRingDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftPinkyProximal)) boneScalers[BoneType.LeftPinkyProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftPinkyMiddle)) boneScalers[BoneType.LeftPinkyMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftPinkyDistal)) boneScalers[BoneType.LeftPinkyDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftThumbProximal)) boneScalers[BoneType.LeftThumbProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftThumbMiddle)) boneScalers[BoneType.LeftThumbMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.LeftThumbDistal)) boneScalers[BoneType.LeftThumbDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.RightIndexProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightIndexIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightIndexDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbIntermediate].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightIndexProximal)) boneScalers[BoneType.RightIndexProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightIndexMiddle)) boneScalers[BoneType.RightIndexMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightIndexDistal)) boneScalers[BoneType.RightIndexDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightMiddleProximal)) boneScalers[BoneType.RightMiddleProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightMiddleMiddle)) boneScalers[BoneType.RightMiddleMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightMiddleDistal)) boneScalers[BoneType.RightMiddleDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightRingProximal)) boneScalers[BoneType.RightRingProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightRingMiddle)) boneScalers[BoneType.RightRingMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightRingDistal)) boneScalers[BoneType.RightRingDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightPinkyProximal)) boneScalers[BoneType.RightPinkyProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightPinkyMiddle)) boneScalers[BoneType.RightPinkyMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightPinkyDistal)) boneScalers[BoneType.RightPinkyDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightThumbProximal)) boneScalers[BoneType.RightThumbProximal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightThumbMiddle)) boneScalers[BoneType.RightThumbMiddle].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.RightThumbDistal)) boneScalers[BoneType.RightThumbDistal].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 		}
 
 		public void ChangeFingerLength(float length)
 		{
-			boneScalers[HumanBodyBones.LeftIndexProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftIndexIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftIndexDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftMiddleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftRingDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftLittleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.LeftThumbDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftIndexProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftIndexIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftIndexDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftMiddleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftMiddleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftMiddleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftRingProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftRingIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftRingDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftLittleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftLittleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftLittleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftThumbProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftThumbIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.LeftThumbDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 
-			boneScalers[HumanBodyBones.RightIndexProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightIndexIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightIndexDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightMiddleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightRingDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightLittleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[HumanBodyBones.RightThumbDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightIndexProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightIndexIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightIndexDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightMiddleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightMiddleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightMiddleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightRingProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightRingIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightRingDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightLittleProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightLittleIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightLittleDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightThumbProximal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightThumbIntermediate].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			//boneScalers[HumanBodyBones.RightThumbDistal].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 		}
 
 		#endregion
 
-		public void GenerateScalerBonesForBody(SkeletonBoneReferences bones, SkeletonBoneReferences boneRotations)
+		public void GenerateScalerBonesForBody(SkeletonBoneReferences bones)
 		{
-			//AddScalerBone(HumanBodyBones.Hips, bones.body.hip.bone, boneRotations.body.hip.bone.rotation, new[] { boneRotations.legLeft.upperLeg.bone, boneRotations.legRight.upperLeg.bone, boneRotations.body.spine[0].bone });
-			//AddScalerBone(HumanBodyBones.Spine, bones.body.spine[0].bone, boneRotations.body.spine[0].bone.rotation, (bones.body.spine[1]?.bone != null) ? new [] { boneRotations.body.spine[1].bone } : new [] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
-			//if (bones.body.spine[1]?.bone != null) AddScalerBone(HumanBodyBones.Chest, bones.body.spine[1].bone, boneRotations.body.spine[1].bone.rotation, (bones.body.spine[2]?.bone != null) ? new[] { boneRotations.body.spine[2].bone } : new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
-			//if (bones.body.spine[2]?.bone != null) AddScalerBone(HumanBodyBones.UpperChest, bones.body.spine[2].bone, boneRotations.body.spine[2].bone.rotation, new[] { boneRotations.head.neck.bone, boneRotations.armLeft.shoulder.bone, boneRotations.armRight.shoulder.bone });
+			AddScalerBone(BoneType.Hips, bones.body.hip.bone, bones.body.hip.bone.rotation, new[] { bones.legLeft.upperLeg.bone, bones.legRight.upperLeg.bone, bones.body.spine.bone });
+			AddScalerBone(BoneType.Spine, bones.body.spine.bone, bones.body.spine.bone.rotation, bones.body.chest.bone != null ? new [] { bones.body.chest.bone } : new [] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
+			if (bones.body.chest.bone != null) AddScalerBone(BoneType.Chest, bones.body.chest.bone, bones.body.chest.bone.rotation, (bones.body.upperChest.bone != null) ? new[] { bones.body.upperChest.bone } : new[] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
+			if (bones.body.upperChest.bone != null) AddScalerBone(BoneType.UpperChest, bones.body.upperChest.bone, bones.body.upperChest.bone.rotation, new[] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
 
-			AddScalerBone(HumanBodyBones.Neck, bones.head.neck.bone, boneRotations.head.neck.bone.rotation, new[] { boneRotations.head.head.bone });
-			AddScalerBone(HumanBodyBones.Head, bones.head.head.bone, boneRotations.head.head.bone.rotation);
+			AddScalerBone(BoneType.Neck, bones.head.neck.bone, bones.head.neck.bone.rotation, new[] { bones.head.head.bone });
+			AddScalerBone(BoneType.Head, bones.head.head.bone, bones.head.head.bone.rotation);
 
 			// Arms
-			AddScalerBone(HumanBodyBones.LeftShoulder, bones.armLeft.shoulder.bone, boneRotations.armLeft.shoulder.bone.rotation, new[] { boneRotations.armLeft.upperArm.bone });
-			AddScalerBone(HumanBodyBones.LeftUpperArm, bones.armLeft.upperArm.bone, boneRotations.armLeft.upperArm.bone.rotation, new[] { boneRotations.armLeft.lowerArm.bone });
-			AddScalerBone(HumanBodyBones.LeftLowerArm, bones.armLeft.lowerArm.bone, boneRotations.armLeft.lowerArm.bone.rotation, new[] { boneRotations.armLeft.hand.wrist.bone });
+			AddScalerBone(BoneType.LeftShoulder, bones.armLeft.shoulder.bone, bones.armLeft.shoulder.bone.rotation, new[] { bones.armLeft.upperArm.bone });
+			AddScalerBone(BoneType.LeftUpperArm, bones.armLeft.upperArm.bone, bones.armLeft.upperArm.bone.rotation, new[] { bones.armLeft.lowerArm.bone });
+			AddScalerBone(BoneType.LeftLowerArm, bones.armLeft.lowerArm.bone, bones.armLeft.lowerArm.bone.rotation, new[] { bones.armLeft.hand.wrist.bone });
 
-			AddScalerBone(HumanBodyBones.RightShoulder, bones.armRight.shoulder.bone, boneRotations.armRight.shoulder.bone.rotation, new[] { boneRotations.armRight.upperArm.bone });
-			AddScalerBone(HumanBodyBones.RightUpperArm, bones.armRight.upperArm.bone, boneRotations.armRight.upperArm.bone.rotation, new[] { boneRotations.armRight.lowerArm.bone });
-			AddScalerBone(HumanBodyBones.RightLowerArm, bones.armRight.lowerArm.bone, boneRotations.armRight.lowerArm.bone.rotation, new[] { boneRotations.armRight.hand.wrist.bone });
+			AddScalerBone(BoneType.RightShoulder, bones.armRight.shoulder.bone, bones.armRight.shoulder.bone.rotation, new[] { bones.armRight.upperArm.bone });
+			AddScalerBone(BoneType.RightUpperArm, bones.armRight.upperArm.bone, bones.armRight.upperArm.bone.rotation, new[] { bones.armRight.lowerArm.bone });
+			AddScalerBone(BoneType.RightLowerArm, bones.armRight.lowerArm.bone, bones.armRight.lowerArm.bone.rotation, new[] { bones.armRight.hand.wrist.bone });
 
 			// Legs
-			AddScalerBone(HumanBodyBones.LeftUpperLeg, bones.legLeft.upperLeg.bone, boneRotations.legLeft.upperLeg.bone.rotation, new[] { boneRotations.legLeft.lowerLeg.bone });
-			AddScalerBone(HumanBodyBones.LeftLowerLeg, bones.legLeft.lowerLeg.bone, boneRotations.legLeft.lowerLeg.bone.rotation, new[] { boneRotations.legLeft.foot.bone });
-			AddScalerBone(HumanBodyBones.LeftFoot, bones.legLeft.foot.bone, boneRotations.legLeft.foot.bone.rotation);
-			//if (bones.legLeft.toes?.bone != null) AddScalerBone(HumanBodyBones.LeftToes, bones.legLeft.toes.bone, boneRotations.legLeft.toes.bone.rotation);
+			AddScalerBone(BoneType.LeftUpperLeg, bones.legLeft.upperLeg.bone, bones.legLeft.upperLeg.bone.rotation, new[] { bones.legLeft.lowerLeg.bone });
+			AddScalerBone(BoneType.LeftLowerLeg, bones.legLeft.lowerLeg.bone, bones.legLeft.lowerLeg.bone.rotation, new[] { bones.legLeft.foot.bone });
+			AddScalerBone(BoneType.LeftFoot, bones.legLeft.foot.bone, bones.legLeft.foot.bone.rotation);
+			//if (bones.legLeft.toes?.bone != null) AddScalerBone(BoneType.LeftToes, bones.legLeft.toes.bone, bones.legLeft.toes.bone.rotation);
 
-			AddScalerBone(HumanBodyBones.RightUpperLeg, bones.legRight.upperLeg.bone, boneRotations.legRight.upperLeg.bone.rotation, new[] { boneRotations.legRight.lowerLeg.bone });
-			AddScalerBone(HumanBodyBones.RightLowerLeg, bones.legRight.lowerLeg.bone, boneRotations.legRight.lowerLeg.bone.rotation, new[] { boneRotations.legRight.foot.bone });
-			AddScalerBone(HumanBodyBones.RightFoot, bones.legRight.foot.bone, boneRotations.legRight.foot.bone.rotation);
-			//if (bones.legRight.toes?.bone != null) AddScalerBone(HumanBodyBones.RightToes, bones.legRight.toes.bone, boneRotations.legRight.toes.bone.rotation);
+			AddScalerBone(BoneType.RightUpperLeg, bones.legRight.upperLeg.bone, bones.legRight.upperLeg.bone.rotation, new[] { bones.legRight.lowerLeg.bone });
+			AddScalerBone(BoneType.RightLowerLeg, bones.legRight.lowerLeg.bone, bones.legRight.lowerLeg.bone.rotation, new[] { bones.legRight.foot.bone });
+			AddScalerBone(BoneType.RightFoot, bones.legRight.foot.bone, bones.legRight.foot.bone.rotation);
+			//if (bones.legRight.toes?.bone != null) AddScalerBone(BoneType.RightToes, bones.legRight.toes.bone, bones.legRight.toes.bone.rotation);
 
 			// Hands
-			AddScalerBone(HumanBodyBones.LeftHand, bones.armLeft.hand.wrist.bone, boneRotations.armLeft.hand.wrist.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftIndexProximal, bones.armLeft.hand.index.proximal.bone, boneRotations.armLeft.hand.index.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftIndexIntermediate, bones.armLeft.hand.index.middle.bone, boneRotations.armLeft.hand.index.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftIndexDistal, bones.armLeft.hand.index.distal.bone, boneRotations.armLeft.hand.index.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftMiddleProximal, bones.armLeft.hand.middle.proximal.bone, boneRotations.armLeft.hand.middle.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftMiddleIntermediate, bones.armLeft.hand.middle.middle.bone, boneRotations.armLeft.hand.middle.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftMiddleDistal, bones.armLeft.hand.middle.distal.bone, boneRotations.armLeft.hand.middle.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftRingProximal, bones.armLeft.hand.ring.proximal.bone, boneRotations.armLeft.hand.ring.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftRingIntermediate, bones.armLeft.hand.ring.middle.bone, boneRotations.armLeft.hand.ring.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftRingDistal, bones.armLeft.hand.ring.distal.bone, boneRotations.armLeft.hand.ring.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftLittleProximal, bones.armLeft.hand.pinky.proximal.bone, boneRotations.armLeft.hand.pinky.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftLittleIntermediate, bones.armLeft.hand.pinky.middle.bone, boneRotations.armLeft.hand.pinky.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftLittleDistal, bones.armLeft.hand.pinky.distal.bone, boneRotations.armLeft.hand.pinky.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftThumbProximal, bones.armLeft.hand.thumb.proximal.bone, boneRotations.armLeft.hand.thumb.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftThumbIntermediate, bones.armLeft.hand.thumb.middle.bone, boneRotations.armLeft.hand.thumb.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.LeftThumbDistal, bones.armLeft.hand.thumb.distal.bone, boneRotations.armLeft.hand.thumb.distal.bone.rotation);
+			AddScalerBone(BoneType.LeftHand, bones.armLeft.hand.wrist.bone, bones.armLeft.hand.wrist.bone.rotation);
 
-			AddScalerBone(HumanBodyBones.RightHand, bones.armRight.hand.wrist.bone, boneRotations.armRight.hand.wrist.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightIndexProximal, bones.armRight.hand.index.proximal.bone, boneRotations.armRight.hand.index.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightIndexIntermediate, bones.armRight.hand.index.middle.bone, boneRotations.armRight.hand.index.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightIndexDistal, bones.armRight.hand.index.distal.bone, boneRotations.armRight.hand.index.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightMiddleProximal, bones.armRight.hand.middle.proximal.bone, boneRotations.armRight.hand.middle.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightMiddleIntermediate, bones.armRight.hand.middle.middle.bone, boneRotations.armRight.hand.middle.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightMiddleDistal, bones.armRight.hand.middle.distal.bone, boneRotations.armRight.hand.middle.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightRingProximal, bones.armRight.hand.ring.proximal.bone, boneRotations.armRight.hand.ring.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightRingIntermediate, bones.armRight.hand.ring.middle.bone, boneRotations.armRight.hand.ring.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightRingDistal, bones.armRight.hand.ring.distal.bone, boneRotations.armRight.hand.ring.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightLittleProximal, bones.armRight.hand.pinky.proximal.bone, boneRotations.armRight.hand.pinky.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightLittleIntermediate, bones.armRight.hand.pinky.middle.bone, boneRotations.armRight.hand.pinky.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightLittleDistal, bones.armRight.hand.pinky.distal.bone, boneRotations.armRight.hand.pinky.distal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightThumbProximal, bones.armRight.hand.thumb.proximal.bone, boneRotations.armRight.hand.thumb.proximal.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightThumbIntermediate, bones.armRight.hand.thumb.middle.bone, boneRotations.armRight.hand.thumb.middle.bone.rotation);
-			//AddScalerBone(HumanBodyBones.RightThumbDistal, bones.armRight.hand.thumb.distal.bone, boneRotations.armRight.hand.thumb.distal.bone.rotation);
+			//AddScalerBone(BoneType.LeftIndexProximal, bones.armLeft.hand.index.proximal.bone, bones.armLeft.hand.index.proximal.bone.rotation);
+			//AddScalerBone(BoneType.LeftIndexMiddle, bones.armLeft.hand.index.middle.bone, bones.armLeft.hand.index.middle.bone.rotation);
+			//AddScalerBone(BoneType.LeftIndexDistal, bones.armLeft.hand.index.distal.bone, bones.armLeft.hand.index.distal.bone.rotation);
+			//AddScalerBone(BoneType.LeftMiddleProximal, bones.armLeft.hand.middle.proximal.bone, bones.armLeft.hand.middle.proximal.bone.rotation);
+			//AddScalerBone(BoneType.LeftMiddleMiddle, bones.armLeft.hand.middle.middle.bone, bones.armLeft.hand.middle.middle.bone.rotation);
+			//AddScalerBone(BoneType.LeftMiddleDistal, bones.armLeft.hand.middle.distal.bone, bones.armLeft.hand.middle.distal.bone.rotation);
+			//AddScalerBone(BoneType.LeftRingProximal, bones.armLeft.hand.ring.proximal.bone, bones.armLeft.hand.ring.proximal.bone.rotation);
+			//AddScalerBone(BoneType.LeftRingMiddle, bones.armLeft.hand.ring.middle.bone, bones.armLeft.hand.ring.middle.bone.rotation);
+			//AddScalerBone(BoneType.LeftRingDistal, bones.armLeft.hand.ring.distal.bone, bones.armLeft.hand.ring.distal.bone.rotation);
+			//AddScalerBone(BoneType.LeftPinkyProximal, bones.armLeft.hand.pinky.proximal.bone, bones.armLeft.hand.pinky.proximal.bone.rotation);
+			//AddScalerBone(BoneType.LeftPinkyMiddle, bones.armLeft.hand.pinky.middle.bone, bones.armLeft.hand.pinky.middle.bone.rotation);
+			//AddScalerBone(BoneType.LeftPinkyDistal, bones.armLeft.hand.pinky.distal.bone, bones.armLeft.hand.pinky.distal.bone.rotation);
+			//AddScalerBone(BoneType.LeftThumbProximal, bones.armLeft.hand.thumb.proximal.bone, bones.armLeft.hand.thumb.proximal.bone.rotation);
+			//AddScalerBone(BoneType.LeftThumbMiddle, bones.armLeft.hand.thumb.middle.bone, bones.armLeft.hand.thumb.middle.bone.rotation);
+			//AddScalerBone(BoneType.LeftThumbDistal, bones.armLeft.hand.thumb.distal.bone, bones.armLeft.hand.thumb.distal.bone.rotation);
+
+			//AddScalerBone(BoneType.RightHand, bones.armRight.hand.wrist.bone, bones.armRight.hand.wrist.bone.rotation);
+			//AddScalerBone(BoneType.RightIndexProximal, bones.armRight.hand.index.proximal.bone, bones.armRight.hand.index.proximal.bone.rotation);
+			//AddScalerBone(BoneType.RightIndexMiddle, bones.armRight.hand.index.middle.bone, bones.armRight.hand.index.middle.bone.rotation);
+			//AddScalerBone(BoneType.RightIndexDistal, bones.armRight.hand.index.distal.bone, bones.armRight.hand.index.distal.bone.rotation);
+			//AddScalerBone(BoneType.RightMiddleProximal, bones.armRight.hand.middle.proximal.bone, bones.armRight.hand.middle.proximal.bone.rotation);
+			//AddScalerBone(BoneType.RightMiddleMiddle, bones.armRight.hand.middle.middle.bone, bones.armRight.hand.middle.middle.bone.rotation);
+			//AddScalerBone(BoneType.RightMiddleDistal, bones.armRight.hand.middle.distal.bone, bones.armRight.hand.middle.distal.bone.rotation);
+			//AddScalerBone(BoneType.RightRingProximal, bones.armRight.hand.ring.proximal.bone, bones.armRight.hand.ring.proximal.bone.rotation);
+			//AddScalerBone(BoneType.RightRingMiddle, bones.armRight.hand.ring.middle.bone, bones.armRight.hand.ring.middle.bone.rotation);
+			//AddScalerBone(BoneType.RightRingDistal, bones.armRight.hand.ring.distal.bone, bones.armRight.hand.ring.distal.bone.rotation);
+			//AddScalerBone(BoneType.RightPinkyProximal, bones.armRight.hand.pinky.proximal.bone, bones.armRight.hand.pinky.proximal.bone.rotation);
+			//AddScalerBone(BoneType.RightPinkyMiddle, bones.armRight.hand.pinky.middle.bone, bones.armRight.hand.pinky.middle.bone.rotation);
+			//AddScalerBone(BoneType.RightPinkyDistal, bones.armRight.hand.pinky.distal.bone, bones.armRight.hand.pinky.distal.bone.rotation);
+			//AddScalerBone(BoneType.RightThumbProximal, bones.armRight.hand.thumb.proximal.bone, bones.armRight.hand.thumb.proximal.bone.rotation);
+			//AddScalerBone(BoneType.RightThumbMiddle, bones.armRight.hand.thumb.middle.bone, bones.armRight.hand.thumb.middle.bone.rotation);
+			//AddScalerBone(BoneType.RightThumbDistal, bones.armRight.hand.thumb.distal.bone, bones.armRight.hand.thumb.distal.bone.rotation);
 		}
 
-		public void AddScalerBone(HumanBodyBones humanBone, Transform bone, Quaternion boneLookRotation, Transform[] childBones = null)
+		public void AddScalerBone(BoneType humanBone, Transform bone, Quaternion boneLookRotation, Transform[] childBones = null)
 		{
 			if (!boneScalers.ContainsKey(humanBone))
 			{

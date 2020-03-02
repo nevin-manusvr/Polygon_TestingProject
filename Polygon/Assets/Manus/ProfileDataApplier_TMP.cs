@@ -66,6 +66,7 @@ namespace Manus.Polygon
 
 			float characterSize = bodyLength / 1.83f;
 
+			polygon.boneReferences.root.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
 			// polygon.newSkeleton.main.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
 			// boneScalers.ChangeSpineLength(spineMultiplier + spineSlider.value);
 			// boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * (armMultiplier + armSlider.value), bodyLength * 0.15f / characterSize * (armMultiplier + armSlider.value));
