@@ -67,7 +67,8 @@ namespace Manus.Polygon.Skeleton.Editor
 			DrawArm(bones.armLeft, bones.body);
 			DrawArm(bones.armRight, bones.body);
 
-			DrawControlPoint(bones.modelHeight, bones.body.hip, ControlPointType.Height);
+			DrawControlPoint(bones.head.modelHeight, bones.root, ControlPointType.Height);
+
 		}
 
 		#region drawing the skeleton bones
@@ -109,6 +110,7 @@ namespace Manus.Polygon.Skeleton.Editor
 			DrawBone(head.head, size);
 			//if (head.eyeLeft?.bone != null) DrawBone(head.eyeLeft, size);
 			//if (head.eyeRight?.bone != null) DrawBone(head.eyeRight, size);
+
 		}
 
 		private void DrawArm(Arm arm, Body body)

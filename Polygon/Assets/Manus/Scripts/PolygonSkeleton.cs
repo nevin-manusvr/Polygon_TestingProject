@@ -133,11 +133,11 @@ namespace Manus.Polygon.Skeleton
 
 			// Model Height
 			{
-				Vector3 rootPos = boneReferences.body.hip.bone.position;
+				Vector3 rootPos = boneReferences.head.head.bone.position;
 				rootPos.y = 0;
 
 				Matrix4x4 rootMatrix = Matrix4x4.TRS(rootPos, boneReferences.root.bone.rotation, Vector3.one).inverse;
-				boneReferences.modelHeight.position = rootMatrix.MultiplyPoint3x4(new Vector3(rootPos.x, 1.8f, rootPos.z));
+				boneReferences.head.modelHeight.position = rootMatrix.MultiplyPoint3x4(new Vector3(rootPos.x, 1.8f, rootPos.z));
 			}
 
 			foreach (var bone in boneReferences.GatherBones(GatherType.All).Values)

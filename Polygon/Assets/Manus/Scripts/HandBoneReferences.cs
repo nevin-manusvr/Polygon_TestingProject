@@ -9,7 +9,7 @@ namespace Manus.Polygon.Skeleton
 	[System.Serializable]
 	public class Finger
 	{
-		public Bone proximal;
+		public OptionalBone proximal;
 		public OptionalBone middle;
 		public OptionalBone distal;
 		public OptionalBone tip;
@@ -29,8 +29,7 @@ namespace Manus.Polygon.Skeleton
 			else if (index == 3) enumName += "Ring";
 			else if (index == 4) enumName += "Pinky";
 
-			proximal = new Bone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Proximal"));
-			
+			proximal = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Proximal"));
 			middle = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Middle"));
 			distal = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Distal"));
 			tip = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Tip"));
@@ -41,7 +40,6 @@ namespace Manus.Polygon.Skeleton
 			this.proximal.AssignTransform(proximal);
 			this.middle.AssignTransform(middle);
 			this.distal.AssignTransform(distal);
-			
 			this.tip.AssignTransform(tip);
 		}
 	}
@@ -70,11 +68,16 @@ namespace Manus.Polygon.Skeleton
 			ClearBoneReferences();
 		}
 
-		public Dictionary<BoneType, Bone> GatherBones()
+		public Dictionary<BoneType, Bone> GatherBones(GatherType type)
 		{
 			var bones = new Dictionary<BoneType, Bone>();
 
 			bones.Add(wrist.type, wrist);
+
+			if (type == GatherType.All)
+			{
+				// TODO: gather fingers
+			}
 
 			return bones;
 		}

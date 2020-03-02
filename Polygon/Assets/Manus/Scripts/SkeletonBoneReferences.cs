@@ -17,6 +17,9 @@ namespace Manus.Polygon.Skeleton
 		public OptionalBone chest;
 		public OptionalBone upperChest;
 
+		public ControlBone hipControl;
+		public ControlBone upperBodyControl;
+
 		public bool IsValid
 		{
 			get { return hip.bone && spine.bone; }
@@ -56,9 +59,8 @@ namespace Manus.Polygon.Skeleton
 	{
 		public Bone neck;
 		public Bone head;
-		
-		//public OptionalBone eyeLeft;
-		//public OptionalBone eyeRight;
+
+		public ControlBone modelHeight;
 
 		public bool IsValid
 		{
@@ -69,6 +71,8 @@ namespace Manus.Polygon.Skeleton
 		{
 			neck = new Bone(BoneType.Neck);
 			head = new Bone(BoneType.Head);
+
+			modelHeight = new ControlBone(ControlPointType.Height);
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones()
@@ -224,7 +228,6 @@ namespace Manus.Polygon.Skeleton
 	public class SkeletonBoneReferences
 	{
 		public Bone root;
-		public ControlBone modelHeight;
 
 		public Head head;
 		public Body body;
@@ -313,7 +316,6 @@ namespace Manus.Polygon.Skeleton
 		public void Clear()
 		{
 			root = new Bone(BoneType.Root);
-			modelHeight = new ControlBone(ControlPointType.Height);
 
 			head = new Head();
 			body = new Body();
