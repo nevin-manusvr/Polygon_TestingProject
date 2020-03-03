@@ -25,10 +25,10 @@ namespace Manus.Polygon
 
 		public void ChangeThickness(float thickness)
 		{
-			boneScalers[BoneType.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
+			boneScalers[BoneType.Hips].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 			boneScalers[BoneType.Spine].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 			if (boneScalers.ContainsKey(BoneType.Chest)) boneScalers[BoneType.Chest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
 			boneScalers[BoneType.Neck].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
@@ -50,8 +50,8 @@ namespace Manus.Polygon
 		public void ChangeSpineLength(float length)
 		{
 			boneScalers[BoneType.Spine].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[BoneType.Chest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
-			boneScalers[BoneType.UpperChest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.Chest)) boneScalers[BoneType.Chest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 		}
 
 		public void ChangeHeadSize(float scale)
@@ -210,7 +210,7 @@ namespace Manus.Polygon
 			//AddScalerBone(BoneType.LeftThumbMiddle, bones.armLeft.hand.thumb.middle.bone, bones.armLeft.hand.thumb.middle.bone.rotation);
 			//AddScalerBone(BoneType.LeftThumbDistal, bones.armLeft.hand.thumb.distal.bone, bones.armLeft.hand.thumb.distal.bone.rotation);
 
-			//AddScalerBone(BoneType.RightHand, bones.armRight.hand.wrist.bone, bones.armRight.hand.wrist.bone.rotation);
+			AddScalerBone(BoneType.RightHand, bones.armRight.hand.wrist.bone, bones.armRight.hand.wrist.bone.rotation);
 			//AddScalerBone(BoneType.RightIndexProximal, bones.armRight.hand.index.proximal.bone, bones.armRight.hand.index.proximal.bone.rotation);
 			//AddScalerBone(BoneType.RightIndexMiddle, bones.armRight.hand.index.middle.bone, bones.armRight.hand.index.middle.bone.rotation);
 			//AddScalerBone(BoneType.RightIndexDistal, bones.armRight.hand.index.distal.bone, bones.armRight.hand.index.distal.bone.rotation);

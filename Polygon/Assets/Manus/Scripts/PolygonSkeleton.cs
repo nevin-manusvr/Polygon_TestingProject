@@ -27,7 +27,7 @@ namespace Manus.Polygon.Skeleton
 			if (boneReferences.IsValid)
 			{
 				boneScalers = new SkeletonBoneScalers();
-				// boneScalers.GenerateScalerBonesForBody(boneReferences);
+				boneScalers.GenerateScalerBonesForBody(boneReferences);
 			}
 		}
 
@@ -107,11 +107,16 @@ namespace Manus.Polygon.Skeleton
 
 		public void CalculateBoneOrientations()
 		{
+			foreach (var bone in boneReferences.GatherBones(GatherType.All).Values)
+			{
+				bone.CalculateOrientation(boneReferences);
+			}
+			
 			// Left Heel
 			{
 				Matrix4x4 footMatrix = Matrix4x4.TRS(
 					boneReferences.legLeft.foot.bone.position,
-					boneReferences.legLeft.foot.bone.rotation,
+					boneReferences.legLeft.foot.desiredRotation,
 					boneReferences.legLeft.foot.bone.lossyScale).inverse;
 
 				Vector3 heelPosition = boneReferences.legLeft.foot.bone.position;
@@ -157,7 +162,7 @@ namespace Manus.Polygon.Skeleton
 
 				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
 					highestSpine.position,
-					highestSpine.rotation, 
+					boneReferences.root.bone.rotation, 
 					highestSpine.lossyScale).inverse;
 
 				Vector3 upperBodyCenterPos = ((boneReferences.armLeft.upperArm.bone.position + boneReferences.armRight.upperArm.bone.position) / 2f +
@@ -165,10 +170,7 @@ namespace Manus.Polygon.Skeleton
 				boneReferences.body.upperBodyControl.position = upperBodyMatrix.MultiplyPoint3x4(upperBodyCenterPos);
 			}
 
-			foreach (var bone in boneReferences.GatherBones(GatherType.All).Values)
-			{
-				bone.CalculateOrientation(boneReferences);
-			}
+			
 		}
 
 		public void SetBindPose()
