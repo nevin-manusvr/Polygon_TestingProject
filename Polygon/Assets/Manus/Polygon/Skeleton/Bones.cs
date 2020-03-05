@@ -1,51 +1,54 @@
 ﻿using UnityEngine;
-using Manus.ToBeHermes.Skeleton;
+using Hermes.Protocol.Polygon;
+using Hermes.Protocol;
+using Manus.Core.Hermes;
 
 namespace Manus.Polygon.Skeleton
 {
 	[System.Serializable]
 	public class Bone
 	{
+		public bool optional = false;
+		public bool retarget = false;
+
 		public BoneType type;
 		public Transform bone;
 
 		public Quaternion desiredRotation;
 
-		public Bone(BoneType type)
+		public Bone(bool _Optional, BoneType _Type)
 		{
-			this.type = type;
+			optional = _Optional;
+			type = _Type;
 		}
 
-		public Bone(BoneType type, Transform bone)
+		public void AssignTransform(Transform _Bone)
 		{
-			this.type = type;
-			this.bone = bone;
+			bone = _Bone;
 		}
 
-		public void AssignTransform(Transform bone)
+		public static implicit operator Hermes.Protocol.Polygon.Bone(Bone _Bone)
 		{
-			this.bone = bone;
+			return new Hermes.Protocol.Polygon.Bone()  
+			{ 
+				Position = new Translation() { Full = _Bone.bone.position.ToProto() }, 
+				Rotation = new Orientation() { Full = _Bone.bone.rotation.ToProto() },
+				Type = _Bone.type
+			};
 		}
-	}
-
-	[System.Serializable]
-	public class OptionalBone : Bone
-	{
-		public OptionalBone(BoneType type) : base(type) { }
-
-		public OptionalBone(BoneType type, Transform bone) : base(type, bone) { }
 	}
 
 	[System.Serializable]
 	public class ControlBone
 	{
-		public ControlPointType type;
 		public Vector3 position;
 		public Quaternion rotation;
 
-		public ControlBone(ControlPointType type)
+		public Bone[] bonesToControl;
+
+		public ControlBone(Bone[] _BonesToControl)
 		{
-			this.type = type;
+			bonesToControl = _BonesToControl;
 		}
 	}
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using Manus.ToBeHermes.Skeleton;
 using System;
 
 namespace Manus.Polygon.Skeleton.Utilities

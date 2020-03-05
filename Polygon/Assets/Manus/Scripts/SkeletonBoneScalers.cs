@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Manus.Polygon
 {
+	using Hermes.Protocol.Polygon;
 	using Manus.Polygon.Skeleton;
-	using Manus.ToBeHermes.Skeleton;
 
 	public class SkeletonBoneScalers
 	{
@@ -25,10 +25,10 @@ namespace Manus.Polygon
 
 		public void ChangeThickness(float thickness)
 		{
-			boneScalers[BoneType.Hips].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			boneScalers[BoneType.Hips].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
 			boneScalers[BoneType.Spine].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 			if (boneScalers.ContainsKey(BoneType.Chest)) boneScalers[BoneType.Chest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
-			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
+			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(thickness, ScaleAxis.Height, ScaleMode.Percentage);
 
 			boneScalers[BoneType.Neck].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 
@@ -47,9 +47,13 @@ namespace Manus.Polygon
 			boneScalers[BoneType.RightLowerLeg].ScaleBone(thickness, ScaleAxis.Thickness, ScaleMode.Percentage);
 		}
 
-		public void ChangeSpineLength(float length)
+		public void ChangeSpineLength(float length, ScaleMode mode)
 		{
-			boneScalers[BoneType.Spine].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
+			float totalDefaultLength = boneScalers[BoneType.Spine].DefaultLength;
+			//if (boneScalers.ContainsKey(BoneType.Chest)) totalDefaultLength 
+
+
+				boneScalers[BoneType.Spine].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 			if (boneScalers.ContainsKey(BoneType.Chest)) boneScalers[BoneType.Chest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 			if (boneScalers.ContainsKey(BoneType.UpperChest)) boneScalers[BoneType.UpperChest].ScaleBone(length, ScaleAxis.Length, ScaleMode.Percentage);
 		}
@@ -59,22 +63,22 @@ namespace Manus.Polygon
 			boneScalers[BoneType.Head].ScaleBone(scale, ScaleAxis.All, ScaleMode.Percentage);
 		}
 
-		public void ChangeArmLength(float upperArmLength, float lowerArmLength)
+		public void ChangeArmLength(float upperArmLength, float lowerArmLength, ScaleMode mode)
 		{
-			boneScalers[BoneType.LeftUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[BoneType.RightUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, mode);
+			boneScalers[BoneType.RightUpperArm].ScaleBone(upperArmLength, ScaleAxis.Length, mode);
 
-			boneScalers[BoneType.LeftLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[BoneType.RightLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, mode);
+			boneScalers[BoneType.RightLowerArm].ScaleBone(lowerArmLength, ScaleAxis.Length, mode);
 		}
 
-		public void ChangeLegLength(float upperLegLength, float lowerLegLength)
+		public void ChangeLegLength(float upperLegLength, float lowerLegLength, ScaleMode mode)
 		{
-			boneScalers[BoneType.LeftUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[BoneType.RightUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, mode);
+			boneScalers[BoneType.RightUpperLeg].ScaleBone(upperLegLength, ScaleAxis.Length, mode);
 
-			boneScalers[BoneType.LeftLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
-			boneScalers[BoneType.RightLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, ScaleMode.Length);
+			boneScalers[BoneType.LeftLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, mode);
+			boneScalers[BoneType.RightLowerLeg].ScaleBone(lowerLegLength, ScaleAxis.Length, mode);
 		}
 
 		public void ChangeFootSize(float scale)
@@ -164,7 +168,7 @@ namespace Manus.Polygon
 		public void GenerateScalerBonesForBody(SkeletonBoneReferences bones)
 		{
 			AddScalerBone(BoneType.Hips, bones.body.hip.bone, bones.body.hip.bone.rotation, new[] { bones.legLeft.upperLeg.bone, bones.legRight.upperLeg.bone, bones.body.spine.bone });
-			AddScalerBone(BoneType.Spine, bones.body.spine.bone, bones.body.spine.bone.rotation, bones.body.chest.bone != null ? new [] { bones.body.chest.bone } : new [] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
+			AddScalerBone(BoneType.Spine, bones.body.spine.bone, bones.body.spine.bone.rotation, bones.body.chest.bone != null ? new[] { bones.body.chest.bone } : new [] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
 			if (bones.body.chest.bone != null) AddScalerBone(BoneType.Chest, bones.body.chest.bone, bones.body.chest.bone.rotation, (bones.body.upperChest.bone != null) ? new[] { bones.body.upperChest.bone } : new[] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
 			if (bones.body.upperChest.bone != null) AddScalerBone(BoneType.UpperChest, bones.body.upperChest.bone, bones.body.upperChest.bone.rotation, new[] { bones.head.neck.bone, bones.armLeft.shoulder.bone, bones.armRight.shoulder.bone });
 

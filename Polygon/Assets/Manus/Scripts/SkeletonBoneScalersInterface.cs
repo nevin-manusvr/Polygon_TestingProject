@@ -4,11 +4,15 @@ using UnityEngine;
 
 namespace Manus.Polygon
 {
+	using Hermes.Protocol.Polygon;
+
 	using Manus.Polygon.Skeleton;
 
 	public class SkeletonBoneScalersInterface : MonoBehaviour
 	{
 		private SkeletonBoneScalers boneScalers;
+
+		[SerializeField, Range(.0001f, 10f)] private float test = 1f;
 
 		[Header("Body")]
 		[SerializeField, Range(.0001f, 10f)] private float thickness = 1f;
@@ -37,13 +41,15 @@ namespace Manus.Polygon
 
 		private void Update()
 		{
+			boneScalers.boneScalers[BoneType.Hips].ScaleBone(test, ScaleAxis.Length, ScaleMode.Percentage);
+
 			boneScalers.ChangeThickness(thickness);
-			boneScalers.ChangeSpineLength(spineLength);
+			boneScalers.ChangeSpineLength(spineLength, ScaleMode.Percentage);
 			boneScalers.ChangeHeadSize(headSize);
 
 
-			//boneScalers.ChangeArmLength(upperArmLength, lowerArmLength);
-			//boneScalers.ChangeLegLength(upperLegLength, lowerLegLength);
+			boneScalers.ChangeArmLength(upperArmLength, lowerArmLength, ScaleMode.Percentage);
+			boneScalers.ChangeLegLength(upperLegLength, lowerLegLength, ScaleMode.Percentage);
 
 			boneScalers.ChangeHandSize(handSize);
 			boneScalers.ChangeFootSize(footSize);

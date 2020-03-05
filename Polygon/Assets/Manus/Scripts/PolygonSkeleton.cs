@@ -1,7 +1,10 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Manus.Polygon.Skeleton.Utilities;
+using Manus.Core;
+using HProt = Hermes.Protocol;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,6 +12,7 @@ using UnityEditor;
 
 namespace Manus.Polygon.Skeleton
 {
+
 	public class PolygonSkeleton : MonoBehaviour
 	{
 		public bool useIK;
@@ -19,6 +23,27 @@ namespace Manus.Polygon.Skeleton
 
 		// TMP
 		public PolygonIK_TMP ik;
+
+		#region Properties
+
+		public bool IsAnimatorValid
+		{
+			get
+			{
+				if (animator == null || animator.avatar == null || !animator.avatar.isValid || !animator.avatar.isHuman)
+				{
+					Debug.LogWarning((animator == null ? "No animator assigned" : "Assigned animator does not have a valid human avatar") + ", trying to find one");
+
+					animator = FindValidAnimatorInHierarchy() ?? animator;
+
+					if (animator == null) return false;
+				}
+
+				return true;
+			}
+		}
+
+		#endregion
 
 		#region Monobehaviour Callbacks
 
@@ -39,6 +64,11 @@ namespace Manus.Polygon.Skeleton
 				ik.CreateCharacterIK();
 			if (ik.ikGenerated && ik.isInitialized)
 				ik.SetIKWeigth(useIK ? 1 : 0);
+
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				SendSkeletonDefinitions();
+			}
 		}
 
 		#endregion
@@ -64,40 +94,12 @@ namespace Manus.Polygon.Skeleton
 
 		#endregion
 
-		public bool IsAnimatorValid()
-		{
-			if (animator == null || animator.avatar == null || !animator.avatar.isValid || !animator.avatar.isHuman)
-			{
-				Debug.LogWarning((animator == null ? "No animator assigned" : "Assigned animator does not have a valid human avatar") + ", trying to find one");
-
-				animator = FindValidAnimatorInHierarchy() ?? animator;
-
-				if (animator == null) return false;
-			}
-
-			return true;
-		}
-
 		public void PopulateBoneReferences()
 		{
-			if (IsAnimatorValid())
+			if (IsAnimatorValid)
 			{
 				boneReferences.Populate(animator);
 			}
-
-			//PolygonSkeleton newVersion = Instantiate(this, transform.position, transform.rotation, transform.parent);
-			//newVersion.transform.SetSiblingIndex(transform.GetSiblingIndex());
-
-			//if (boneReferences.IsValid)
-			//{
-			//	if (newSkeletonParent != null)
-			//		DestroyImmediate(newSkeletonParent.gameObject);
-
-			//	newSkeletonParent = new GameObject("newSkeleton").transform;
-			//	newSkeletonParent.SetParent(transform);
-
-			//	newSkeleton = CopySkeleton(boneReferences, newSkeletonParent);
-			//}
 		}
 
 		public void ClearBoneReferences()
@@ -111,7 +113,13 @@ namespace Manus.Polygon.Skeleton
 			{
 				bone.CalculateOrientation(boneReferences);
 			}
-			
+
+			Tuple<Transform, Transform>[] bones =
+				{
+					Tuple.Create(boneReferences.armLeft.hand.wrist.bone, boneReferences.armRight.hand.wrist.bone),
+					Tuple.Create(boneReferences.legLeft.foot.bone, boneReferences.legRight.foot.bone)
+				};
+
 			// Left Heel
 			{
 				Matrix4x4 footMatrix = Matrix4x4.TRS(
@@ -122,18 +130,21 @@ namespace Manus.Polygon.Skeleton
 				Vector3 heelPosition = boneReferences.legLeft.foot.bone.position;
 				heelPosition.y = 0;
 				boneReferences.legLeft.heel.position = footMatrix.MultiplyPoint3x4(heelPosition);
+				boneReferences.legLeft.heel.rotation = Quaternion.identity;
+
 			}
 
 			// Right Heel
 			{
 				Matrix4x4 footMatrix = Matrix4x4.TRS(
 					boneReferences.legRight.foot.bone.position,
-					boneReferences.legRight.foot.bone.rotation,
+					boneReferences.legRight.foot.desiredRotation,
 					boneReferences.legRight.foot.bone.lossyScale).inverse;
 
 				Vector3 heelPosition = boneReferences.legRight.foot.bone.position;
 				heelPosition.y = 0;
 				boneReferences.legRight.heel.position = footMatrix.MultiplyPoint3x4(heelPosition);
+				boneReferences.legRight.heel.rotation = Quaternion.identity;
 			}
 
 			// Model Height
@@ -147,30 +158,41 @@ namespace Manus.Polygon.Skeleton
 
 			// Hip Control
 			{
+				boneReferences.body.hipControl = new ControlBone(new[] { boneReferences.body.hip, boneReferences.body.spine, boneReferences.legLeft.upperLeg, boneReferences.legRight.upperLeg });
+				
 				Matrix4x4 hipMatrix = Matrix4x4.TRS(
 					boneReferences.body.hip.bone.position,
-					Quaternion.identity, 
+					boneReferences.body.hip.desiredRotation, 
 					boneReferences.body.hip.bone.lossyScale).inverse;
 
 				Vector3 hipCenterPos = (boneReferences.legLeft.upperLeg.bone.position + boneReferences.legRight.upperLeg.bone.position) / 2f;
 				boneReferences.body.hipControl.position = hipMatrix.MultiplyPoint3x4(hipCenterPos);
+
+				Vector3 aimDirection = hipMatrix.MultiplyVector(SkeletonOrientationCalculator.CalculateForward(bones));
+				Vector3 upDirection = hipMatrix.MultiplyVector(Vector3.up);
+				boneReferences.body.hipControl.rotation = Quaternion.LookRotation(aimDirection, upDirection);
 			}
 
 			// UpperBody Control
 			{
-				Transform highestSpine = boneReferences.body.upperChest.bone ?? boneReferences.body.chest.bone ?? boneReferences.body.spine.bone;
+				Bone highestSpine = boneReferences.body.spine;
+				if (boneReferences.body.chest.bone != null) highestSpine = boneReferences.body.chest;
+				if (boneReferences.body.upperChest.bone != null) highestSpine = boneReferences.body.upperChest;
+				boneReferences.body.upperBodyControl = new ControlBone(new[] { highestSpine, boneReferences.head.neck, boneReferences.armLeft.shoulder, boneReferences.armRight.shoulder });
 
 				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
-					highestSpine.position,
-					boneReferences.root.bone.rotation, 
-					highestSpine.lossyScale).inverse;
+					highestSpine.bone.position,
+					highestSpine.desiredRotation, 
+					highestSpine.bone.lossyScale).inverse;
 
 				Vector3 upperBodyCenterPos = ((boneReferences.armLeft.upperArm.bone.position + boneReferences.armRight.upperArm.bone.position) / 2f +
 				                             (boneReferences.armLeft.shoulder.bone.position + boneReferences.armRight.shoulder.bone.position) / 2f) / 2f;
 				boneReferences.body.upperBodyControl.position = upperBodyMatrix.MultiplyPoint3x4(upperBodyCenterPos);
-			}
 
-			
+				Vector3 aimDirection = upperBodyMatrix.MultiplyVector(-SkeletonOrientationCalculator.CalculateForward(bones));
+				Vector3 upDirection = upperBodyMatrix.MultiplyVector(Vector3.up);
+				boneReferences.body.upperBodyControl.rotation = Quaternion.LookRotation(aimDirection, upDirection);
+			}
 		}
 
 		public void SetBindPose()
@@ -188,6 +210,26 @@ namespace Manus.Polygon.Skeleton
 
 			SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 			boneReferences.UpdateBoneOrientations(skinnedMeshes);
+		}
+
+		public void SendSkeletonDefinitions()
+		{
+			HProt.Polygon.SkeletalDefinition t_Skeletors = new HProt.Polygon.SkeletalDefinition();
+
+			HProt.Polygon.Skeleton t_Skele = new HProt.Polygon.Skeleton();
+			t_Skele.DeviceID = 1;
+
+			foreach (var bone in boneReferences.GatherBones(GatherType.All))
+			{
+				t_Skele.Bones.Add(bone.Value);
+			}
+
+			t_Skeletors.Skeletons.Add(t_Skele);
+
+			if (ManusManager.instance.communicationHub.careTaker == null || !ManusManager.instance.communicationHub.careTaker.isConnected)
+				return;
+
+			ManusManager.instance.communicationHub.careTaker.Hermes.PolygonSkeletalDefinitionSetAsync(t_Skeletors);
 		}
 	}
 }

@@ -24,13 +24,15 @@ namespace Manus.Polygon.Skeleton
 			float margin = 3f;
 			float iconSize = EditorGUIUtility.singleLineHeight - margin * 2f;
 
+			bool t_Optional = property.FindPropertyRelative("optional").boolValue;
+
 			var amountRect = new Rect(position.x, position.y, position.width - iconSize - margin, position.height);
 			var optionalRect = new Rect(position.x, position.y + margin, iconSize, iconSize);
 
 			// Draw fields - passs GUIContent.none to each so they are drawn without labels
 			EditorGUI.PropertyField(amountRect, property.FindPropertyRelative("bone"), label);
 
-			EditorGUI.DrawRect(optionalRect, Color.red);
+			EditorGUI.DrawRect(optionalRect, t_Optional ? Color.blue : Color.red);
 
 			// Set indent back to what it was
 			EditorGUI.indentLevel = indent;
