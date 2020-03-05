@@ -57,15 +57,21 @@ namespace Manus.Polygon.Skeleton
 					bones.Add(hip.type, hip);
 					bones.Add(spine.type, spine);
 					if (chest.bone) bones.Add(chest.type, chest);
-					if (upperChest.bone) bones.Add(upperChest.type, upperChest); 
-					
+					if (upperChest.bone) bones.Add(upperChest.type, upperChest);
 					break;
+
 				case GatherType.Retargeted:
 					bones.Add(hip.type, hip);
 					bones.Add(spine.type, spine);
 					if (chest.bone) bones.Add(chest.type, chest);
 					if (upperChest.bone) bones.Add(upperChest.type, upperChest);
+					break;
 
+				case GatherType.Networked:
+					bones.Add(hip.type, hip);
+					bones.Add(spine.type, spine);
+					if (chest.bone) bones.Add(chest.type, chest);
+					if (upperChest.bone) bones.Add(upperChest.type, upperChest);
 					break;
 			}
 			
@@ -121,7 +127,13 @@ namespace Manus.Polygon.Skeleton
 					bones.Add(neck.type, neck);
 					bones.Add(head.type, head);
 					break;
+
 				case GatherType.Retargeted:
+					bones.Add(neck.type, neck);
+					bones.Add(head.type, head);
+					break;
+
+				case GatherType.Networked:
 					bones.Add(neck.type, neck);
 					bones.Add(head.type, head);
 					break;
@@ -183,14 +195,20 @@ namespace Manus.Polygon.Skeleton
 					bones.Add(upperArm.type, upperArm);
 					bones.Add(lowerArm.type, lowerArm);
 					if (hand.wrist.bone != null) bones.Add(hand.wrist.type, hand.wrist);
-
 					break;
+
 				case GatherType.Retargeted:
 					bones.Add(shoulder.type, shoulder);
 					bones.Add(upperArm.type, upperArm);
 					bones.Add(lowerArm.type, lowerArm);
 					if (hand.wrist.bone != null) bones.Add(hand.wrist.type, hand.wrist);
+					break;
 
+				case GatherType.Networked:
+					bones.Add(shoulder.type, shoulder);
+					bones.Add(upperArm.type, upperArm);
+					bones.Add(lowerArm.type, lowerArm);
+					if (hand.wrist.bone != null) bones.Add(hand.wrist.type, hand.wrist);
 					break;
 			}
 
@@ -262,14 +280,21 @@ namespace Manus.Polygon.Skeleton
 					bones.Add(lowerLeg.type, lowerLeg);
 					bones.Add(foot.type, foot);
 					if (toes.bone != null) bones.Add(toes.type, toes);
-					if (toesEnd.bone != null) bones.Add(toesEnd.type, toesEnd); 
-					
+					if (toesEnd.bone != null) bones.Add(toesEnd.type, toesEnd);
 					break;
+
 				case GatherType.Retargeted:
 					bones.Add(upperLeg.type, upperLeg);
 					bones.Add(lowerLeg.type, lowerLeg);
 					bones.Add(foot.type, foot);
+					break;
 
+				case GatherType.Networked:
+					bones.Add(upperLeg.type, upperLeg);
+					bones.Add(lowerLeg.type, lowerLeg);
+					bones.Add(foot.type, foot);
+					if (toes.bone != null) bones.Add(toes.type, toes);
+					if (toesEnd.bone != null) bones.Add(toesEnd.type, toesEnd);
 					break;
 			}
 
@@ -303,7 +328,8 @@ namespace Manus.Polygon.Skeleton
 	public enum GatherType
 	{
 		All,
-		Retargeted
+		Retargeted,
+		Networked
 	}
 
 	#endregion

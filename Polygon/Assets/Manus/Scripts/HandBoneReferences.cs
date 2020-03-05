@@ -51,6 +51,9 @@ namespace Manus.Polygon.Skeleton
 					break;
 				case GatherType.Retargeted:
 					break;
+
+				case GatherType.Networked:
+					break;
 			}
 
 			return bones;
@@ -102,11 +105,24 @@ namespace Manus.Polygon.Skeleton
 					AddToDictionary(ring.GatherBones(gatherType));
 					AddToDictionary(pinky.GatherBones(gatherType));
 					AddToDictionary(thumb.GatherBones(gatherType));
-
 					break;
+
 				case GatherType.Retargeted:
 					bones.Add(wrist.type, wrist);
+					AddToDictionary(index.GatherBones(gatherType));
+					AddToDictionary(middle.GatherBones(gatherType));
+					AddToDictionary(ring.GatherBones(gatherType));
+					AddToDictionary(pinky.GatherBones(gatherType));
+					AddToDictionary(thumb.GatherBones(gatherType));
+					break;
 
+				case GatherType.Networked:
+					bones.Add(wrist.type, wrist);
+					AddToDictionary(index.GatherBones(gatherType));
+					AddToDictionary(middle.GatherBones(gatherType));
+					AddToDictionary(ring.GatherBones(gatherType));
+					AddToDictionary(pinky.GatherBones(gatherType));
+					AddToDictionary(thumb.GatherBones(gatherType));
 					break;
 			}
 

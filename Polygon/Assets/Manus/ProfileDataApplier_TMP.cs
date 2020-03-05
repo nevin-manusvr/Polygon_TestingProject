@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Manus.Core.Utility;
-using UnityEngine.UI;
+using Hermes.Protocol.Polygon;
 
 namespace Manus.Polygon
 {

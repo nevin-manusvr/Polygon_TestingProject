@@ -21,8 +21,10 @@ namespace Manus.Polygon.Skeleton
 		public SkeletonBoneReferences boneReferences;
 		public SkeletonBoneScalers boneScalers;
 
-		// TMP
+		// TODO: remove IK from plugin
 		public PolygonIK_TMP ik;
+
+		public Action CalibrateBody;
 
 		#region Properties
 
@@ -58,6 +60,7 @@ namespace Manus.Polygon.Skeleton
 
 		private void Update()
 		{
+			// TODO: remove IK from plugin
 			if (useIK && !ik.isInitialized)
 				ik.InitializeIK(transform, animator, boneReferences, FindObjectOfType<IKTargets_TMP>());
 			if (useIK && !ik.ikGenerated)
@@ -67,7 +70,7 @@ namespace Manus.Polygon.Skeleton
 
 			if (Input.GetKeyDown(KeyCode.P))
 			{
-				SendSkeletonDefinitions();
+				TMP_SendSkeletonDefinitions();
 			}
 		}
 
@@ -93,6 +96,8 @@ namespace Manus.Polygon.Skeleton
 		}
 
 		#endregion
+
+		#region Skeleton Setup
 
 		public void PopulateBoneReferences()
 		{
@@ -159,10 +164,10 @@ namespace Manus.Polygon.Skeleton
 			// Hip Control
 			{
 				boneReferences.body.hipControl = new ControlBone(new[] { boneReferences.body.hip, boneReferences.body.spine, boneReferences.legLeft.upperLeg, boneReferences.legRight.upperLeg });
-				
+
 				Matrix4x4 hipMatrix = Matrix4x4.TRS(
 					boneReferences.body.hip.bone.position,
-					boneReferences.body.hip.desiredRotation, 
+					boneReferences.body.hip.desiredRotation,
 					boneReferences.body.hip.bone.lossyScale).inverse;
 
 				Vector3 hipCenterPos = (boneReferences.legLeft.upperLeg.bone.position + boneReferences.legRight.upperLeg.bone.position) / 2f;
@@ -182,11 +187,11 @@ namespace Manus.Polygon.Skeleton
 
 				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
 					highestSpine.bone.position,
-					highestSpine.desiredRotation, 
+					highestSpine.desiredRotation,
 					highestSpine.bone.lossyScale).inverse;
 
 				Vector3 upperBodyCenterPos = ((boneReferences.armLeft.upperArm.bone.position + boneReferences.armRight.upperArm.bone.position) / 2f +
-				                             (boneReferences.armLeft.shoulder.bone.position + boneReferences.armRight.shoulder.bone.position) / 2f) / 2f;
+											 (boneReferences.armLeft.shoulder.bone.position + boneReferences.armRight.shoulder.bone.position) / 2f) / 2f;
 				boneReferences.body.upperBodyControl.position = upperBodyMatrix.MultiplyPoint3x4(upperBodyCenterPos);
 
 				Vector3 aimDirection = upperBodyMatrix.MultiplyVector(-SkeletonOrientationCalculator.CalculateForward(bones));
@@ -212,7 +217,23 @@ namespace Manus.Polygon.Skeleton
 			boneReferences.UpdateBoneOrientations(skinnedMeshes);
 		}
 
-		public void SendSkeletonDefinitions()
+		#endregion
+
+		#region ProfileData
+
+		public void ApplyProfileData()
+		{
+			CalibrateBody?.Invoke();
+		}
+
+		#endregion
+
+		public void TMP_ToggleIK(bool tf)
+		{
+			useIK = tf;
+		}
+
+		public void TMP_SendSkeletonDefinitions()
 		{
 			HProt.Polygon.SkeletalDefinition t_Skeletors = new HProt.Polygon.SkeletalDefinition();
 

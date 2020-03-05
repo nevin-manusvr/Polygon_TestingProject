@@ -5,6 +5,8 @@ using Manus.Core.Utility;
 
 namespace Manus.Polygon
 {
+	using Hermes.Protocol.Polygon;
+
 	[CreateAssetMenu(fileName = "new Calibration Profile", menuName = "ManusVR/Polygon/Calibration/Profile", order = 1)]
 	public class CalibrationProfile : ScriptableObject
 	{
