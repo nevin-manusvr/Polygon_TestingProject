@@ -35,6 +35,7 @@ namespace Manus.Polygon.Skeleton.Networking
 
 		public override bool IsDirty()
 		{
+			return true;
 			//if (m_SmoothRoutine != null) return false; //still busy, probably
 			//if (m_Position != transform.localPosition) return true;
 			//if (m_Rotation != transform.localRotation) return true;
