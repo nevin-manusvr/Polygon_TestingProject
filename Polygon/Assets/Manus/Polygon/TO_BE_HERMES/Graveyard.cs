@@ -38,6 +38,12 @@ namespace Manus.ToBeHermes
 
 		public bool RemoveGrave(int _ID)
 		{
+			if (!ContainsGrave(_ID))
+			{
+				Debug.LogWarning("No skeleton to remove");
+				return false;
+			}
+
 			for (int i = 0; i < graves.Count; i++)
 			{
 				if (graves[i].ID == _ID)
@@ -61,6 +67,20 @@ namespace Manus.ToBeHermes
 			}
 
 			return false;
+		}
+
+		public Grave GetGrave(int _ID)
+		{
+			foreach (var t_Grave in graves)
+			{
+				if (t_Grave.ID == _ID)
+				{
+					return t_Grave;
+				}
+			}
+
+			Debug.LogWarning("No skeleton found");
+			return null;
 		}
 
 		private static bool IsSkeletonValid(HProt.Polygon.Skeleton _Skeleton)

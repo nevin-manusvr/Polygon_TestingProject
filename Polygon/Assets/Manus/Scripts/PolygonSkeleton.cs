@@ -12,7 +12,6 @@ using UnityEditor;
 
 namespace Manus.Polygon.Skeleton
 {
-
 	public class PolygonSkeleton : MonoBehaviour
 	{
 		public bool useIK;
