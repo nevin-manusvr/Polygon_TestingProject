@@ -12,9 +12,17 @@ using UnityEditor;
 
 namespace Manus.Polygon.Skeleton
 {
+	using Hermes.Protocol.Polygon;
+
+	using Manus.Core.Hermes;
+
 	public class PolygonSkeleton : MonoBehaviour
 	{
 		public bool useIK;
+		public bool updateFromHermes;
+
+		public int deviceID;
+
 		public Animator animator;
 
 		public SkeletonBoneReferences boneReferences;
@@ -55,6 +63,8 @@ namespace Manus.Polygon.Skeleton
 				boneScalers = new SkeletonBoneScalers();
 				boneScalers.GenerateScalerBonesForBody(boneReferences);
 			}
+
+			ManusManager.instance.communicationHub.polygonUpdate += TMP_UpdateFromHermes;
 		}
 
 		private void Update()
@@ -227,6 +237,33 @@ namespace Manus.Polygon.Skeleton
 
 		#endregion
 
+		private void TMP_UpdateFromHermes(HProt.Polygon.Data _Poly)
+		{
+			if (!updateFromHermes) 
+				return;
+
+			UnityMainThreadDispatcher.Instance().Enqueue(
+				() =>
+					{
+						foreach (Skeleton polySkeleton in _Poly.Skeletons)
+						{
+							if (polySkeleton.DeviceID != (uint)deviceID)
+								continue;
+
+							var localBones = boneReferences.GatherBones(GatherType.Retargeted);
+
+							foreach (var bone in polySkeleton.Bones)
+							{
+								if (localBones.ContainsKey(bone.Type))
+								{
+									localBones[bone.Type].bone.position = bone.Position.ToVector3();
+									localBones[bone.Type].bone.rotation = bone.Rotation.ToUnityQuat();
+								}
+							}
+						}
+					});
+		}
+
 		public void TMP_ToggleIK(bool tf)
 		{
 			useIK = tf;
@@ -237,7 +274,7 @@ namespace Manus.Polygon.Skeleton
 			HProt.Polygon.SkeletalDefinition t_Skeletors = new HProt.Polygon.SkeletalDefinition();
 
 			HProt.Polygon.Skeleton t_Skele = new HProt.Polygon.Skeleton();
-			t_Skele.DeviceID = 1;
+			t_Skele.DeviceID = (uint)deviceID;
 
 			foreach (var bone in boneReferences.GatherBones(GatherType.All))
 			{

@@ -1,21 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Manus.Polygon;
+﻿using System.Collections.Generic;
+using GlmSharp;
+using Hermes.Protocol.Polygon;
+using Hermes.Tools;
+using Manus.ToBeHermes.Tracking;
+using HProt = Hermes.Protocol;
 
 namespace Manus.ToBeHermes.IK
 {
-	using GlmSharp;
-
-	using Hermes.Protocol.Polygon;
-	using Hermes.Tools;
-
-	using Manus.Core.Hermes;
-	using Manus.ToBeHermes.Tracking;
-
-	using UnityEngine;
-
-	using HProt = Hermes.Protocol;
-
 	[System.Serializable]
 	public class SkeletonEstimator
 	{
@@ -89,8 +80,10 @@ namespace Manus.ToBeHermes.IK
 			measurements.shoulderWidth = .35f;
 			measurements.legWidth = .2f;
 		}
+
 		public void EstimateBody(Tracker _Head, Tracker _LeftHand, Tracker _RightHand, Tracker _Hip, Tracker _LeftFoot, Tracker _RightFoot)
 		{
+			// Position
 			EstimateNeckPosition(_Head, _Hip);
 			EstimateSpinePosition(_Head, _Hip);
 
@@ -100,55 +93,19 @@ namespace Manus.ToBeHermes.IK
 			EstimateLegPositions(_Hip, _LeftFoot, true);
 			EstimateLegPositions(_Hip, _RightFoot, false);
 
+
+			// Rotation
 			EstimateNeckRotation(_Head, _Hip);
+			EstimateSpineRotation(_Hip);
+
+			EstimateArmRotations(_Head, _Hip, _LeftHand, true);
+			EstimateArmRotations(_Head, _Hip, _RightHand, false);
+
+			EstimateLegRotations(_Hip, _LeftFoot, true);
+			EstimateLegRotations(_Hip, _RightFoot, false);
 		}
 
-		//		public IKTargets_TMP targets;
-
-		//		private Dictionary<VRTrackerType, Tracker> GatherTrackerData()
-		//		{
-		//			var t_trackers = new Dictionary<VRTrackerType, Tracker>();
-
-		//			t_trackers.Add(VRTrackerType.Head, new Tracker(VRTrackerType.Head, targets.head.position.ToGlmVec3(), targets.head.rotation.ToGlmQuat()));
-		//			t_trackers.Add(VRTrackerType.Waist, new Tracker(VRTrackerType.Waist, targets.hip.position.ToGlmVec3(), targets.hip.rotation.ToGlmQuat()));
-		//			t_trackers.Add(VRTrackerType.LeftHand, new Tracker(VRTrackerType.LeftHand, targets.leftHand.position.ToGlmVec3(), targets.leftHand.rotation.ToGlmQuat()));
-		//			t_trackers.Add(VRTrackerType.RightHand, new Tracker(VRTrackerType.RightHand, targets.rightHand.position.ToGlmVec3(), targets.rightHand.rotation.ToGlmQuat()));
-		//			t_trackers.Add(VRTrackerType.LeftFoot, new Tracker(VRTrackerType.LeftFoot, targets.leftFoot.position.ToGlmVec3(), targets.leftFoot.rotation.ToGlmQuat()));
-		//			t_trackers.Add(VRTrackerType.RightFoot, new Tracker(VRTrackerType.RightFoot, targets.rightFoot.position.ToGlmVec3(), targets.rightFoot.rotation.ToGlmQuat()));
-
-		//			// TODO: for when using trackers instead of transforms, add the profile data (tracker position and rotation offsets)
-		//			return t_trackers;
-		//		}
-
-		//		private void EstimateBody()
-		//		{
-		//			var t_trackers = GatherTrackerData();
-
-		//			// Head
-		//			if (!t_trackers.ContainsKey(VRTrackerType.Head) || 
-		//			    !t_trackers.ContainsKey(VRTrackerType.Waist) || 
-		//			    !t_trackers.ContainsKey(VRTrackerType.LeftHand) || 
-		//			    !t_trackers.ContainsKey(VRTrackerType.RightHand) || 
-		//			    !t_trackers.ContainsKey(VRTrackerType.LeftFoot) ||
-		//			    !t_trackers.ContainsKey(VRTrackerType.RightFoot))
-		//			{
-		//				Debug.LogError("NO");
-		//				return;
-		//			}
-
-		//			// Limit Tracker Distances
-
-		//			// Estimate
-		//			EstimateNeckPosition(t_trackers[VRTrackerType.Head], t_trackers[VRTrackerType.Waist], out vec3 neck);
-		//			EstimateSpine(t_trackers[VRTrackerType.Head], t_trackers[VRTrackerType.Waist], neck, out vec3 spine);
-
-		//			EstimateArm(t_trackers[VRTrackerType.Head], t_trackers[VRTrackerType.Waist], t_trackers[VRTrackerType.LeftHand], neck, spine, true, out vec3 leftShoulder, out vec3 leftUpperArm, out vec3 leftElbow);
-		//			EstimateArm(t_trackers[VRTrackerType.Head], t_trackers[VRTrackerType.Waist], t_trackers[VRTrackerType.RightHand], neck, spine, false, out vec3 rightShoulder, out vec3 rightUpperArm, out vec3 rightElbow);
-
-		//			EstimateLeg(t_trackers[VRTrackerType.Waist], t_trackers[VRTrackerType.LeftFoot], true, out vec3 leftUpperLeg, out vec3 leftKnee);
-		//			EstimateLeg(t_trackers[VRTrackerType.Waist], t_trackers[VRTrackerType.RightFoot], false, out vec3 rightUpperLeg, out vec3 rightKnee);
-		//		}
-
+		// Position
 		private void EstimateNeckPosition(Tracker _Head, Tracker _Hip)
 		{
 			vec3 t_DirectionToNeck = _Head.rotation * -vec3.UnitY + _Head.rotation * -vec3.UnitZ;
@@ -164,34 +121,13 @@ namespace Manus.ToBeHermes.IK
 			//#endif
 		}
 
-		private void EstimateNeckRotation(Tracker _Head, Tracker _Hip)
-		{
-			vec3 t_DirectionToHead = bones[BoneType.Head].Position.toGlmVec3() - bones[BoneType.Neck].Position.toGlmVec3();
-			quat test = LookRotationLH(t_DirectionToHead.Normalized, -vec3.UnitZ);
-
-			// Debug.DrawRay(bones[BoneType.Neck].Position.ToVector3(), t_DirectionToHead.ToUnityVector3(), Color.blue);
-			Debug.DrawRay(bones[BoneType.Neck].Position.ToVector3(), (test * vec3.UnitZ).ToUnityVector3(), Color.blue);
-			Debug.DrawRay(bones[BoneType.Neck].Position.ToVector3(), (test * vec3.UnitX).ToUnityVector3(), Color.red);
-			Debug.DrawRay(bones[BoneType.Neck].Position.ToVector3(), (test * vec3.UnitY).ToUnityVector3(), Color.green);
-
-
-			//bones[BoneType.Neck].Position.Full = quatLookAt
-			bones[BoneType.Head].Rotation.Full = _Head.rotation.toProtoQuat();
-		}
-
 		private void EstimateSpinePosition(Tracker _Head, Tracker _Hip)
 		{
 			vec3 t_NeckPos = bones[BoneType.Neck].Position.toGlmVec3();
-			vec3 t_SpineDirection = (_Hip.rotation * -vec3.UnitZ * 3f + _Head.rotation * -vec3.UnitZ * 1f).Normalized;
+			vec3 t_SpineDirection = (_Hip.rotation * -vec3.UnitZ * 3f + _Head.rotation * -vec3.UnitZ * 1f).Normalized; // TODO: fix this so it doesn't flip around
 			vec3 t_SpinePos = IK(_Hip.position, t_NeckPos, (_Hip.position + t_NeckPos) / 2f + t_SpineDirection, measurements.spineHeight);
 
 			bones[BoneType.Spine].Position.Full = t_SpinePos.toProtoVec3();
-
-			//#if UNITY_EDITOR
-			//			Gizmos.color = Color.cyan;
-			//			Gizmos.DrawLine(_Hip.position.ToUnityVector3(), spine.ToUnityVector3());
-			//			Gizmos.DrawLine(spine.ToUnityVector3(), _neckPos.ToUnityVector3());
-			//#endif
 		}
 
 		private void EstimateArmPositions(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
@@ -216,7 +152,7 @@ namespace Manus.ToBeHermes.IK
 									    _Hand.rotation * -vec3.UnitY * t_HandInfluence.y +
 									    _Hand.rotation * -vec3.UnitZ * t_HandInfluence.z).Normalized *
 									   t_TotalHandInfluence).Normalized;
-			t_ModifiedElbowAimDirection = ProjectOnPlane(t_ModifiedElbowAimDirection, t_ArmDirection).Normalized *
+			t_ModifiedElbowAimDirection = GlmMathExtensions.ProjectOnPlane(t_ModifiedElbowAimDirection, t_ArmDirection).Normalized *
 										  (1f - glm.Clamp(vec3.Distance(_Hand.position, t_UpperArmPos) / measurements.armLength, 0.3f, .7f));
 
 			vec3 t_ElbowPos = (_Hand.position + t_UpperArmPos) / 2f + t_ModifiedElbowAimDirection;
@@ -248,14 +184,14 @@ namespace Manus.ToBeHermes.IK
 			float t_totalFootInfluence = 2f;
 			vec3 t_footInfluence = new vec3(0.1f, 1f, .8f);
 
-			float _feetWidth = Project(t_FootPosition - t_UpperLegPosition, _Hip.rotation * -vec3.UnitX).Length;
+			float _feetWidth = GlmMathExtensions.Project(t_FootPosition - t_UpperLegPosition, _Hip.rotation * -vec3.UnitX).Length;
 			vec3 t_kneeAimDirection = vec3.Cross((t_UpperLegPosition - t_FootPosition).Normalized, _Hip.rotation * -vec3.UnitX + _Hip.rotation * -vec3.UnitZ * _feetWidth * 0.3f).Normalized;
 			vec3 t_modifiedKneeAimPosition = (t_kneeAimDirection +
 											  (_Foot.rotation * vec3.UnitX * (_Left ? -1 : 1) * t_footInfluence.x +
 											   _Foot.rotation * vec3.UnitY * t_footInfluence.y +
 											   _Foot.rotation * vec3.UnitZ * t_footInfluence.z).Normalized *
 											  t_totalFootInfluence).Normalized;
-			t_modifiedKneeAimPosition = ProjectOnPlane(t_modifiedKneeAimPosition, t_FootPosition - t_UpperLegPosition).Normalized
+			t_modifiedKneeAimPosition = GlmMathExtensions.ProjectOnPlane(t_modifiedKneeAimPosition, t_FootPosition - t_UpperLegPosition).Normalized
 										* (1f - glm.Clamp(vec3.Distance(t_FootPosition, t_UpperLegPosition) / measurements.legLength, 0.3f, .7f));
 
 			vec3 t_KneePosition = (t_UpperLegPosition + t_FootPosition) / 2f + t_modifiedKneeAimPosition;
@@ -278,25 +214,90 @@ namespace Manus.ToBeHermes.IK
 			//#endif
 		}
 
+
+		// Rotation
+		private void EstimateNeckRotation(Tracker _Head, Tracker _Hip)
+		{
+			quat t_HeadRotation = _Head.rotation;
+			quat t_HipRotatation = _Hip.rotation;
+
+			vec3 t_DirectionToHead = bones[BoneType.Head].Position.toGlmVec3() - bones[BoneType.Neck].Position.toGlmVec3();
+			vec3 t_BackDirection = (t_HeadRotation * -vec3.UnitZ * 2f + t_HipRotatation * -vec3.UnitZ).Normalized;
+			quat t_NeckRotation = GlmMathExtensions.LookRotation(t_DirectionToHead.Normalized, t_BackDirection);
+
+			bones[BoneType.Neck].Rotation.Full = t_NeckRotation.toProtoQuat();
+			bones[BoneType.Head].Rotation.Full = t_HeadRotation.toProtoQuat();
+		}
+
+		private void EstimateSpineRotation(Tracker _Hip)
+		{
+			quat t_HipRotation = _Hip.rotation;
+
+			vec3 t_AimDirection = (bones[BoneType.Neck].Position.toGlmVec3() - bones[BoneType.Spine].Position.toGlmVec3()).Normalized;
+			vec3 t_SpineDirection = (t_HipRotation * -vec3.UnitZ * 3f + bones[BoneType.Head].Rotation.toGlmQuat() * -vec3.UnitZ * 1f) / 4f; // TODO: fix this so it doesn't flip around
+			quat t_SpineRotation = GlmMathExtensions.LookRotation(t_AimDirection, t_SpineDirection);
+
+			bones[BoneType.Hips].Rotation.Full = t_SpineRotation.toProtoQuat();
+			bones[BoneType.Spine].Rotation.Full = t_SpineRotation.toProtoQuat();
+		}
+
+		private void EstimateArmRotations(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
+		{
+			vec3 t_HipPosition = _Hip.position;
+			vec3 t_HeadPosition = _Head.position;
+			quat t_HandRotation = _Hand.rotation;
+			
+			// Bone positions
+			vec3 t_ShoulderPosition = bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].Position.toGlmVec3();
+			vec3 t_UpperArmPosition = bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].Position.toGlmVec3();
+			vec3 t_LowerArmPosition = bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].Position.toGlmVec3();
+			vec3 t_HandPosition = bones[_Left ? BoneType.LeftHand : BoneType.RightHand].Position.toGlmVec3();
+
+			// Shoulder
+			vec3 t_ShoulderDirection = (t_UpperArmPosition - t_ShoulderPosition).Normalized;
+			quat t_ShoulderRotation = GlmMathExtensions.LookRotation(t_ShoulderDirection, t_HeadPosition - t_HipPosition);
+
+			// UpperArm
+			vec3 t_UpperArmDirection = (t_LowerArmPosition - t_UpperArmPosition).Normalized;
+			vec3 t_UpperArmUp = t_ShoulderRotation * vec3.UnitY;
+			quat t_UpperArmRotation = GlmMathExtensions.LookRotation(t_UpperArmDirection, t_UpperArmUp);
+
+			// LowerArm
+			vec3 t_LowerArmDirection = (t_HandPosition - t_LowerArmPosition).Normalized;
+			vec3 t_LowerArmUp = vec3.Cross(vec3.Cross(t_LowerArmPosition - t_UpperArmPosition, vec3.UnitY), t_LowerArmPosition - t_UpperArmPosition);
+			quat t_lowerArmRotation = GlmMathExtensions.LookRotation(t_LowerArmDirection, t_LowerArmUp);
+
+			bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].Rotation.Full = t_ShoulderRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].Rotation.Full = t_UpperArmRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].Rotation.Full = t_lowerArmRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].Rotation.Full = t_HandRotation.toProtoQuat();
+		}
+
+		private void EstimateLegRotations(Tracker _Hip, Tracker _Foot, bool _Left)
+		{
+			quat t_FootRotation = _Foot.rotation;
+			quat t_HipRotation = _Hip.rotation;
+
+			vec3 t_FootPosition = bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].Position.toGlmVec3();
+			vec3 t_LowerLegPosition = bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].Position.toGlmVec3();
+			vec3 t_UpperLegPosition = bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].Position.toGlmVec3();
+
+			// Upper leg, TODO: fix this
+			vec3 t_UpperLegDirection = (t_LowerLegPosition - t_UpperLegPosition).Normalized;
+			vec3 t_UpperLegUp = -vec3.Cross(t_FootPosition - t_UpperLegPosition, vec3.Cross(t_FootPosition - t_UpperLegPosition, t_HipRotation * (t_HipRotation * vec3.UnitZ * 3f + t_FootRotation * vec3.UnitZ) / 4f).Normalized);
+			quat t_upperLegRotation = GlmMathExtensions.LookRotation(t_UpperLegDirection, t_UpperLegUp);
+
+			// Lower leg, TODO: fix this
+			vec3 t_LowerLegDirection = (t_FootPosition - t_LowerLegPosition).Normalized;
+			vec3 t_LowerLegUp = t_upperLegRotation * vec3.UnitZ + t_upperLegRotation * vec3.UnitY;
+			quat t_LowerLegRotation = GlmMathExtensions.LookRotation(t_LowerLegDirection, t_LowerLegUp);
+
+			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].Rotation.Full = t_upperLegRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].Rotation.Full = t_LowerLegRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].Rotation.Full = t_FootRotation.toProtoQuat();
+		}
+
 		#region Math extensions
-
-		public vec3 Project(vec3 vector, vec3 onNormal)
-		{
-			float num1 = vec3.Dot(onNormal, onNormal);
-			if ((double)num1 < double.Epsilon)
-				return vec3.Zero;
-			float num2 = vec3.Dot(vector, onNormal);
-			return new vec3(onNormal.x * num2 / num1, onNormal.y * num2 / num1, onNormal.z * num2 / num1);
-		}
-
-		public vec3 ProjectOnPlane(vec3 vector, vec3 planeNormal)
-		{
-			float num1 = vec3.Dot(planeNormal, planeNormal);
-			if ((double)num1 < double.Epsilon)
-				return vector;
-			float num2 = vec3.Dot(vector, planeNormal);
-			return new vec3(vector.x - planeNormal.x * num2 / num1, vector.y - planeNormal.y * num2 / num1, vector.z - planeNormal.z * num2 / num1);
-		}
 
 		private vec3 IK(vec3 _root, vec3 _target, vec3 _aimPosition, float totalLength)
 		{
@@ -325,63 +326,6 @@ namespace Manus.ToBeHermes.IK
 				vec3 t_moveDir = (pos - t_aimPoint).Normalized;
 
 				t_aimPoint += t_moveDir * (t_distance - t_maxDistance);
-			}
-		}
-
-		public quat LookRotationLH(vec3 direction, vec3 up)
-		{
-			mat3 result = new mat3();
-
-			result.Column2 = direction;
-			result.Column0 = vec3.Cross(up, result.Column2).Normalized;
-			result.Column1 = vec3.Cross(result.Column2, result.Column0);
-			
-			return Cast(result);
-		}
-
-		public quat Cast(mat3 m)
-		{
-			float fourXSquaredMinus1 = m[0, 0] - m[1, 1] - m[2, 2];
-			float fourYSquaredMinus1 = m[1, 1] - m[0, 0] - m[2, 2];
-			float fourZSquaredMinus1 = m[2, 2] - m[0, 0] - m[1, 1];
-			float fourWSquaredMinus1 = m[0, 0] + m[1, 1] + m[2, 2];
-
-			int biggestIndex = 0;
-			float fourBiggestSquaredMinus1 = fourWSquaredMinus1;
-
-			if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
-			{
-				fourBiggestSquaredMinus1 = fourXSquaredMinus1;
-				biggestIndex = 1;
-			}
-
-			if (fourYSquaredMinus1 > fourBiggestSquaredMinus1)
-			{
-				fourBiggestSquaredMinus1 = fourYSquaredMinus1;
-				biggestIndex = 2;
-			}
-
-			if (fourZSquaredMinus1 > fourBiggestSquaredMinus1)
-			{
-				fourBiggestSquaredMinus1 = fourZSquaredMinus1;
-				biggestIndex = 3;
-			}
-
-			float biggestVal = glm.Sqrt(fourBiggestSquaredMinus1 + 1f) * 0.5f;
-			float mult = 0.25f / biggestVal;
-
-			switch (biggestIndex)
-			{
-				case 0:
-					return new quat(biggestVal, (m[1, 2] - m[2, 1]) * mult, (m[2, 0] - m[0, 2]) * mult, (m[0, 1] - m[1, 0]) * mult);
-				case 1:
-					return new quat((m[1, 2] - m[2, 1]) * mult, biggestVal, (m[0, 1] + m[1, 0]) * mult, (m[2, 0] + m[0, 2]) * mult);
-				case 2:
-					return new quat((m[2, 0] - m[0, 2]) * mult, (m[0, 1] + m[1, 0]) * mult, biggestVal, (m[1, 2] + m[2, 1]) * mult);
-				case 3:
-					return new quat((m[0, 1] - m[1, 0]) * mult, (m[2, 0] + m[0, 2]) * mult, (m[1, 2] + m[2, 1]) * mult, biggestVal);
-				default:
-					return new quat(1, 0, 0, 0);
 			}
 		}
 

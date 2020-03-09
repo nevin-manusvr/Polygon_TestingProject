@@ -26,6 +26,8 @@ namespace Manus.ToBeHermes
 
 		public IKTargets_TMP targets;
 
+		public List<BoneType> testTypes;
+
 		private void Awake()
 		{
 			if (instance == null)
@@ -57,7 +59,18 @@ namespace Manus.ToBeHermes
 			{
 				foreach (var bone in IK.Skeleton.Bones)
 				{
-					Gizmos.DrawWireSphere(bone.Position.ToVector3(), .05f);
+					Vector3 t_Pos = bone.Position.ToVector3();
+					Quaternion t_Rot = bone.Rotation.ToUnityQuat();
+
+					Gizmos.color = Color.cyan;
+					Gizmos.DrawWireSphere(t_Pos, .02f);
+					Gizmos.color = Color.blue;
+					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.forward * .05f);
+					Gizmos.color = Color.green;
+					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.up * .05f);
+					Gizmos.color = Color.red;
+					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.right * .05f);
+
 				}
 			}
 		}
@@ -98,14 +111,23 @@ namespace Manus.ToBeHermes
 
 			foreach (var grave in graveyard.graves)
 			{
-				var t_Skeleton = new HProt.Polygon.Skeleton { DeviceID = (uint)grave.ID };
+				testTypes = new List<BoneType>();
 
 				foreach (var bone in grave.Skeleton.Bones)
 				{
-					t_Skeleton.Bones.Add(bone);
+					testTypes.Add(bone.Type);
+
+					foreach (var ikBone in IK.Skeleton.Bones)
+					{
+						if (bone.Type == ikBone.Type)
+						{
+							bone.Position = ikBone.Position;
+							bone.Rotation = ikBone.Rotation;
+						}
+					}
 				}
 
-				t_Data.Skeletons.Add(t_Skeleton);
+				t_Data.Skeletons.Add(grave.Skeleton);
 			}
 
 			ManusManager.instance.communicationHub.careTaker.Hermes?.UpdatePolygonAsync(t_Data);

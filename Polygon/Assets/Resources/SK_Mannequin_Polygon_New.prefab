@@ -2918,6 +2918,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useIK: 0
+  updateFromHermes: 0
+  deviceID: 0
   animator: {fileID: 6571939038520617849}
   boneReferences:
     root:
