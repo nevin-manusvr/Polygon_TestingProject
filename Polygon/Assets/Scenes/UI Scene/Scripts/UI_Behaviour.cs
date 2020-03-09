@@ -12,21 +12,33 @@ public class UI_Behaviour : MonoBehaviour
     public CalibrationControllerEvent controllerEvent;
 	public CalibrationSequence sequence;
 
-    [Header("Canvas")]
+    [Header("Guide Canvas")]
     [SerializeField]
-    private CanvasGroup m_MainCanvas;
+    private CanvasGroup m_GuideCanvas;
     [SerializeField]
-    private CanvasGroup m_UpperCanvas;
-    private CanvasGroup m_LowerCanvas;
+    private List<CanvasGroup> m_List;
+    private int m_GuideIndex;
+    [SerializeField]
+    CanvasGroup m_WelcomeText;
+    [SerializeField]
+    CanvasGroup m_ProgressText;
+    [SerializeField]
+    CanvasGroup m_ControllerText;
+    [SerializeField]
+    CanvasGroup m_ToggleText;
+    [SerializeField]
+    private GameObject m_GuideButtons;
 
-    [Header("Buttons")]
 
+    [Header("Progress Canvas")]
     [SerializeField]
-    private GameObject m_Buttons;
+    private CanvasGroup m_ProgressCanvas;
+
+    [Header("Controller Canvas")]
     [SerializeField]
-    private bool m_ButtonsAreActive;
+    private CanvasGroup m_ControllerCanvas;
     [SerializeField]
-    private bool m_AreSwitched;
+    private GameObject m_ControllerButtons;
     [SerializeField]
     private GameObject m_PlayButtonObj;
     [SerializeField]
@@ -37,6 +49,18 @@ public class UI_Behaviour : MonoBehaviour
     private GameObject m_CheckButtonObj;
     [SerializeField]
     private CanvasGroup m_CheckButton;
+
+    [Header("Toggle Canvas")]
+    [SerializeField]
+    private CanvasGroup m_ToggleCanvas;
+
+
+    [Header("Buttons")]
+
+    [SerializeField]
+    private bool m_ButtonsAreActive;
+    [SerializeField]
+    private bool m_AreSwitched;
 
     [Header("Slider")]
     [SerializeField]
@@ -55,18 +79,20 @@ public class UI_Behaviour : MonoBehaviour
 
     private Camera m_Camera;
 
+
     
 
     // Start is called before the first frame update
     void Start()
     {
+        m_Camera = Camera.main;
 
-
+        m_GuideIndex = 1;
 
         controllerEvent.StartCalibrationSequence();
-        m_Camera = Camera.main;
         m_ButtonsAreActive = true;
         m_AreSwitched = false;
+        ToggleUIButtons();
         m_GetReadyText.alpha = 0;
         m_CalibratingText.alpha = 0;
 
@@ -84,7 +110,7 @@ public class UI_Behaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(m_Camera.transform.position.x, m_Camera.transform.position.y / 1.5f, m_Camera.transform.position.z + 0.35f);
+        transform.position = new Vector3(m_Camera.transform.position.x, m_Camera.transform.position.y / 1.6f, m_Camera.transform.position.z + 0.35f);
     }
 
 
@@ -124,7 +150,17 @@ public class UI_Behaviour : MonoBehaviour
                 break;
             case "Check":
 
-                ToggleUIButtons();
+                SwitchButtons();
+
+                break;
+            case "StartGuide":
+
+                StartGuide(m_GuideIndex);
+
+                break;
+            case "SkipGuide":
+
+                SkipGuide();
 
                 break;
 	    }
@@ -135,7 +171,10 @@ public class UI_Behaviour : MonoBehaviour
         m_PlayButton.DOFade(0, 1f);
         m_PreviousButton.DOFade(0, 1f).OnComplete( () => ToggleUIButtons());
         m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
-        m_SliderImage.DOFillAmount(1, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {   controllerEvent.RaiseStartNextStep(); 
+
+        
+        m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
+                                                                                        controllerEvent.RaiseStartNextStep();
                                                                                         m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
                                                                                         UndoSlider(); 
                                                                                     });
@@ -146,7 +185,8 @@ public class UI_Behaviour : MonoBehaviour
     void UndoSlider()
     {
         m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
-        m_SliderImage.DOFillAmount(0, 6f).SetEase(Ease.InOutCubic).OnComplete(() => {   if(sequence.currentIndex == sequence.calibrationSteps.Count)
+        m_SliderImage.DOFillAmount(0, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
+                                                                                        if(sequence.currentIndex == sequence.calibrationSteps.Count)
 			                                                                            {
                                                                                             SwitchButtons();
 			                                                                            }
@@ -160,20 +200,20 @@ public class UI_Behaviour : MonoBehaviour
     public void ToggleUIButtons()
     {
         m_ButtonsAreActive = !m_ButtonsAreActive;  
-        m_Buttons.SetActive(m_ButtonsAreActive);
+        m_ControllerButtons.SetActive(m_ButtonsAreActive);
     }
 
     public void ToggleUI(bool isVisible)
     {
         if(isVisible)
         {
-            m_MainCanvas.DOFade(1, 2f).SetEase(Ease.InOutCubic);
-            m_UpperCanvas.DOFade(1, 2f).SetEase(Ease.InOutCubic);
+            m_ControllerCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+            m_ProgressCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
         }
         else
         {
-            m_MainCanvas.DOFade(0, 2f).SetEase(Ease.InOutCubic);
-            m_UpperCanvas.DOFade(0, 2f).SetEase(Ease.InOutCubic);
+            m_ControllerCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
+            m_ProgressCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
         }
         
     }
@@ -205,5 +245,68 @@ public class UI_Behaviour : MonoBehaviour
         m_CurrentStepSliderImages.DOFillAmount(sliderValue, .4f).SetEase(Ease.InOutCubic);
         m_CurrentStepText.text = m_CurrentStep.ToString();
     }
+
+    private void StartGuide(int index)
+    {
+        if(index < 4)
+        {
+            m_List[index - 1].DOFade(0, .2f);
+            m_List[index].DOFade(1, .2f);
+        }
+
+        switch (index)
+        {
+            case 1:
+                m_ProgressCanvas.DOFade(1, .5f).SetEase(Ease.InOutCubic);
+                break;
+            case 2:
+                ToggleUIButtons();
+                m_ControllerCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
+                break;
+            case 3:
+                m_ToggleCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);              
+                break;
+            case 4:
+                CloseGuide();
+                break;
+        }
+        m_GuideIndex += 1;
+
+
+        /*
+        go through steps
+        - show progress canvas and switch text
+        - show controller canvas and switch text
+        - show toggle canvas and switch text
+        - finally close guide canvas 
+        */
+    }
+
+    private void CloseGuide()
+    {
+        m_GuideCanvas.DOFade(0, 0.5f).SetEase(Ease.InOutCubic);
+        m_GuideButtons.SetActive(false);
+
+    }
+    private void SkipGuide()
+    {
+        CloseGuide();
+
+        m_ProgressCanvas.DOFade(1, .5f).SetEase(Ease.InOutCubic);
+
+        m_ControllerCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
         
+        m_ToggleCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
+        /*
+        close guide canvas
+        open Progress, controller anf toggle canvas
+        */
+    }
+
+
+
+
+
+
+
 }

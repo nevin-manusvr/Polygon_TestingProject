@@ -21,6 +21,8 @@ public class Button_Behaviour : MonoBehaviour
 
     [SerializeField]
     private bool m_IsLocked;
+    [SerializeField]
+    private bool m_WasLocked;
 
     [SerializeField]
     Sprite m_UnlockSprite;
@@ -31,6 +33,7 @@ public class Button_Behaviour : MonoBehaviour
     private void Start()
     {
         m_IsLocked = false;
+        m_WasLocked = true;
 
         m_PressedButtonColor = new Color32(140,24,18,255);
         m_ButtonColor = new Color32(25,30,34,255);
@@ -50,23 +53,9 @@ public class Button_Behaviour : MonoBehaviour
         if(m_IsColliding) return;
         m_IsColliding = true;
 
-        Debug.Log("colliding with: " + collider);
-        if(this.gameObject.CompareTag("Start"))
-        {
-            Debug.Log("Continue");
-            m_UIBehaviour.ButtonFunction(transform.tag);
-            //next step
-        }
-        else if(this.gameObject.CompareTag("Previous"))
-        {
-            Debug.Log("Previous");
-            m_UIBehaviour.ButtonFunction(transform.tag);
-            //previous step
-        }
-        else if(this.gameObject.CompareTag("Check"))
-        {
-            m_UIBehaviour.ButtonFunction(transform.tag);
-        }
+
+        m_UIBehaviour.ButtonFunction(transform.tag);
+
         
     }
 
@@ -77,6 +66,8 @@ public class Button_Behaviour : MonoBehaviour
     
         m_Child.transform.localPosition = new Vector3(0, 0, m_handposition);
 
+
+        //makes button follow tracker along x axis
         if(this.gameObject.CompareTag("Slider"))
         {
             transform.position = new Vector3(collider.transform.position.x, transform.position.y ,transform.position.z);
@@ -101,20 +92,23 @@ public class Button_Behaviour : MonoBehaviour
         m_ChildImage.DOColor(m_ButtonColor, .1f);
         Vector3 Startpos =  new Vector3(transform.localPosition.x, 0, 0);
         m_Child.transform.DOLocalMoveZ(0, 0.1f);
-        if(this.gameObject.CompareTag("Slider"))
+       
+       
+       
+       
+        if (this.gameObject.CompareTag("Slider"))
         {
-            Debug.Log("exits");
-           if (transform.localPosition.x >= 40)
+            if (transform.localPosition.x >= 40)
             {
                 m_IsLocked = true;
-                transform.DOLocalMoveX(125, .2f).OnComplete(() => SwitchImage());
+                transform.DOLocalMoveX(125, .2f);
             }
             else if (transform.localPosition.x <= -40)
             {
                 m_IsLocked = false;
-                transform.DOLocalMoveX(-125, .2f).OnComplete(() => SwitchImage());
+                transform.DOLocalMoveX(-125, .2f);
             }
-            else if(transform.localPosition.x < 40 && transform.localPosition.x > -40)
+            else if (transform.localPosition.x < 40 && transform.localPosition.x > -40)
             {
                 if(m_IsLocked)
                 {
@@ -125,10 +119,17 @@ public class Button_Behaviour : MonoBehaviour
                     transform.DOLocalMoveX(-125, .2f);
                 }
             }
+
+            if (m_WasLocked != m_IsLocked)
+            {
+                SwitchImage();
+                m_WasLocked = m_IsLocked;
+            }
+
         }
     }
 
-    void SwitchImage()
+    private void SwitchImage()
     {
         if(m_IsLocked)
         {
@@ -139,6 +140,7 @@ public class Button_Behaviour : MonoBehaviour
             m_ChildImage.sprite = m_UnlockSprite;
         }
         m_UIBehaviour.ToggleUI(m_IsLocked);
+        m_UIBehaviour.ToggleUIButtons();
         //switches slider image to either lock or unlock
         //toggles ui
     }

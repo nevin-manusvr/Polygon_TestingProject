@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d506a273bfc44a4c8c0317df7e82366, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  calibrationEvent: {fileID: 11400000, guid: e17edb8b4562ae64b9a34c50bbf2dbde, type: 2}
+  calibrationEvent: {fileID: 11400000, guid: 4717abc0d2b559d44a3303380b28b6e6, type: 2}
 --- !u!114 &313104196447937125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,10 +57,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f29c5303cfd8448aaf472a79662294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCalibration: {fileID: 0}
-  calibrationStepName: Wrist
-  currentStepText: {fileID: 0}
-  discriptionCalibration: 
-  discriptionText: {fileID: 0}
-  model: {fileID: 0}
-  modelAnimator: {fileID: 0}
+  uiManager: {fileID: 0}
+  calibrationStepName: Hand aligner
+  discriptionCalibration: Hold your hands together and face them forward
+  animationPoseTrigger: Wrist_AlignStartPose
+  animationCalibrationTrigger: Wrist_AlignStartPose
