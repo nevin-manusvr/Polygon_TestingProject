@@ -6,6 +6,8 @@ using Manus.Polygon.Skeleton.Utilities;
 using Manus.Core;
 using HProt = Hermes.Protocol;
 
+using Manus.Core.Utility;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -222,8 +224,32 @@ namespace Manus.Polygon.Skeleton
 			}
 #endif
 
+			string t_ID = "PolygonMesh_" + gameObject.GetInstanceID().ToString();
+			string t_Path = "Assets/" + t_ID + ".asset";
+			PolygonMeshes t_Asset = new PolygonMeshes();
+			t_Asset.name = t_ID;
+			AssetDatabase.CreateAsset(t_Asset, t_Path);
+			AssetDatabase.SetMainObject(t_Asset, t_Path);
 			SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 			boneReferences.UpdateBoneOrientations(skinnedMeshes);
+
+			t_Asset.m_ID = t_ID;
+			t_Asset.m_Meshes = new PolygonMeshes.MeshInfo[skinnedMeshes.Length];
+
+			for (int i = 0; i < skinnedMeshes.Length; i++)
+			{
+				Mesh t_Mesh = skinnedMeshes[i].sharedMesh;
+				t_Mesh.name = skinnedMeshes[i].name + "_Mesh";
+				AssetDatabase.AddObjectToAsset(t_Mesh, t_Asset);
+				skinnedMeshes[i].sharedMesh = t_Mesh;
+				t_Asset.m_Meshes[i].m_Mesh = t_Mesh;
+				t_Asset.m_Meshes[i].m_Hierarchy = skinnedMeshes[i].transform.GetPath();
+#if UNITY_EDITOR
+				EditorUtility.SetDirty(skinnedMeshes[i]);
+#endif
+			}
+
+			AssetDatabase.SaveAssets();
 		}
 
 		#endregion
