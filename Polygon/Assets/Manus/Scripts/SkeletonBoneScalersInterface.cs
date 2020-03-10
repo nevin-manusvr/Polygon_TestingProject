@@ -41,18 +41,18 @@ namespace Manus.Polygon
 
 		private void Update()
 		{
-			boneScalers.boneScalers[BoneType.Hips].ScaleBone(test, ScaleAxis.Length, ScaleMode.Percentage);
+			// boneScalers.boneScalers[BoneType.Hips].ScaleBone(test, ScaleAxis.Length, ScaleMode.Percentage);
 
 			boneScalers.ChangeThickness(thickness);
-			boneScalers.ChangeSpineLength(spineLength, ScaleMode.Percentage);
-			boneScalers.ChangeHeadSize(headSize);
+			//boneScalers.ChangeSpineLength(spineLength, ScaleMode.Percentage);
+			//boneScalers.ChangeHeadSize(headSize);
 
 
-			boneScalers.ChangeArmLength(upperArmLength, lowerArmLength, ScaleMode.Percentage);
-			boneScalers.ChangeLegLength(upperLegLength, lowerLegLength, ScaleMode.Percentage);
+			//boneScalers.ChangeArmLength(upperArmLength, lowerArmLength, ScaleMode.Percentage);
+			//boneScalers.ChangeLegLength(upperLegLength, lowerLegLength, ScaleMode.Percentage);
 
-			boneScalers.ChangeHandSize(handSize);
-			boneScalers.ChangeFootSize(footSize);
+			//boneScalers.ChangeHandSize(handSize);
+			//boneScalers.ChangeFootSize(footSize);
 
 			//boneScalers.ChangeFingerLength(fingerLength);
 			//boneScalers.ChangeFingerThickness(fingerThickness);

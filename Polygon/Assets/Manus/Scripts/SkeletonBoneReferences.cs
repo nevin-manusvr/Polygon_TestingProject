@@ -95,8 +95,6 @@ namespace Manus.Polygon.Skeleton
 					break;
 
 				case GatherType.Networked:
-					bones.Add(hipControl.type, hipControl);
-					bones.Add(upperBodyControl.type, upperBodyControl);
 					break;
 			}
 			
@@ -477,7 +475,12 @@ namespace Manus.Polygon.Skeleton
 		{
 			var bones = new Dictionary<ControlBoneType, ControlBone>();
 
-
+			AddToDictionary(body.GatherControlBones(gatherType));
+			AddToDictionary(head.GatherControlBones(gatherType));
+			AddToDictionary(armLeft.GatherControlBones(gatherType));
+			AddToDictionary(armRight.GatherControlBones(gatherType));
+			AddToDictionary(legLeft.GatherControlBones(gatherType));
+			AddToDictionary(legRight.GatherControlBones(gatherType));
 
 			return bones;
 

@@ -15,8 +15,6 @@ using UnityEditor;
 
 namespace Manus.Polygon.Skeleton
 {
-	
-
 	public class PolygonSkeleton : MonoBehaviour
 	{
 		public bool useIK;
@@ -208,7 +206,6 @@ namespace Manus.Polygon.Skeleton
 					return;
 				}
 			}
-#endif
 
 			string t_ID = "PolygonMesh_" + gameObject.GetInstanceID().ToString();
 			string t_Path = "Assets/" + t_ID + ".asset";
@@ -230,12 +227,11 @@ namespace Manus.Polygon.Skeleton
 				skinnedMeshes[i].sharedMesh = t_Mesh;
 				t_Asset.m_Meshes[i].m_Mesh = t_Mesh;
 				t_Asset.m_Meshes[i].m_Hierarchy = skinnedMeshes[i].transform.GetPath();
-#if UNITY_EDITOR
 				EditorUtility.SetDirty(skinnedMeshes[i]);
-#endif
 			}
 
 			AssetDatabase.SaveAssets();
+#endif
 		}
 
 		public void SetToBindPose()
@@ -304,9 +300,16 @@ namespace Manus.Polygon.Skeleton
 			HProt.Polygon.Skeleton t_Skele = new HProt.Polygon.Skeleton();
 			t_Skele.DeviceID = (uint)deviceID;
 
+			// Add bones
 			foreach (var bone in boneReferences.GatherBones(GatherType.All))
 			{
 				t_Skele.Bones.Add(bone.Value);
+			}
+
+			// Add controls
+			foreach (var control in boneReferences.GatherControlBones(GatherType.All))
+			{
+				t_Skele.Controls.Add(control.Value);
 			}
 
 			t_Skeletors.Skeletons.Add(t_Skele);
