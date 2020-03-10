@@ -6,6 +6,13 @@ namespace Manus.Polygon.Skeleton.Editor
 {
 	using System.Linq;
 
+	public enum ControlPointType
+	{
+		Ground,
+		Height,
+		Group
+	}
+
 	[CustomEditor(typeof(PolygonSkeleton))]
 	public class PolygonSkeletonEditor : UnityEditor.Editor
 	{
