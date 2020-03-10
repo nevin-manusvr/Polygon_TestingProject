@@ -5,6 +5,8 @@ using Manus.Core.Hermes;
 
 namespace Manus.Polygon.Skeleton
 {
+	using Manus.Polygon.Skeleton.Utilities;
+
 	[System.Serializable]
 	public class Bone
 	{
@@ -41,42 +43,72 @@ namespace Manus.Polygon.Skeleton
 	[System.Serializable]
 	public class ControlBone
 	{
+		public ControlBoneType type;
+
 		public Vector3 position;
 		public Quaternion rotation;
 
 		public BoneLocalOffset[] bonesToControl;
 
-		public ControlBone(Bone[] _BonesToControl)
+		public ControlBone(ControlBoneType _Type, Bone[] _BonesToControl)
 		{
-			var t_Offsets = new BoneLocalOffset[_BonesToControl.Length];
+			type = _Type;
 
-			for (int i = 0; i < _BonesToControl.Length; i++)
+			if (bonesToControl == null)
 			{
-				t_Offsets[i] = new BoneLocalOffset(_BonesToControl[i], this);
+				bonesToControl = new BoneLocalOffset[0];
 			}
+			else
+			{
+				var t_Offsets = new BoneLocalOffset[_BonesToControl.Length];
 
-			bonesToControl = t_Offsets;
+				for (int i = 0; i < _BonesToControl.Length; i++)
+				{
+					t_Offsets[i] = new BoneLocalOffset(_BonesToControl[i], this);
+				}
+
+				bonesToControl = t_Offsets;
+			}
 		}
 
-		public void Update(Vector3 _Position)
+		#region Update
+
+		public void UpdateTransformation(Vector3 _Position)
 		{
-			Update(_Position, rotation);
+			UpdateTransformation(_Position, rotation);
 		}
 
-		public void Update(Quaternion _Rotation)
+		public void UpdateTransformation(Quaternion _Rotation)
 		{
-			Update(position, _Rotation);
+			UpdateTransformation(position, _Rotation);
 		}
 
-		public void Update(Vector3 _Position, Quaternion _Rotation)
+		public void UpdateTransformation(Vector3 _Position, Quaternion _Rotation)
 		{
 			foreach (var t_BoneLocalOffset in bonesToControl)
 			{
-				t_BoneLocalOffset.Update(this);
+				t_BoneLocalOffset.UpdateTransformation(this);
 			}
 		}
 
-		// TODO: add implicit converter
+		#endregion
+
+		public static implicit operator Hermes.Protocol.Polygon.ControlBone(ControlBone _Control)
+		{
+			var offsets = new Hermes.Protocol.Polygon.BoneLocalOffset[_Control.bonesToControl.Length];
+			for (int i = 0; i < _Control.bonesToControl.Length; i++)
+			{
+				offsets[i] = _Control.bonesToControl[i];
+			}
+
+			return new Hermes.Protocol.Polygon.ControlBone
+				       {
+					       Type = _Control.type,
+					       Position = new Translation() { Full = _Control.position.ToProto() },
+					       Rotation = new Orientation() { Full = _Control.rotation.ToProto() },
+						   BoneLocalOffsets = { offsets }
+				       };
+		}
 	}
 
 	[System.Serializable]
@@ -90,16 +122,29 @@ namespace Manus.Polygon.Skeleton
 		public BoneLocalOffset(Bone _Bone, ControlBone _Parent)
 		{
 			bone = _Bone;
-			Update(_Parent);
+			UpdateTransformation(_Parent);
 		}
 
-		public void Update(ControlBone _Parent)
+		public void UpdateTransformation(ControlBone _Parent)
 		{
-			Matrix4x4 t_ParentMatrix = Matrix4x4.TRS(_Parent.position, _Parent.rotation, Vector3.one).inverse;
+			if (bone.bone == null) 
+				return;
+
+			Matrix4x4 t_ParentMatrix = Matrix4x4.TRS(_Parent.position, _Parent.rotation.IsValid() ? _Parent.rotation : Quaternion.identity, Vector3.one).inverse;
 			localPosition = t_ParentMatrix.MultiplyPoint3x4(bone.bone.position);
 			Vector3 t_Forward = t_ParentMatrix.MultiplyVector(bone.bone.rotation * Vector3.forward);
 			Vector3 t_Up = t_ParentMatrix.MultiplyVector(bone.bone.rotation * Vector3.up);
 			localRotation = Quaternion.LookRotation(t_Forward, t_Up);
+		}
+
+		public static implicit operator Hermes.Protocol.Polygon.BoneLocalOffset(BoneLocalOffset _Offset)
+		{
+			return new Hermes.Protocol.Polygon.BoneLocalOffset()
+				       {
+					       Bone = _Offset.bone,
+					       LocalPosition = new Translation() { Full = _Offset.localPosition.ToProto() },
+					       LocalRotation = new Orientation() { Full = _Offset.localRotation.ToProto() }
+				       };
 		}
 	}
 }

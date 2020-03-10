@@ -250,17 +250,58 @@ namespace Manus.Polygon.Skeleton.Utilities
 						HandBoneReferences hand = skeleton.armLeft.hand;
 
 						// Forward Vector
-						Vector3 aimDirection =
-							((hand.index.proximal.bone.position - hand.wrist.bone.position
-							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
-							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
-							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+						Vector3 aimDirection = Vector3.zero;
+						int fingerCount = 0;
+
+						if (hand.index.proximal.bone)
+						{
+							aimDirection += hand.index.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.middle.proximal.bone)
+						{
+							aimDirection += hand.middle.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.ring.proximal.bone)
+						{
+							aimDirection += hand.ring.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.pinky.proximal.bone)
+						{
+							aimDirection += hand.pinky.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						aimDirection = (aimDirection / fingerCount).normalized;
 
 						// Up Vector
-						Vector3 upDirection =
-							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
-							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
-							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized;
+						Vector3 upDirection = Vector3.zero;
+						fingerCount = 0;
+
+						if (hand.index.proximal.bone && hand.middle.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						if (hand.middle.proximal.bone && hand.ring.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						if (hand.ring.proximal.bone && hand.pinky.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						upDirection = (upDirection / fingerCount).normalized;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}
@@ -272,17 +313,58 @@ namespace Manus.Polygon.Skeleton.Utilities
 						HandBoneReferences hand = skeleton.armRight.hand;
 
 						// Forward Vector
-						Vector3 aimDirection =
-							((hand.index.proximal.bone.position - hand.wrist.bone.position
-							  + hand.middle.proximal.bone.position - hand.wrist.bone.position
-							  + hand.ring.proximal.bone.position - hand.wrist.bone.position
-							  + hand.pinky.proximal.bone.position - hand.wrist.bone.position) / 4f).normalized;
+						Vector3 aimDirection = Vector3.zero;
+						int fingerCount = 0;
+
+						if (hand.index.proximal.bone)
+						{
+							aimDirection += hand.index.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.middle.proximal.bone)
+						{
+							aimDirection += hand.middle.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.ring.proximal.bone)
+						{
+							aimDirection += hand.ring.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						if (hand.pinky.proximal.bone)
+						{
+							aimDirection += hand.pinky.proximal.bone.position - hand.wrist.bone.position;
+							fingerCount++;
+						}
+
+						aimDirection = (aimDirection / fingerCount).normalized;
 
 						// Up Vector
-						Vector3 upDirection =
-							(Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection)
-							 + Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection)
-							 + Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection)).normalized * -1f;
+						Vector3 upDirection = Vector3.zero;
+						fingerCount = 0;
+
+						if (hand.index.proximal.bone && hand.middle.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.middle.proximal.bone.position - hand.index.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						if (hand.middle.proximal.bone && hand.ring.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.ring.proximal.bone.position - hand.middle.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						if (hand.ring.proximal.bone && hand.pinky.proximal.bone)
+						{
+							upDirection += Vector3.Cross(hand.pinky.proximal.bone.position - hand.ring.proximal.bone.position, aimDirection);
+							fingerCount++;
+						}
+
+						upDirection = (upDirection / fingerCount).normalized;
 
 						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
 					}

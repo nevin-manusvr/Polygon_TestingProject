@@ -46,6 +46,11 @@ namespace Manus.Polygon.Skeleton.Editor
 			{
 				script?.SetBindPose();
 			}
+
+			if (GUILayout.Button("Set To Bind Pose"))
+			{
+				script?.SetToBindPose();
+			}
 		}
 
 		void OnSceneGUI()

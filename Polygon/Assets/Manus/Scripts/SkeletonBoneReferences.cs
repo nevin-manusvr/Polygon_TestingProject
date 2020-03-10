@@ -10,7 +10,7 @@ namespace Manus.Polygon.Skeleton
 	#region BoneOrganization
 
 	[System.Serializable]
-	public class Body
+	public class Body : IBoneGroup
 	{
 		public Bone hip;
 		// public Bone[] spine;
@@ -43,8 +43,8 @@ namespace Manus.Polygon.Skeleton
 			chest = new Bone(true, BoneType.Chest);
 			upperChest = new Bone(true, BoneType.UpperChest);
 
-			hipControl = new ControlBone(new[] { hip, spine });
-			upperBodyControl = new ControlBone(new[] { spine });
+			hipControl = new ControlBone(ControlBoneType.HipControl, new[] { hip, spine });
+			upperBodyControl = new ControlBone(ControlBoneType.UpperBodyControl, new[] { spine });
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
@@ -77,6 +77,31 @@ namespace Manus.Polygon.Skeleton
 			
 			return bones;
 		}
+		
+		public Dictionary<ControlBoneType, ControlBone> GatherControlBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<ControlBoneType, ControlBone>();
+
+			switch (gatherType)
+			{
+				case GatherType.All:
+					bones.Add(hipControl.type, hipControl);
+					bones.Add(upperBodyControl.type, upperBodyControl);
+					break;
+
+				case GatherType.Retargeted:
+					bones.Add(hipControl.type, hipControl);
+					bones.Add(upperBodyControl.type, upperBodyControl);
+					break;
+
+				case GatherType.Networked:
+					bones.Add(hipControl.type, hipControl);
+					bones.Add(upperBodyControl.type, upperBodyControl);
+					break;
+			}
+			
+			return bones;
+		}
 
 		public void AssignBones(Transform hip, Transform spine, Transform chest, Transform upperChest)
 		{
@@ -88,7 +113,7 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public class Head
+	public class Head : IBoneGroup
 	{
 		public Bone neck;
 		public Bone head;
@@ -114,7 +139,7 @@ namespace Manus.Polygon.Skeleton
 			neck = new Bone(false, BoneType.Neck);
 			head = new Bone(false, BoneType.Head);
 
-			modelHeight = new ControlBone(null);
+			modelHeight = new ControlBone(ControlBoneType.RootControl, null);
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
@@ -141,6 +166,26 @@ namespace Manus.Polygon.Skeleton
 
 			return bones;
 		}
+		
+		public Dictionary<ControlBoneType, ControlBone> GatherControlBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<ControlBoneType, ControlBone>();
+			
+			switch (gatherType)
+			{
+				case GatherType.All:
+					bones.Add(modelHeight.type, modelHeight);
+					break;
+
+				case GatherType.Retargeted:
+					break;
+
+				case GatherType.Networked:
+					break;
+			}
+
+			return bones;
+		}
 
 		public void AssignBones(Transform neck, Transform head, Transform eyeLeft, Transform eyeRight)
 		{
@@ -150,7 +195,7 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public class Arm
+	public class Arm : IBoneGroup
 	{
 		private bool left;
 
@@ -214,6 +259,25 @@ namespace Manus.Polygon.Skeleton
 
 			return bones;
 		}
+		
+		public Dictionary<ControlBoneType, ControlBone> GatherControlBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<ControlBoneType, ControlBone>();
+
+			switch (gatherType)
+			{
+				case GatherType.All:
+					break;
+
+				case GatherType.Retargeted:
+					break;
+
+				case GatherType.Networked:
+					break;
+			}
+
+			return bones;
+		}
 
 		public void AssignBones(Transform shoulder, Transform upperArm, Transform lowerArm)
 		{
@@ -229,9 +293,9 @@ namespace Manus.Polygon.Skeleton
 	}
 
 	[System.Serializable]
-	public class Leg
+	public class Leg : IBoneGroup
 	{
-		private bool left = false;
+		private bool m_Left = false;
 
 		public Bone upperLeg;
 		public Bone lowerLeg;
@@ -241,18 +305,18 @@ namespace Manus.Polygon.Skeleton
 
 		public ControlBone heel;
 
-		public Leg(bool left)
+		public Leg(bool _Left)
 		{
-			this.left = left;
+			m_Left = _Left;
 
-			upperLeg = new Bone(false, left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg);
-			lowerLeg = new Bone(false, left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg);
-			foot = new Bone(false, left ? BoneType.LeftFoot : BoneType.RightFoot);
+			upperLeg = new Bone(false, m_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg);
+			lowerLeg = new Bone(false, m_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg);
+			foot = new Bone(false, m_Left ? BoneType.LeftFoot : BoneType.RightFoot);
 
-			toes = new Bone(true, left ? BoneType.LeftToes : BoneType.RightToes);
-			toesEnd = new Bone(true, left ? BoneType.LeftToesEnd : BoneType.RightToesEnd);
+			toes = new Bone(true, m_Left ? BoneType.LeftToes : BoneType.RightToes);
+			toesEnd = new Bone(true, m_Left ? BoneType.LeftToesEnd : BoneType.RightToesEnd);
 
-			heel = new ControlBone(new[] { foot });
+			heel = new ControlBone(m_Left ? ControlBoneType.LeftHeelControl : ControlBoneType.RightHeelControl, new[] { foot });
 		}
 
 		public bool IsValid
@@ -295,6 +359,27 @@ namespace Manus.Polygon.Skeleton
 					bones.Add(foot.type, foot);
 					if (toes.bone != null) bones.Add(toes.type, toes);
 					if (toesEnd.bone != null) bones.Add(toesEnd.type, toesEnd);
+					break;
+			}
+
+			return bones;
+		}
+	
+		public Dictionary<ControlBoneType, ControlBone> GatherControlBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<ControlBoneType, ControlBone>();
+
+			switch (gatherType)
+			{
+				case GatherType.All:
+					bones.Add(heel.type, heel);
+					break;
+
+				case GatherType.Retargeted:
+					bones.Add(heel.type, heel);
+					break;
+
+				case GatherType.Networked:
 					break;
 			}
 
@@ -377,6 +462,26 @@ namespace Manus.Polygon.Skeleton
 			return bones;
 
 			void AddToDictionary(Dictionary<BoneType, Bone> bonesToAdd)
+			{
+				foreach (var bone in bonesToAdd)
+				{
+					if (!bones.ContainsKey(bone.Key))
+					{
+						bones.Add(bone.Key, bone.Value);
+					}
+				}
+			}
+		}
+
+		public Dictionary<ControlBoneType, ControlBone> GatherControlBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<ControlBoneType, ControlBone>();
+
+
+
+			return bones;
+
+			void AddToDictionary(Dictionary<ControlBoneType, ControlBone> bonesToAdd)
 			{
 				foreach (var bone in bonesToAdd)
 				{

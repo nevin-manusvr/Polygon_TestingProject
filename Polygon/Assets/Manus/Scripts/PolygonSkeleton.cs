@@ -137,14 +137,14 @@ namespace Manus.Polygon.Skeleton
 			{
 				Vector3 heelPosition = boneReferences.legLeft.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legLeft.heel.Update(heelPosition, Quaternion.identity);
+				boneReferences.legLeft.heel.UpdateTransformation(heelPosition, Quaternion.identity);
 			}
 
 			// Right Heel
 			{
 				Vector3 heelPosition = boneReferences.legRight.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legLeft.heel.Update(heelPosition, Quaternion.identity);
+				boneReferences.legLeft.heel.UpdateTransformation(heelPosition, Quaternion.identity);
 			}
 
 			// Model Height
@@ -158,7 +158,7 @@ namespace Manus.Polygon.Skeleton
 
 			// Hip Control
 			{
-				boneReferences.body.hipControl = new ControlBone(new[] { boneReferences.body.hip, boneReferences.body.spine, boneReferences.legLeft.upperLeg, boneReferences.legRight.upperLeg });
+				boneReferences.body.hipControl = new ControlBone(HProt.Polygon.ControlBoneType.HipControl, new[] { boneReferences.body.hip, boneReferences.body.spine, boneReferences.legLeft.upperLeg, boneReferences.legRight.upperLeg });
 
 				Matrix4x4 hipMatrix = Matrix4x4.TRS(
 					boneReferences.body.hip.bone.position,
@@ -178,7 +178,7 @@ namespace Manus.Polygon.Skeleton
 				Bone highestSpine = boneReferences.body.spine;
 				if (boneReferences.body.chest.bone != null) highestSpine = boneReferences.body.chest;
 				if (boneReferences.body.upperChest.bone != null) highestSpine = boneReferences.body.upperChest;
-				boneReferences.body.upperBodyControl = new ControlBone(new[] { highestSpine, boneReferences.head.neck, boneReferences.armLeft.shoulder, boneReferences.armRight.shoulder });
+				boneReferences.body.upperBodyControl = new ControlBone(HProt.Polygon.ControlBoneType.UpperBodyControl, new[] { highestSpine, boneReferences.head.neck, boneReferences.armLeft.shoulder, boneReferences.armRight.shoulder });
 
 				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
 					highestSpine.bone.position,
@@ -210,6 +210,22 @@ namespace Manus.Polygon.Skeleton
 
 			SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
 			boneReferences.UpdateBoneOrientations(skinnedMeshes);
+		}
+
+		public void SetToBindPose()
+		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				if (PrefabUtility.GetPrefabAssetType(this.gameObject) != PrefabAssetType.NotAPrefab)
+				{
+					Debug.LogError("The object you are trying to edit is a prefab");
+					return;
+				}
+			}
+#endif
+
+			SkeletonOrientator.SampleBindPose(gameObject);
 		}
 
 		#endregion

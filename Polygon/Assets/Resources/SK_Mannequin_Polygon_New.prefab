@@ -757,7 +757,6 @@ MonoBehaviour:
       restRotation: {x: 0, y: 0, z: 0, w: 1}
   gizmoLength: 0.01
   handModelType: 1
-  t_Test: 1
 --- !u!1 &6571939037187309215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,7 +2516,6 @@ MonoBehaviour:
       restRotation: {x: 0, y: 0, z: 0, w: 1}
   gizmoLength: 0.01
   handModelType: 0
-  t_Test: 1
 --- !u!1 &6571939038392082707
 GameObject:
   m_ObjectHideFlags: 0
@@ -2943,6 +2941,7 @@ MonoBehaviour:
         bone: {fileID: 6571939037694014550}
         desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
       modelHeight:
+        type: 0
         position: {x: -1.051134e-15, y: 1.8230146, z: -1.32394096e-14}
         rotation: {x: 0, y: 0, z: 0, w: 0}
         bonesToControl: []
@@ -2976,57 +2975,79 @@ MonoBehaviour:
         desiredRotation: {x: -0.75613475, y: -0.000000248058, z: -0.00000017059413,
           w: 0.654416}
       hipControl:
+        type: 0
         position: {x: -0.000000015955182, y: -0.006434123, z: -0.014011391}
         rotation: {x: 0.67743725, y: -0.00000007799244, z: 0.00000008468639, w: 0.73558056}
         bonesToControl:
-        - optional: 0
-          retarget: 0
-          type: 3
-          bone: {fileID: 6571939038976347823}
-          desiredRotation: {x: -0.6774373, y: -0.0000001363013, z: -0.00000028204036,
-            w: 0.7355805}
-        - optional: 0
-          retarget: 0
-          type: 4
-          bone: {fileID: 6571939036927368180}
-          desiredRotation: {x: -0.7314878, y: -0.000000034925062, z: -0.00000036570873,
-            w: 0.68185455}
-        - optional: 0
-          retarget: 0
-          type: 7
-          bone: {fileID: 6571939038841974146}
-          desiredRotation: {x: 0.716239, y: -0.044029925, z: -0.042733256, w: 0.6951526}
-        - optional: 0
-          retarget: 0
-          type: 8
-          bone: {fileID: 6571939037709321209}
-          desiredRotation: {x: 0.71623933, y: 0.04402959, z: 0.0427337, w: 0.69515216}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
       upperBodyControl:
+        type: 0
         position: {x: 0.000000098437106, y: 0.011543523, z: 0.11120584}
         rotation: {x: 0.00000004969073, y: 0.65441555, z: 0.7561351, w: -0.00000005741445}
         bonesToControl:
-        - optional: 1
-          retarget: 0
-          type: 6
-          bone: {fileID: 6571939038397846827}
-          desiredRotation: {x: -0.75613475, y: -0.000000248058, z: -0.00000017059413,
-            w: 0.654416}
-        - optional: 0
-          retarget: 0
-          type: 2
-          bone: {fileID: 6571939037501254481}
-          desiredRotation: {x: -0.6308263, y: -0.00000040367667, z: 0.000000034711917,
-            w: 0.77592415}
-        - optional: 0
-          retarget: 0
-          type: 17
-          bone: {fileID: 6571939037067259253}
-          desiredRotation: {x: 0.044634044, y: -0.8474617, z: 0.072182365, w: 0.52402884}
-        - optional: 0
-          retarget: 0
-          type: 18
-          bone: {fileID: 6571939037760305263}
-          desiredRotation: {x: 0.044633817, y: 0.84746206, z: -0.072182074, w: 0.5240284}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 0
+            bone: {fileID: 0}
+            desiredRotation: {x: 0, y: 0, z: 0, w: 0}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
     armLeft:
       shoulder:
         optional: 0
@@ -3361,14 +3382,18 @@ MonoBehaviour:
         bone: {fileID: 6571939038392082716}
         desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
       heel:
+        type: 0
         position: {x: -0.0000000012073031, y: -0.13462232, z: 1.1615982e-10}
         rotation: {x: 0, y: 0, z: 0, w: 1}
         bonesToControl:
-        - optional: 0
-          retarget: 0
-          type: 11
-          bone: {fileID: 6571939038564684114}
-          desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 11
+            bone: {fileID: 6571939038564684114}
+            desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
     legRight:
       upperLeg:
         optional: 0
@@ -3401,14 +3426,18 @@ MonoBehaviour:
         bone: {fileID: 6571939038182518194}
         desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
       heel:
+        type: 0
         position: {x: 0.0000000042850132, y: -0.13463476, z: -0.0000000027478055}
         rotation: {x: 0, y: 0, z: 0, w: 1}
         bonesToControl:
-        - optional: 0
-          retarget: 0
-          type: 12
-          bone: {fileID: 6571939036862867117}
-          desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
+        - bone:
+            optional: 0
+            retarget: 0
+            type: 12
+            bone: {fileID: 6571939036862867117}
+            desiredRotation: {x: 0, y: -0.00000029132525, z: -0, w: 1}
+          localPosition: {x: 0, y: 0, z: 0}
+          localRotation: {x: 0, y: 0, z: 0, w: 0}
   ik:
     isInitialized: 0
     ikGenerated: 0
@@ -3497,34 +3526,13 @@ MonoBehaviour:
   m_NetID: -9223372036854775808
   m_PrefabID: -2147483645
   m_ControllerID: 0
-  m_OnGainOwnership:
+  destroyOnControllerDisconnected: 0
+  onGainOwnership:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6571939038520617855}
-        m_MethodName: TMP_ToggleIK
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-  m_OnLoseOwnership:
+      m_Calls: []
+  onLoseOwnership:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6571939038520617855}
-        m_MethodName: TMP_ToggleIK
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &6571939038537189331
 GameObject:
   m_ObjectHideFlags: 0
