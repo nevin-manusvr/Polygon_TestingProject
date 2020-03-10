@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manus.Polygon.Skeleton.Utilities;
 using Manus.Core;
+using Manus.Core.Hermes;
 using HProt = Hermes.Protocol;
 
 #if UNITY_EDITOR
@@ -12,9 +13,7 @@ using UnityEditor;
 
 namespace Manus.Polygon.Skeleton
 {
-	using Hermes.Protocol.Polygon;
-
-	using Manus.Core.Hermes;
+	
 
 	public class PolygonSkeleton : MonoBehaviour
 	{
@@ -136,29 +135,16 @@ namespace Manus.Polygon.Skeleton
 
 			// Left Heel
 			{
-				Matrix4x4 footMatrix = Matrix4x4.TRS(
-					boneReferences.legLeft.foot.bone.position,
-					boneReferences.legLeft.foot.desiredRotation,
-					boneReferences.legLeft.foot.bone.lossyScale).inverse;
-
 				Vector3 heelPosition = boneReferences.legLeft.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legLeft.heel.position = footMatrix.MultiplyPoint3x4(heelPosition);
-				boneReferences.legLeft.heel.rotation = Quaternion.identity;
-
+				boneReferences.legLeft.heel.Update(heelPosition, Quaternion.identity);
 			}
 
 			// Right Heel
 			{
-				Matrix4x4 footMatrix = Matrix4x4.TRS(
-					boneReferences.legRight.foot.bone.position,
-					boneReferences.legRight.foot.desiredRotation,
-					boneReferences.legRight.foot.bone.lossyScale).inverse;
-
 				Vector3 heelPosition = boneReferences.legRight.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legRight.heel.position = footMatrix.MultiplyPoint3x4(heelPosition);
-				boneReferences.legRight.heel.rotation = Quaternion.identity;
+				boneReferences.legLeft.heel.Update(heelPosition, Quaternion.identity);
 			}
 
 			// Model Height
@@ -245,7 +231,7 @@ namespace Manus.Polygon.Skeleton
 			UnityMainThreadDispatcher.Instance().Enqueue(
 				() =>
 					{
-						foreach (Skeleton polySkeleton in _Poly.Skeletons)
+						foreach (HProt.Polygon.Skeleton polySkeleton in _Poly.Skeletons)
 						{
 							if (polySkeleton.DeviceID != (uint)deviceID)
 								continue;
