@@ -8,6 +8,7 @@ using Hermes.Protocol.Polygon;
 //Ownership shit?
 namespace Manus.Polygon.Skeleton.Networking
 {
+	[UnityEngine.AddComponentMenu("Manus/Networking/Sync/Polygon Skeleton (Sync)")]
 	[RequireComponent(typeof(PolygonSkeleton))]
 	public class SkeletonNetworkSync : BaseSync
 	{
@@ -28,27 +29,20 @@ namespace Manus.Polygon.Skeleton.Networking
 
 		Dictionary<BoneType, NetworkedBone> m_Bones = null;
 
-		#region Private Methods
+		bool m_Owned = false;
 
-		private bool HasSkeletonComponent()
+		public override void Initialize(Manus.Networking.NetObject _Object)
 		{
-			if (m_PolygonSkeleton != null) return true;
-
 			m_PolygonSkeleton = GetComponent<PolygonSkeleton>();
-			if (m_PolygonSkeleton == null) return false;
 
 			var t_Bones = m_PolygonSkeleton.boneReferences.GatherBones(GatherType.Networked);
 
 			m_Bones = new Dictionary<BoneType, NetworkedBone>();
-			foreach(var t_Bone in t_Bones)
+			foreach (var t_Bone in t_Bones)
 			{
 				m_Bones.Add(t_Bone.Key, new NetworkedBone() { bone = t_Bone.Value, targetRotation = t_Bone.Value.bone.localRotation });
 			}
-
-			return true;
 		}
-
-		#endregion
 
 		public override void Clean()
 		{
@@ -61,6 +55,7 @@ namespace Manus.Polygon.Skeleton.Networking
 
 		public override void ReceiveData(LidNet.NetBuffer _Msg)
 		{
+			
 			/* TODO: reenable this
 			if (_Msg.ReadBoolean())
 			{
@@ -75,8 +70,6 @@ namespace Manus.Polygon.Skeleton.Networking
 			*/
 
 			// Sync rotations
-			if (!HasSkeletonComponent())
-				return;
 
 			if (_Msg.ReadBoolean())
 			{
@@ -94,6 +87,16 @@ namespace Manus.Polygon.Skeleton.Networking
 						m_Bones[t_Type].targetRotation = t_Rotation;
 					}
 				}
+			}
+
+			if (m_Owned) //don't apply any data if you own this skeletor
+			{
+				if (m_SmoothRoutine != null)
+				{
+					StopCoroutine(m_SmoothRoutine);
+					m_SmoothRoutine = null;
+				}
+				return;
 			}
 
 			if (smooth)
@@ -148,8 +151,6 @@ namespace Manus.Polygon.Skeleton.Networking
 			*/
 
 			// Sync rotations
-			if (!HasSkeletonComponent())
-				return;
 
 			if (m_PolygonSkeleton == null)
 			{
@@ -170,6 +171,16 @@ namespace Manus.Polygon.Skeleton.Networking
 					_Msg.Write(bone.Value.bone.bone.localRotation);
 				}
 			}
+		}
+
+		public override void OnGainOwnership(Manus.Networking.NetObject _Object)
+		{
+			m_Owned = true;
+		}
+
+		public override void OnLoseOwnership(Manus.Networking.NetObject _Object)
+		{
+			m_Owned = false;
 		}
 	}
 }
