@@ -3512,7 +3512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smooth: 1
-  smoothFactor: 10
+  smoothFactor: 20
 --- !u!114 &6571939038520617851
 MonoBehaviour:
   m_ObjectHideFlags: 0

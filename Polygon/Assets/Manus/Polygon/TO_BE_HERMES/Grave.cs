@@ -10,6 +10,8 @@ namespace Manus.ToBeHermes
 	{
 		// TMP
 		public int m_ID;
+		
+		public Haunting haunting;
 
 		#region Properties
 
@@ -17,12 +19,15 @@ namespace Manus.ToBeHermes
 
 		public Skeleton Skeleton { get; internal set; }
 
+
 		#endregion
 
 		public Grave(Skeleton _Skeleton)
 		{
 			m_ID = (int)_Skeleton.DeviceID;
 			Skeleton = _Skeleton;
+
+			haunting = new Haunting(Skeleton);
 		}
 	}
 }
