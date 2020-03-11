@@ -41,6 +41,7 @@ namespace Manus.Polygon
 
 			//scaleBone.SetParent(bone, true);
 			scaleBone = bone;
+			scaleBone.localScale = Vector3.one;
 
 			// Instantiate scale fix bones
 			scaleFixBones = new Transform[] { };
@@ -56,6 +57,7 @@ namespace Manus.Polygon
 					scaleFixBone.SetParent(scaleBone, true);
 					scaleFixBone.position = child.position;
 					scaleFixBone.rotation = lookRotation;
+					scaleFixBone.localScale = Vector3.one;
 
 					scaleFixList.Add(scaleFixBone);
 

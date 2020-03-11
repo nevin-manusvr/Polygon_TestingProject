@@ -5,42 +5,58 @@ using LidNet = Lidgren.Network;
 using UnityEngine;
 using Hermes.Protocol.Polygon;
 
+//Ownership shit?
 namespace Manus.Polygon.Skeleton.Networking
 {
 	[RequireComponent(typeof(PolygonSkeleton))]
 	public class SkeletonNetworkSync : BaseSync
 	{
+		public class NetworkedBone
+		{
+			public Bone bone;
+			public Quaternion targetRotation;
+		}
+
 		private PolygonSkeleton m_PolygonSkeleton;
 		private Dictionary<BodyMeasurements, float> m_BodyMeasurements = new Dictionary<BodyMeasurements, float>();
+		
+		public bool smooth = true;
+		public float smoothFactor = 20.0f;
+		Coroutine m_SmoothRoutine = null;
+
+		Vector3 m_HipPositionTarget;
+
+		Dictionary<BoneType, NetworkedBone> m_Bones = null;
 
 		#region Private Methods
 
 		private bool HasSkeletonComponent()
 		{
-			if (m_PolygonSkeleton == null)
-				if (GetComponent<PolygonSkeleton>())
-					m_PolygonSkeleton = GetComponent<PolygonSkeleton>();
-			
-			return m_PolygonSkeleton != null;
+			if (m_PolygonSkeleton != null) return true;
+
+			m_PolygonSkeleton = GetComponent<PolygonSkeleton>();
+			if (m_PolygonSkeleton == null) return false;
+
+			var t_Bones = m_PolygonSkeleton.boneReferences.GatherBones(GatherType.Networked);
+
+			m_Bones = new Dictionary<BoneType, NetworkedBone>();
+			foreach(var t_Bone in t_Bones)
+			{
+				m_Bones.Add(t_Bone.Key, new NetworkedBone() { bone = t_Bone.Value, targetRotation = t_Bone.Value.bone.localRotation });
+			}
+
+			return true;
 		}
 
 		#endregion
 
 		public override void Clean()
 		{
-			//m_Position = transform.localPosition;
-			//m_Rotation = transform.localRotation;
-			//m_Scale = transform.localScale;
 		}
 
 		public override bool IsDirty()
 		{
 			return true;
-			//if (m_SmoothRoutine != null) return false; //still busy, probably
-			//if (m_Position != transform.localPosition) return true;
-			//if (m_Rotation != transform.localRotation) return true;
-			//if (m_Scale != transform.localScale) return true;
-			return false;
 		}
 
 		public override void ReceiveData(LidNet.NetBuffer _Msg)
@@ -62,10 +78,10 @@ namespace Manus.Polygon.Skeleton.Networking
 			if (!HasSkeletonComponent())
 				return;
 
-			var t_Bones = m_PolygonSkeleton.boneReferences.GatherBones(GatherType.Networked);
-
 			if (_Msg.ReadBoolean())
 			{
+				m_HipPositionTarget = _Msg.ReadVector3();
+
 				int t_Count = _Msg.ReadInt32();
 				
 				for (int i = 0; i < t_Count; i++)
@@ -73,11 +89,42 @@ namespace Manus.Polygon.Skeleton.Networking
 					var t_Type = (BoneType)_Msg.ReadInt32();
 					var t_Rotation = _Msg.ReadQuaternion();
 
-					if (t_Bones.ContainsKey(t_Type))
+					if (m_Bones.ContainsKey(t_Type))
 					{
-						t_Bones[t_Type].bone.rotation = t_Rotation;
+						m_Bones[t_Type].targetRotation = t_Rotation;
 					}
 				}
+			}
+
+			if (smooth)
+			{
+				if (m_SmoothRoutine == null) m_SmoothRoutine = StartCoroutine(SmoothTransform());
+				return;
+			}
+			if (m_SmoothRoutine != null)
+			{
+				StopCoroutine(m_SmoothRoutine);
+				m_SmoothRoutine = null;
+			}
+			
+			m_Bones[BoneType.Hips].bone.bone.position = m_HipPositionTarget;
+			foreach (var t_Bone in m_Bones)
+			{
+				t_Bone.Value.bone.bone.localRotation = t_Bone.Value.targetRotation;
+			}
+		}
+
+		System.Collections.IEnumerator SmoothTransform()
+		{
+			while (true)
+			{
+				m_Bones[BoneType.Hips].bone.bone.position = Vector3.Lerp(m_Bones[BoneType.Hips].bone.bone.position, m_HipPositionTarget, smoothFactor * Time.deltaTime);
+
+				foreach (var t_Bone in m_Bones)
+				{
+					t_Bone.Value.bone.bone.localRotation = Quaternion.Slerp(t_Bone.Value.bone.bone.localRotation, t_Bone.Value.targetRotation, smoothFactor * Time.deltaTime);
+				}
+				yield return new WaitForEndOfFrame();
 			}
 		}
 
@@ -112,13 +159,15 @@ namespace Manus.Polygon.Skeleton.Networking
 			{
 				_Msg.Write(true);
 
-				var bones = m_PolygonSkeleton.boneReferences.GatherBones(GatherType.Networked);
-				_Msg.Write(bones.Count);
+				_Msg.Write(m_Bones[BoneType.Hips].bone.bone.position);
 
-				foreach (var bone in bones)
+
+				_Msg.Write(m_Bones.Count);
+
+				foreach (var bone in m_Bones)
 				{
 					_Msg.Write((int)bone.Key);
-					_Msg.Write(bone.Value.bone.rotation);
+					_Msg.Write(bone.Value.bone.bone.localRotation);
 				}
 			}
 		}

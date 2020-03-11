@@ -81,13 +81,13 @@ namespace Manus.Polygon.Skeleton.Editor
 			DrawArm(bones.armLeft, bones.body);
 			DrawArm(bones.armRight, bones.body);
 
-			DrawControlPoint(bones.head.modelHeight, bones.root, ControlPointType.Height);
-			DrawControlPoint(bones.body.hipControl, bones.body.hip, ControlPointType.Group);
+			DrawControlPoint(bones.head.modelHeight, ControlPointType.Height);
+			DrawControlPoint(bones.body.hipControl, ControlPointType.Group);
 
 			Bone highestSpine = bones.body.spine;
 			if (bones.body.chest.bone != null) highestSpine = bones.body.chest;
 			if (bones.body.upperChest.bone != null) highestSpine = bones.body.upperChest;
-			DrawControlPoint(bones.body.upperBodyControl, highestSpine, ControlPointType.Group);
+			DrawControlPoint(bones.body.upperBodyControl, ControlPointType.Group);
 		}
 
 		#region drawing the skeleton bones
@@ -165,7 +165,7 @@ namespace Manus.Polygon.Skeleton.Editor
 			DrawBone(leg.toes, size);
 			DrawBone(leg.toesEnd, size);
 
-			DrawControlPoint(leg.heel, leg.foot, ControlPointType.Ground);
+			DrawControlPoint(leg.heel, ControlPointType.Ground);
 		}
 
 		private void DrawHand(HandBoneReferences hand)
@@ -234,26 +234,26 @@ namespace Manus.Polygon.Skeleton.Editor
 			Handles.ArrowHandleCap(0, bone.bone.position, bone.desiredRotation * Quaternion.Euler(-90f, 0f, 0f), size, EventType.Repaint);
 		}
 
-		private void DrawControlPoint(ControlBone control, Bone root, ControlPointType type)
+		private void DrawControlPoint(ControlBone control, ControlPointType type)
 		{
 			switch (type)
 			{
 				case ControlPointType.Ground:
 
-					if (control.position != Vector3.zero && control.rotation.IsValid())
+					if (control.rotation.IsValid())
 					{
 						EditorGUI.BeginChangeCheck();
 
-						Matrix4x4 rootMatrix = Matrix4x4.TRS(root.bone.position, root.desiredRotation, root.bone.lossyScale);
+						// Matrix4x4 rootMatrix = Matrix4x4.TRS(root.bone.position, root.desiredRotation, root.bone.lossyScale);
 						
-						Quaternion controlRotation = Quaternion.LookRotation(rootMatrix.MultiplyVector(control.rotation * Vector3.forward), rootMatrix.MultiplyVector(control.rotation * Vector3.up));
-						Vector3 point = Handles.Slider2D(rootMatrix.MultiplyPoint3x4(control.position), controlRotation * Vector3.up, controlRotation * Vector3.forward, controlRotation * Vector3.right, size, Handles.CircleHandleCap, new Vector2(.001f, .001f));
-						Handles.DrawLine(point, point + controlRotation * Vector3.forward * size);
+						//Quaternion controlRotation = Quaternion.LookRotation(rootMatrix.MultiplyVector(control.rotation * Vector3.forward), rootMatrix.MultiplyVector(control.rotation * Vector3.up));
+						Vector3 point = Handles.Slider2D(control.position, control.rotation * Vector3.up, control.rotation* Vector3.forward, control.rotation * Vector3.right, size, Handles.CircleHandleCap, new Vector2(.001f, .001f));
+						Handles.DrawLine(point, point + control.rotation * Vector3.forward * size);
 
 						if (EditorGUI.EndChangeCheck())
 						{
 							Undo.RecordObject(target, "Moved Control point");
-							control.position = rootMatrix.inverse.MultiplyPoint3x4(point);
+							control.UpdateTransformation(point);
 						}
 					}
 
@@ -264,14 +264,9 @@ namespace Manus.Polygon.Skeleton.Editor
 					{
 						EditorGUI.BeginChangeCheck();
 
-						Vector3 rootPosition = root.bone.position;
-						rootPosition.y = 0;
-
-						Matrix4x4 rootMatrix = Matrix4x4.TRS(rootPosition, root.desiredRotation, Vector3.one);
 						Vector3 point = Handles.Slider(
-							rootMatrix.MultiplyPoint3x4(control.position)
-							+ root.desiredRotation * Vector3.up * size * 0.5f,
-							root.bone.rotation * Vector3.up,
+							control.position + control.rotation * Vector3.up * size * 0.5f,
+							control.rotation * Vector3.up,
 							size,
 							Handles.CubeHandleCap,
 							.001f);
@@ -279,7 +274,7 @@ namespace Manus.Polygon.Skeleton.Editor
 						if (EditorGUI.EndChangeCheck())
 						{
 							Undo.RecordObject(target, "Moved Control point");
-							control.position = rootMatrix.inverse.MultiplyPoint3x4(point);
+							control.position = point;
 						}
 					}
 
@@ -288,13 +283,8 @@ namespace Manus.Polygon.Skeleton.Editor
 
 					if (control.position != Vector3.zero || control.rotation.IsValid())
 					{
-						Matrix4x4 rootMatrix = Matrix4x4.TRS(root.bone.position, Application.isPlaying ? root.bone.rotation : root.desiredRotation, Vector3.one);
-						
-						Vector3 controlPosition = rootMatrix.MultiplyPoint3x4(control.position);
-						Quaternion controlRotation = Quaternion.LookRotation(rootMatrix.MultiplyVector(control.rotation * Vector3.forward), rootMatrix.MultiplyVector(control.rotation * Vector3.up));
-						
-						Handles.CircleHandleCap(0, controlPosition, controlRotation * Quaternion.Euler(90f, 0f, 0f), size * 5, EventType.Repaint);
-						Handles.DrawLine(controlPosition, controlPosition + controlRotation * Vector3.forward * size * 5);
+						Handles.CircleHandleCap(0, control.position, control.rotation * Quaternion.Euler(90f, 0f, 0f), size * 5, EventType.Repaint);
+						Handles.DrawLine(control.position, control.position + control.rotation * Vector3.forward * size * 5);
 					}
 
 					break;

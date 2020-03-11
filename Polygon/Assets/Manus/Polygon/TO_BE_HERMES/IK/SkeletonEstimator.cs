@@ -123,10 +123,13 @@ namespace Manus.ToBeHermes.IK
 
 		private void EstimateSpinePosition(Tracker _Head, Tracker _Hip)
 		{
+			vec3 t_HipPosition = _Hip.position;
+
 			vec3 t_NeckPos = bones[BoneType.Neck].Position.toGlmVec3();
 			vec3 t_SpineDirection = (_Hip.rotation * -vec3.UnitZ * 3f + _Head.rotation * -vec3.UnitZ * 1f).Normalized; // TODO: fix this so it doesn't flip around
-			vec3 t_SpinePos = IK(_Hip.position, t_NeckPos, (_Hip.position + t_NeckPos) / 2f + t_SpineDirection, measurements.spineHeight);
+			vec3 t_SpinePos = IK(t_HipPosition, t_NeckPos, (t_HipPosition + t_NeckPos) / 2f + t_SpineDirection, measurements.spineHeight);
 
+			bones[BoneType.Hips].Position.Full = t_HipPosition.toProtoVec3();
 			bones[BoneType.Spine].Position.Full = t_SpinePos.toProtoVec3();
 		}
 

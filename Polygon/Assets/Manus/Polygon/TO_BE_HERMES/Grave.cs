@@ -1,4 +1,6 @@
-﻿using HProt = Hermes.Protocol;
+﻿using HProt = Hermes.Protocol.Polygon;
+using System.Collections.Generic;
+using Hermes.Protocol.Polygon;
 
 namespace Manus.ToBeHermes
 {
@@ -13,24 +15,14 @@ namespace Manus.ToBeHermes
 
 		public int ID { get { return (int)Skeleton.DeviceID; } }
 
-		public HProt.Polygon.Skeleton Skeleton { get; internal set; }
+		public Skeleton Skeleton { get; internal set; }
 
 		#endregion
 
-		public Grave(HProt.Polygon.Skeleton _Skeleton)
+		public Grave(Skeleton _Skeleton)
 		{
 			m_ID = (int)_Skeleton.DeviceID;
 			Skeleton = _Skeleton;
 		}
-
-		public void SetTarget(HProt.Polygon.Skeleton _Skeleton)
-		{
-
-		}
-	}
-
-	public class RetargetBone
-	{
-		public HProt.Polygon.Bone bone;
 	}
 }

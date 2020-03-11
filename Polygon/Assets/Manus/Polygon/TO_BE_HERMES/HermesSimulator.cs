@@ -26,8 +26,6 @@ namespace Manus.ToBeHermes
 
 		public IKTargets_TMP targets;
 
-		public List<BoneType> testTypes;
-
 		private void Awake()
 		{
 			if (instance == null)
@@ -77,9 +75,9 @@ namespace Manus.ToBeHermes
 
 		public void OnNewSkeletonDefinition(HProt.Polygon.InternalData _Poly)
 		{
-			foreach (var skeleton in _Poly.Skeleton.Skeletons)
+			foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
 			{
-				graveyard.AddGrave(skeleton);
+				graveyard.AddGrave(t_Skeleton);
 			}
 			
 			//for (var i = 0; i < _Poly.Skeleton.Skeletons.Count; i++)
@@ -107,16 +105,12 @@ namespace Manus.ToBeHermes
 			if (ManusManager.instance.communicationHub.careTaker == null) 
 				return;
 
-			var t_Data = new HProt.Polygon.Data();
+			var t_Data = new Data();
 
 			foreach (var grave in graveyard.graves)
 			{
-				testTypes = new List<BoneType>();
-
 				foreach (var bone in grave.Skeleton.Bones)
 				{
-					testTypes.Add(bone.Type);
-
 					foreach (var ikBone in IK.Skeleton.Bones)
 					{
 						if (bone.Type == ikBone.Type)

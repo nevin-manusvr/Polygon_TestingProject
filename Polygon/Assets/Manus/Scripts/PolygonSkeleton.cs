@@ -137,40 +137,29 @@ namespace Manus.Polygon.Skeleton
 			{
 				Vector3 heelPosition = boneReferences.legLeft.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legLeft.heel.UpdateTransformation(heelPosition, Quaternion.identity);
+				boneReferences.legLeft.heel.UpdateTransformation(heelPosition, boneReferences.legLeft.foot.desiredRotation);
 			}
 
 			// Right Heel
 			{
 				Vector3 heelPosition = boneReferences.legRight.foot.bone.position;
 				heelPosition.y = 0;
-				boneReferences.legLeft.heel.UpdateTransformation(heelPosition, Quaternion.identity);
+				boneReferences.legRight.heel.UpdateTransformation(heelPosition, boneReferences.legRight.foot.desiredRotation);
 			}
 
 			// Model Height
 			{
-				Vector3 rootPos = boneReferences.head.head.bone.position;
-				rootPos.y = 0;
-
-				Matrix4x4 rootMatrix = Matrix4x4.TRS(rootPos, boneReferences.root.bone.rotation, Vector3.one).inverse;
-				boneReferences.head.modelHeight.position = rootMatrix.MultiplyPoint3x4(new Vector3(rootPos.x, 1.8f, rootPos.z));
+				Vector3 t_HipPosition = boneReferences.body.hip.bone.position;
+				t_HipPosition.y = 1.8f;
+				boneReferences.head.modelHeight.UpdateTransformation(t_HipPosition, Quaternion.identity);
 			}
 
 			// Hip Control
 			{
 				boneReferences.body.hipControl = new ControlBone(HProt.Polygon.ControlBoneType.HipControl, new[] { boneReferences.body.hip, boneReferences.body.spine, boneReferences.legLeft.upperLeg, boneReferences.legRight.upperLeg });
-
-				Matrix4x4 hipMatrix = Matrix4x4.TRS(
-					boneReferences.body.hip.bone.position,
-					boneReferences.body.hip.desiredRotation,
-					boneReferences.body.hip.bone.lossyScale).inverse;
-
-				Vector3 hipCenterPos = (boneReferences.legLeft.upperLeg.bone.position + boneReferences.legRight.upperLeg.bone.position) / 2f;
-				boneReferences.body.hipControl.position = hipMatrix.MultiplyPoint3x4(hipCenterPos);
-
-				Vector3 aimDirection = hipMatrix.MultiplyVector(SkeletonOrientationCalculator.CalculateForward(bones));
-				Vector3 upDirection = hipMatrix.MultiplyVector(Vector3.up);
-				boneReferences.body.hipControl.rotation = Quaternion.LookRotation(aimDirection, upDirection);
+				Vector3 hipCenterPosition = (boneReferences.legLeft.upperLeg.bone.position + boneReferences.legRight.upperLeg.bone.position) / 2f;
+				Quaternion hipRotation = Quaternion.LookRotation(SkeletonOrientationCalculator.CalculateForward(bones), Vector3.up);
+				boneReferences.body.hipControl.UpdateTransformation(hipCenterPosition, hipRotation);
 			}
 
 			// UpperBody Control
@@ -180,18 +169,10 @@ namespace Manus.Polygon.Skeleton
 				if (boneReferences.body.upperChest.bone != null) highestSpine = boneReferences.body.upperChest;
 				boneReferences.body.upperBodyControl = new ControlBone(HProt.Polygon.ControlBoneType.UpperBodyControl, new[] { highestSpine, boneReferences.head.neck, boneReferences.armLeft.shoulder, boneReferences.armRight.shoulder });
 
-				Matrix4x4 upperBodyMatrix = Matrix4x4.TRS(
-					highestSpine.bone.position,
-					highestSpine.desiredRotation,
-					highestSpine.bone.lossyScale).inverse;
-
 				Vector3 upperBodyCenterPos = ((boneReferences.armLeft.upperArm.bone.position + boneReferences.armRight.upperArm.bone.position) / 2f +
 											 (boneReferences.armLeft.shoulder.bone.position + boneReferences.armRight.shoulder.bone.position) / 2f) / 2f;
-				boneReferences.body.upperBodyControl.position = upperBodyMatrix.MultiplyPoint3x4(upperBodyCenterPos);
-
-				Vector3 aimDirection = upperBodyMatrix.MultiplyVector(-SkeletonOrientationCalculator.CalculateForward(bones));
-				Vector3 upDirection = upperBodyMatrix.MultiplyVector(Vector3.up);
-				boneReferences.body.upperBodyControl.rotation = Quaternion.LookRotation(aimDirection, upDirection);
+				Quaternion upperBodyRotation = Quaternion.LookRotation(-SkeletonOrientationCalculator.CalculateForward(bones), Vector3.up);
+				boneReferences.body.upperBodyControl.UpdateTransformation(upperBodyCenterPos, upperBodyRotation);
 			}
 		}
 
@@ -214,7 +195,7 @@ namespace Manus.Polygon.Skeleton
 			AssetDatabase.CreateAsset(t_Asset, t_Path);
 			AssetDatabase.SetMainObject(t_Asset, t_Path);
 			SkinnedMeshRenderer[] skinnedMeshes = GetComponentsInChildren<SkinnedMeshRenderer>();
-			boneReferences.UpdateBoneOrientations(skinnedMeshes);
+			boneReferences.SetBindPose(skinnedMeshes);
 
 			t_Asset.m_ID = t_ID;
 			t_Asset.m_Meshes = new PolygonMeshes.MeshInfo[skinnedMeshes.Length];
@@ -247,7 +228,7 @@ namespace Manus.Polygon.Skeleton
 			}
 #endif
 
-			SkeletonOrientator.SampleBindPose(gameObject);
+			SkeletonBindPoseUtilities.SampleBindPose(gameObject);
 		}
 
 		#endregion

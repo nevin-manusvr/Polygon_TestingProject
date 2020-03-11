@@ -137,7 +137,7 @@ namespace Manus.Polygon.Skeleton
 			neck = new Bone(false, BoneType.Neck);
 			head = new Bone(false, BoneType.Head);
 
-			modelHeight = new ControlBone(ControlBoneType.RootControl, null);
+			modelHeight = new ControlBone(ControlBoneType.ModelHeightControl, null);
 		}
 
 		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)

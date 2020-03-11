@@ -54,7 +54,7 @@ namespace Manus.Polygon.Skeleton
 		{
 			type = _Type;
 
-			if (bonesToControl == null)
+			if (_BonesToControl == null)
 			{
 				bonesToControl = new BoneLocalOffset[0];
 			}
@@ -85,6 +85,9 @@ namespace Manus.Polygon.Skeleton
 
 		public void UpdateTransformation(Vector3 _Position, Quaternion _Rotation)
 		{
+			position = _Position;
+			rotation = _Rotation;
+
 			foreach (var t_BoneLocalOffset in bonesToControl)
 			{
 				t_BoneLocalOffset.UpdateTransformation(this);
@@ -132,8 +135,8 @@ namespace Manus.Polygon.Skeleton
 
 			Matrix4x4 t_ParentMatrix = Matrix4x4.TRS(_Parent.position, _Parent.rotation.IsValid() ? _Parent.rotation : Quaternion.identity, Vector3.one).inverse;
 			localPosition = t_ParentMatrix.MultiplyPoint3x4(bone.bone.position);
-			Vector3 t_Forward = t_ParentMatrix.MultiplyVector(bone.bone.rotation * Vector3.forward);
-			Vector3 t_Up = t_ParentMatrix.MultiplyVector(bone.bone.rotation * Vector3.up);
+			Vector3 t_Forward = t_ParentMatrix.MultiplyVector(bone.desiredRotation * Vector3.forward);
+			Vector3 t_Up = t_ParentMatrix.MultiplyVector(bone.desiredRotation * Vector3.up);
 			localRotation = Quaternion.LookRotation(t_Forward, t_Up);
 		}
 
