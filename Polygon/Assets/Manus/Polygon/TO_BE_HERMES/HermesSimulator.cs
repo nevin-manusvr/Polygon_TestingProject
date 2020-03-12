@@ -21,8 +21,7 @@ namespace Manus.ToBeHermes
 		public static HermesSimulator instance;
 
 		public Graveyard graveyard;
-
-		public SkeletonEstimator IK;
+		public Ghost IK;
 
 		public IKTargets_TMP targets;
 
@@ -33,7 +32,7 @@ namespace Manus.ToBeHermes
 
 			graveyard = new Graveyard();
 
-			IK = new SkeletonEstimator(0);
+			IK = new Ghost(0);
 		}
 
 		private void Update()
@@ -46,6 +45,11 @@ namespace Manus.ToBeHermes
 				new Tracker(VRTrackerType.LeftFoot, targets.leftFoot.position.ToGlmVec3(), targets.leftFoot.rotation.ToGlmQuat()),
 				new Tracker(VRTrackerType.RightFoot, targets.rightFoot.position.ToGlmVec3(), targets.rightFoot.rotation.ToGlmQuat())
 			);
+
+			foreach (Grave grave in graveyard.graves)
+			{
+				grave.possession.Move();
+			}
 
 			UpdatePolygonSkeletons();
 		}
@@ -78,26 +82,9 @@ namespace Manus.ToBeHermes
 			foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
 			{
 				graveyard.AddGrave(t_Skeleton);
+
+				graveyard.GetGrave((int)t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
 			}
-			
-			//for (var i = 0; i < _Poly.Skeleton.Skeletons.Count; i++)
-			//{
-			//	if (i != 0) return;
-
-			//	// Debug.Log($"Skeleton is valid : {IsDefinitionValid(_Poly.Skeleton.Skeletons[i].Bones)}");
-
-			//	var bones = new Dictionary<BoneType, Bone>();
-			//	var skeleton = _Poly.Skeleton.Skeletons[i];
-				
-			//	foreach (Bone bone in skeleton.Bones)
-			//	{
-			//		bones.Add(bone.Type, bone);
-			//	}
-
-			//	float armLength = glm.Distance(bones[BoneType.LeftHand].Position.toGlmVec3(), bones[BoneType.LeftLowerArm].Position.toGlmVec3()) +
-			//	                  glm.Distance(bones[BoneType.LeftLowerArm].Position.toGlmVec3(), bones[BoneType.LeftUpperArm].Position.toGlmVec3());
-			//	Debug.Log($"left arm length = {armLength}");
-			//}
 		}
 
 		public void UpdatePolygonSkeletons()
@@ -109,17 +96,17 @@ namespace Manus.ToBeHermes
 
 			foreach (var grave in graveyard.graves)
 			{
-				foreach (var bone in grave.Skeleton.Bones)
-				{
-					foreach (var ikBone in IK.Skeleton.Bones)
-					{
-						if (bone.Type == ikBone.Type)
-						{
-							bone.Position = ikBone.Position;
-							bone.Rotation = ikBone.Rotation;
-						}
-					}
-				}
+				//foreach (var bone in grave.Skeleton.Bones)
+				//{
+				//	foreach (var ikBone in IK.Skeleton.Bones)
+				//	{
+				//		if (bone.Type == ikBone.Type)
+				//		{
+				//			bone.Position = ikBone.Position;
+				//			bone.Rotation = ikBone.Rotation;
+				//		}
+				//	}
+				//}
 
 				t_Data.Skeletons.Add(grave.Skeleton);
 			}

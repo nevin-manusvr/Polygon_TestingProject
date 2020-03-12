@@ -5,6 +5,7 @@ using Google.Protobuf.Collections;
 using HProt = Hermes.Protocol;
 
 using UnityEngine;
+using Manus.ToBeHermes.IK;
 
 namespace Manus.ToBeHermes
 {

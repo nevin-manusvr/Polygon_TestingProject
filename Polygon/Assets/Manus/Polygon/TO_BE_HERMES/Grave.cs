@@ -11,7 +11,7 @@ namespace Manus.ToBeHermes
 		// TMP
 		public int m_ID;
 		
-		public Haunting haunting;
+		public Possession possession;
 
 		#region Properties
 
@@ -27,7 +27,7 @@ namespace Manus.ToBeHermes
 			m_ID = (int)_Skeleton.DeviceID;
 			Skeleton = _Skeleton;
 
-			haunting = new Haunting(Skeleton);
+			possession = new Possession(Skeleton);
 		}
 	}
 }

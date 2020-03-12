@@ -2432,7 +2432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetID: -9223372036854775808
-  m_PrefabID: -2147483648
+  m_PrefabID: -2147483644
   m_ControllerID: 0
   destroyOnControllerDisconnected: 0
   onGainOwnership:
