@@ -33,6 +33,20 @@ public class UI_Behaviour : MonoBehaviour
     [Header("Progress Canvas")]
     [SerializeField]
     private CanvasGroup m_ProgressCanvas;
+    [SerializeField]
+    private Image m_CurrentStepSliderImages;
+    private int m_CurrentStep;
+
+    [SerializeField]
+    private TextMeshProUGUI m_CurrentStepText;
+
+    [SerializeField]
+    private TextMeshProUGUI m_CurrentStepIndexText;
+
+    [SerializeField]
+    private CanvasGroup m_GetReadyText;
+    [SerializeField]
+    private CanvasGroup m_CalibratingText;
 
     [Header("Controller Canvas")]
     [SerializeField]
@@ -49,6 +63,8 @@ public class UI_Behaviour : MonoBehaviour
     private GameObject m_CheckButtonObj;
     [SerializeField]
     private CanvasGroup m_CheckButton;
+    [SerializeField]
+    private Image m_FocusImage;
 
     [Header("Toggle Canvas")]
     [SerializeField]
@@ -62,20 +78,11 @@ public class UI_Behaviour : MonoBehaviour
     [SerializeField]
     private bool m_AreSwitched;
 
-    [Header("Slider")]
+    [Header("Instructor")]
     [SerializeField]
-    private Image m_SliderImage;
+    private Image m_InstructorFocusImage;
     [SerializeField]
-    private Image m_CurrentStepSliderImages;
-    private int m_CurrentStep;
-
-    [SerializeField]
-    private TextMeshProUGUI m_CurrentStepText;
-
-    [SerializeField]
-    private CanvasGroup m_GetReadyText;
-    [SerializeField]
-    private CanvasGroup m_CalibratingText;
+    private Image m_InstructorSliderImage;
 
     private Camera m_Camera;
 
@@ -99,9 +106,9 @@ public class UI_Behaviour : MonoBehaviour
         m_CurrentStep = 0;
 
 
-        m_PlayButtonObj = gameObject.transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+        m_PlayButtonObj = gameObject.transform.GetChild(2).GetChild(2).GetChild(0).gameObject;
 
-        m_CheckButtonObj = gameObject.transform.GetChild(0).GetChild(1).GetChild(2).gameObject;
+        m_CheckButtonObj = gameObject.transform.GetChild(2).GetChild(2).GetChild(2).gameObject;
         m_CheckButtonObj.SetActive(false);
         m_CheckButton.alpha = 0;
 
@@ -112,6 +119,8 @@ public class UI_Behaviour : MonoBehaviour
     {
         transform.position = new Vector3(m_Camera.transform.position.x, m_Camera.transform.position.y / 1.6f, m_Camera.transform.position.z + 0.35f);
     }
+
+
 
 
     public void ButtonFunction(string buttonTag)
@@ -126,7 +135,7 @@ public class UI_Behaviour : MonoBehaviour
 				    controllerEvent.RaiseSetupNextStep();
                     StartSlider();
                     m_CurrentStep += 1;
-                    UpdateCurrentStep();
+                    UpdateCurrentStep(null);
 			    }
 
 			    break;
@@ -139,7 +148,7 @@ public class UI_Behaviour : MonoBehaviour
                 {
                     m_CurrentStep -= 1;
                 }
-                UpdateCurrentStep();
+                UpdateCurrentStep(null);
                 Debug.Log(sequence.isFinished);
                 if(sequence.isFinished)
                 {
@@ -168,14 +177,15 @@ public class UI_Behaviour : MonoBehaviour
 
     void StartSlider()
     {
-        m_PlayButton.DOFade(0, 1f);
-        m_PreviousButton.DOFade(0, 1f).OnComplete( () => ToggleUIButtons());
-        m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
+        m_PlayButton.DOFade(0, .3f);
+        m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons());
+        //m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
+        FocusInstructor();
 
-        
-        m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
+
+        m_InstructorSliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
                                                                                         controllerEvent.RaiseStartNextStep();
-                                                                                        m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
+                                                                                        //m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
                                                                                         UndoSlider(); 
                                                                                     });
 
@@ -184,16 +194,17 @@ public class UI_Behaviour : MonoBehaviour
 
     void UndoSlider()
     {
-        m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
-        m_SliderImage.DOFillAmount(0, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
+        //m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
+        m_InstructorSliderImage.DOFillAmount(0, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
                                                                                         if(sequence.currentIndex == sequence.calibrationSteps.Count)
 			                                                                            {
                                                                                             SwitchButtons();
 			                                                                            }
-                                                                                        m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
+                                                                                        //m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
                                                                                         ToggleUIButtons(); 
-                                                                                        m_PlayButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
-                                                                                        m_PreviousButton.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+                                                                                        m_PlayButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
+                                                                                        m_PreviousButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
+                                                                                        FocusUI();
                                                                                     });
     }
 
@@ -224,26 +235,30 @@ public class UI_Behaviour : MonoBehaviour
         
         if (m_AreSwitched)
         {
-            m_PlayButton.DOFade(0, .2f).OnComplete(() => {  m_PlayButtonObj.SetActive(false); 
+            m_PlayButton.DOFade(0, .1f).OnComplete(() => {  m_PlayButtonObj.SetActive(false); 
                                                             m_CheckButtonObj.SetActive(true);
                                                             });
-            m_CheckButton.DOFade(1, .2f).SetDelay(.3f);
+            m_CheckButton.DOFade(1, .1f).SetDelay(.3f);
         }
         else
         {
-            m_CheckButton.DOFade(0, .2f).OnComplete(() => { m_PlayButtonObj.SetActive(true); 
+            m_CheckButton.DOFade(0, .1f).OnComplete(() => { m_PlayButtonObj.SetActive(true); 
                                                             m_CheckButtonObj.SetActive(false);
                                                         });
-            m_PlayButton.DOFade(1, .2f).SetDelay(.3f);
+            m_PlayButton.DOFade(1, .1f).SetDelay(.3f);
         }
 
     }
 
-    private void UpdateCurrentStep()
+    public void UpdateCurrentStep(string currentStepText)
     {
         float sliderValue = 1f / 8f * m_CurrentStep;
         m_CurrentStepSliderImages.DOFillAmount(sliderValue, .4f).SetEase(Ease.InOutCubic);
-        m_CurrentStepText.text = m_CurrentStep.ToString();
+        m_CurrentStepIndexText.text = m_CurrentStep.ToString();
+        if(currentStepText != null)
+        {
+            m_CurrentStepText.text = currentStepText;
+        }
     }
 
     private void StartGuide(int index)
@@ -272,14 +287,6 @@ public class UI_Behaviour : MonoBehaviour
         }
         m_GuideIndex += 1;
 
-
-        /*
-        go through steps
-        - show progress canvas and switch text
-        - show controller canvas and switch text
-        - show toggle canvas and switch text
-        - finally close guide canvas 
-        */
     }
 
     private void CloseGuide()
@@ -291,6 +298,7 @@ public class UI_Behaviour : MonoBehaviour
     private void SkipGuide()
     {
         CloseGuide();
+        ToggleUIButtons();
 
         m_ProgressCanvas.DOFade(1, .5f).SetEase(Ease.InOutCubic);
 
@@ -304,9 +312,23 @@ public class UI_Behaviour : MonoBehaviour
     }
 
 
+    private void FocusInstructor() 
+    {
+        Vector3 minScale = new Vector3(1, 1, 1);
+        Vector3 maxScale = new Vector3(2, 2, 2);
+        for (int i = 0; i < 3; i++)
+        {
+            m_InstructorFocusImage.transform.DOScale(minScale, .5f).SetDelay(i).SetEase(Ease.InOutCubic).OnComplete(() => { m_InstructorFocusImage.transform.localScale = maxScale ; });
+            m_InstructorFocusImage.DOFade(1, .25f).SetDelay(i).SetEase(Ease.InOutCubic).OnComplete(() => { m_InstructorFocusImage.DOFade(0, .25f); });
+        }
 
+    }
 
-
-
-
+    private void FocusUI() 
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            m_FocusImage.DOFade(1, .4f).SetDelay(i).OnComplete(() => { m_FocusImage.DOFade(0, .4f); });
+        }
+    }
 }
