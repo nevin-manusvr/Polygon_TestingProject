@@ -96,17 +96,17 @@ namespace Manus.ToBeHermes
 
 			foreach (var grave in graveyard.graves)
 			{
-				//foreach (var bone in grave.Skeleton.Bones)
-				//{
-				//	foreach (var ikBone in IK.Skeleton.Bones)
-				//	{
-				//		if (bone.Type == ikBone.Type)
-				//		{
-				//			bone.Position = ikBone.Position;
-				//			bone.Rotation = ikBone.Rotation;
-				//		}
-				//	}
-				//}
+				foreach (var bone in grave.Skeleton.Bones)
+				{
+					foreach (var ikBone in IK.Skeleton.Bones)
+					{
+						if (bone.Type == ikBone.Type)
+						{
+							bone.Position = ikBone.Position;
+							bone.Rotation = ikBone.Rotation;
+						}
+					}
+				}
 
 				t_Data.Skeletons.Add(grave.Skeleton);
 			}

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Hermes.Protocol.Polygon;
 using System.Linq;
@@ -9,172 +10,60 @@ using Hermes.Tools;
 
 namespace Manus.ToBeHermes 
 {
-	using System;
-
 	public class Possession
 	{
-		private static readonly BoneType[] m_RetargetType = 
-			{ 
-				// Body
-				BoneType.Hips,
-				BoneType.Spine,
-				BoneType.Chest,
-				BoneType.UpperChest,
-				BoneType.Neck,
-				BoneType.Head,
+		private readonly Skeleton m_Skeleton;
 
-				// Left arm
-				BoneType.LeftShoulder,
-				BoneType.LeftUpperArm,
-				BoneType.LeftLowerArm,
-				BoneType.LeftHand,
+		private List<Constraint> m_AllConstraints;
+		private Dictionary<int, List<Constraint>> m_Constraints;
 
-				// Right arm
-				BoneType.RightShoulder,
-				BoneType.RightUpperArm,
-				BoneType.RightLowerArm,
-				BoneType.RightHand,
-
-				// Left leg
-				BoneType.LeftUpperLeg,
-				BoneType.LeftLowerLeg,
-				BoneType.LeftFoot,
-				
-				// Right leg
-				BoneType.RightUpperLeg,
-				BoneType.RightLowerLeg,
-				BoneType.RightFoot,
-			};
-
-		private static int GetBonePriority(BoneType _Type)
+		public Possession(Skeleton _Skeleton, BoneType[] _Filter)
 		{
-			switch (_Type)
+			m_Skeleton = new Skeleton() { DeviceID = (uint)_Skeleton.DeviceID };
+
+			foreach (var t_Bone in _Skeleton.Bones)
 			{
-				// Main
-				case BoneType.Root:
-					return 0;
-				case BoneType.Head:
-					return 100;
-				case BoneType.Neck:
-					return 90;
-				case BoneType.Hips:
-					return 30;
-				case BoneType.Spine:
-				case BoneType.Chest:
-				case BoneType.UpperChest:
-					return 50;
+				if (!_Filter.Contains(t_Bone.Type))
+					continue;
 
-				// Legs
-				case BoneType.LeftUpperLeg:
-				case BoneType.RightUpperLeg:
-					return 50;
-				case BoneType.LeftLowerLeg:
-				case BoneType.RightLowerLeg:
-					return 0;
-				case BoneType.LeftFoot:
-				case BoneType.RightFoot:
-					return 70;
-				case BoneType.LeftToes:
-				case BoneType.RightToes:
-					return 5;
-				case BoneType.LeftToesEnd:
-				case BoneType.RightToesEnd:
-					return 2;
-
-				// Arms
-				case BoneType.LeftShoulder:
-				case BoneType.RightShoulder:
-					return 50;
-				case BoneType.LeftUpperArm:
-				case BoneType.RightUpperArm:
-					return 10;
-				case BoneType.LeftLowerArm:
-				case BoneType.RightLowerArm:
-					return 0;
-				case BoneType.LeftHand:
-				case BoneType.RightHand:
-					return 90;
-
-				// Hands
-				case BoneType.LeftIndexProximal:
-				case BoneType.LeftMiddleProximal:
-				case BoneType.LeftRingProximal:
-				case BoneType.LeftPinkyProximal:
-				case BoneType.LeftThumbProximal:
-				case BoneType.RightIndexProximal:
-				case BoneType.RightMiddleProximal:
-				case BoneType.RightRingProximal:
-				case BoneType.RightPinkyProximal:
-				case BoneType.RightThumbProximal:
-					return 3;
-				case BoneType.LeftIndexMiddle:
-				case BoneType.LeftMiddleMiddle:
-				case BoneType.LeftRingMiddle:
-				case BoneType.LeftPinkyMiddle:
-				case BoneType.LeftThumbMiddle:
-				case BoneType.RightIndexMiddle:
-				case BoneType.RightMiddleMiddle:
-				case BoneType.RightRingMiddle:
-				case BoneType.RightPinkyMiddle:
-				case BoneType.RightThumbMiddle:
-					return 5;
-				case BoneType.LeftIndexDistal:
-				case BoneType.LeftMiddleDistal:
-				case BoneType.LeftRingDistal:
-				case BoneType.LeftPinkyDistal:
-				case BoneType.LeftThumbDistal:
-				case BoneType.RightIndexDistal:
-				case BoneType.RightMiddleDistal:
-				case BoneType.RightRingDistal:
-				case BoneType.RightPinkyDistal:
-				case BoneType.RightThumbDistal:
-					return 7;
-				case BoneType.LeftIndexTip:
-				case BoneType.LeftMiddleTip:
-				case BoneType.LeftRingTip:
-				case BoneType.LeftPinkyTip:
-				case BoneType.LeftThumbTip:
-				case BoneType.RightIndexTip:
-				case BoneType.RightMiddleTip:
-				case BoneType.RightRingTip:
-				case BoneType.RightPinkyTip:
-				case BoneType.RightThumbTip:
-					return 10;
-				default:
-					return 0;
-
+				m_Skeleton.Bones.Add(t_Bone.Clone());
 			}
-			return 0;
-		}
-
-		private Skeleton m_Skeleton;
-		private Dictionary<int, Constraint[]> m_Constraints;
-
-		public Possession(Skeleton _Skeleton)
-		{
-			m_Skeleton = _Skeleton.Clone();
 		}
 
 		public void SetTargetSkeleton(Skeleton _TargetSkeleton)
 		{
-			GenerateHauntedSkeleton(_TargetSkeleton);
+			GeneratePosessedSkeleton(_TargetSkeleton);
 		}
 
-		private void GenerateHauntedSkeleton(Skeleton _TargetSkeleton)
+		private void GeneratePosessedSkeleton(Skeleton _TargetSkeleton)
 		{
+			m_AllConstraints = new List<Constraint>();
+			m_Constraints = new Dictionary<int, List<Constraint>>();
+
 			foreach (var t_Bone in m_Skeleton.Bones)
 			{
-				// This bone does not have to be retargeted
-				if (!m_RetargetType.Contains(t_Bone.Type))
-					continue;
-
 				foreach (var t_TargetBone in _TargetSkeleton.Bones)
 				{
 					if (t_Bone.Type == t_TargetBone.Type)
 					{
-						new Constraint(GetBonePriority(t_Bone.Type), t_Bone, t_TargetBone);
+						var t_Priority = PossessionUtilities.GetBonePriority(t_Bone.Type);
+						var t_Constraint = new Constraint(t_Priority, t_Bone, t_TargetBone);
+
+						if (!m_Constraints.ContainsKey(t_Priority))
+							m_Constraints.Add(t_Priority, new List<Constraint>());
+
+						m_AllConstraints.Add(t_Constraint);
+						m_Constraints[t_Priority].Add(t_Constraint);
 					}
 				}
+			}
+
+			m_Constraints = m_Constraints.OrderByDescending(t_Result => t_Result.Key).ToDictionary(t_Result => t_Result.Key, t_Result => t_Result.Value);
+
+			var m_AllConstraintsArray = m_AllConstraints.ToArray();
+			foreach (var t_Constraint in m_AllConstraints)
+			{
+				t_Constraint.AddChains(m_AllConstraintsArray);
 			}
 		}
 
@@ -187,17 +76,57 @@ namespace Manus.ToBeHermes
 
 		public class Constraint
 		{
-			public int priority;
+			private int m_Priority;
 
 			public Bone bone;
-			public Bone targetBone;
+			private Bone m_TargetBone;
+
+			private Chain[] m_Chains;
 
 			public Constraint(int _Priority, Bone _Bone, Bone _TargetBone)
 			{
-				priority = _Priority;
+				m_Priority = _Priority;
 				bone = _Bone;
-				targetBone = _TargetBone;
+				m_TargetBone = _TargetBone;
 			}
+
+			#region Setup
+
+			public void AddChains(Constraint[] _AllConstraints)
+			{
+				var chains = new List<Chain>();
+				TraverseConstraints(bone, new List<Bone>(), _AllConstraints, chains);
+
+				m_Chains = chains.ToArray();
+			}
+
+			private void TraverseConstraints(Bone _CurrentNode, List<Bone> _Path, Constraint[] _AllConstraints, List<Chain> _ChainCollection)
+			{
+				_Path = new List<Bone>(_Path);
+				_Path.Add(_CurrentNode);
+
+				foreach (var t_Constraint in _AllConstraints)
+				{
+					if (t_Constraint.bone == _CurrentNode && _CurrentNode != bone)
+					{
+						// Add chain;
+						Debug.Log("Found chain end");
+						return;
+					}
+				}
+
+				// Continue path
+
+			}
+
+			#endregion
+		}
+
+		public class Chain
+		{
+			public Constraint endConstraint;
+			public float maxDistance;
+			public bool directConnection;
 		}
 
 		#endregion

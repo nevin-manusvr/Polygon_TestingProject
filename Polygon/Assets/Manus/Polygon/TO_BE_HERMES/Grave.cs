@@ -27,7 +27,7 @@ namespace Manus.ToBeHermes
 			m_ID = (int)_Skeleton.DeviceID;
 			Skeleton = _Skeleton;
 
-			possession = new Possession(Skeleton);
+			possession = new Possession(Skeleton, PossessionUtilities.DefaultRetargetTypes);
 		}
 	}
 }
