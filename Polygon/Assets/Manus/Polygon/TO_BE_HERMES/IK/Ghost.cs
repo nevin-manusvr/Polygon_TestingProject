@@ -44,7 +44,9 @@ namespace Manus.ToBeHermes.IK
 			Skeleton.Bones.Add(new Bone { Type = BoneType.Neck, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
 			Skeleton.Bones.Add(new Bone { Type = BoneType.Hips, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
 			Skeleton.Bones.Add(new Bone { Type = BoneType.Spine, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			
+			Skeleton.Bones.Add(new Bone { Type = BoneType.Chest, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.Bones.Add(new Bone { Type = BoneType.UpperChest, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+
 			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftShoulder, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
 			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftUpperArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
 			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftLowerArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });

@@ -76,7 +76,7 @@ namespace Manus.ToBeHermes
 
 		public class Constraint
 		{
-			private int m_Priority;
+			public int priority;
 
 			public Bone bone;
 			private Bone m_TargetBone;
@@ -85,7 +85,7 @@ namespace Manus.ToBeHermes
 
 			public Constraint(int _Priority, Bone _Bone, Bone _TargetBone)
 			{
-				m_Priority = _Priority;
+				priority = _Priority;
 				bone = _Bone;
 				m_TargetBone = _TargetBone;
 			}
@@ -105,18 +105,34 @@ namespace Manus.ToBeHermes
 				_Path = new List<Bone>(_Path);
 				_Path.Add(_CurrentNode);
 
-				foreach (var t_Constraint in _AllConstraints)
+				foreach (Constraint t_Constraint in _AllConstraints)
 				{
 					if (t_Constraint.bone == _CurrentNode && _CurrentNode != bone)
 					{
-						// Add chain;
-						Debug.Log("Found chain end");
-						return;
+						if (t_Constraint.priority >= priority)
+						{
+							// Add chain;
+							Debug.Log("Found chain end");
+							return;
+						}
 					}
 				}
 
 				// Continue path
+				Constraint t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _CurrentNode.Type);
+				if (t_Parent != null)
+				{
+					// Debug.Log($"Parent: { _CurrentNode.Type} - {t_Parent.bone.Type}");
+				}
 
+				Constraint[] t_Children = PossessionUtilities.GetChildrenForType(_AllConstraints, _CurrentNode.Type);
+				if (t_Children != null)
+				{
+					foreach (var t_Child in t_Children)
+					{
+						Debug.Log($"Child: { _CurrentNode.Type} - {t_Child.bone.Type}");
+					}
+				}
 			}
 
 			#endregion
