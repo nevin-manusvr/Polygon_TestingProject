@@ -9,6 +9,10 @@ TagManager:
   - Previous
   - Start
   - Check
+  - Slider
+  - HandCollider
+  - SkipGuide
+  - StartGuide
   layers:
   - Default
   - TransparentFX

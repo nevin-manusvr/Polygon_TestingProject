@@ -10,9 +10,9 @@ using Manus.Polygon;
 public class CalibrationController : MonoBehaviour
 {
     private CalibrationStepEventListener eventListener;
-    
+
     [Header("UI Script")]
-    public UIManager uiManager;
+    public UI_Behaviour m_UIBehaviour;
 
     [Header("Calibration step")]
     public string calibrationStepName;
@@ -29,9 +29,9 @@ public class CalibrationController : MonoBehaviour
     {
         eventListener = GetComponent<CalibrationStepEventListener>();
 
-        uiManager = FindObjectOfType<UIManager>();
+        m_UIBehaviour = FindObjectOfType<UI_Behaviour>();
 
-		model = GameObject.Find("CalibrationInstructionModel");
+        model = GameObject.Find("CalibrationInstructionModel");
         modelAnimator = model.GetComponent<Animator>();
     }
 
@@ -68,9 +68,9 @@ public class CalibrationController : MonoBehaviour
     }
 
     public void OnPrepareCalibration()
-    { 
+    {
         //shows ui and starts countdown
-        //uiManager.UpdateText(calibrationStepName, discriptionCalibration);
+        m_UIBehaviour.UpdateCurrentStep(calibrationStepName);
         TriggerPoseAnimation(calibrationStepName);
     }
 
@@ -81,31 +81,26 @@ public class CalibrationController : MonoBehaviour
 
     public void OnUpdateCalibration(float percentage)
     {
-		//uiManager.UpdateTimer(percentage);
     }
 
     public void OnFinishCalibration()
     {
         ResetTrigger();
-		//uiManager.Continue();
     }
 
     //Set trigger for animations
     void TriggerPoseAnimation(string step)
     {
-        //Debug.Log("set trigger");
         string currentStep = step + "_CalibrationStartingPose";
         modelAnimator.SetTrigger(animationPoseTrigger);
     }
     void TriggerStartAnimation(string step)
     {
-        //Debug.Log("set trigger");
         string currentStep = step + "_CalibrationStart";
         modelAnimator.SetTrigger(animationCalibrationTrigger);        
     }
     void ResetTrigger()
     {
-        //Debug.Log("Reset trigger");
         modelAnimator.SetTrigger("IsDone");
     }
 }
