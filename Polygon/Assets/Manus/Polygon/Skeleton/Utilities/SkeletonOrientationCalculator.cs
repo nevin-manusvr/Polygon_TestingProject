@@ -13,6 +13,7 @@ namespace Manus.Polygon.Skeleton.Utilities
 		{
 			switch (bone.type)
 			{
+				case BoneType.Hips:
 				case BoneType.Root:
 				case BoneType.Head:
 				case BoneType.LeftFoot:
@@ -36,21 +37,21 @@ namespace Manus.Polygon.Skeleton.Utilities
 					}
 
 					break;
-				case BoneType.Hips:
-					{
-						Tuple<Transform, Transform>[] bones =
-							{
-								Tuple.Create(skeleton.armLeft.hand.wrist.bone, skeleton.armRight.hand.wrist.bone),
-								Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
-							};
+				//case BoneType.Hips:
+				//	{
+				//		Tuple<Transform, Transform>[] bones =
+				//			{
+				//				Tuple.Create(skeleton.armLeft.hand.wrist.bone, skeleton.armRight.hand.wrist.bone),
+				//				Tuple.Create(skeleton.legLeft.foot.bone, skeleton.legRight.foot.bone)
+				//			};
 
-						Vector3 aimDirection = skeleton.body.spine.bone.position - bone.bone.position;
-						Vector3 upDirection = -CalculateForward(bones);
+				//		Vector3 aimDirection = skeleton.body.spine.bone.position - bone.bone.position;
+				//		Vector3 upDirection = -CalculateForward(bones);
 
-						bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
-					}
+				//		bone.desiredRotation = Quaternion.LookRotation(aimDirection, upDirection);
+				//	}
 
-					break;
+				//	break;
 				case BoneType.Neck:
 
 					{

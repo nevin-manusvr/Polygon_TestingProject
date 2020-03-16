@@ -97,6 +97,11 @@ namespace Manus.ToBeHermes
 				var chains = new List<Chain>();
 				TraverseConstraints(bone, new List<Bone>(), _AllConstraints, chains);
 
+				foreach (var chain in chains)
+				{
+					Debug.Log(bone.Type + " - " + chain.endConstraint.bone.Type);
+				}
+
 				m_Chains = chains.ToArray();
 			}
 
@@ -112,6 +117,7 @@ namespace Manus.ToBeHermes
 						if (t_Constraint.priority >= priority)
 						{
 							// Add chain;
+							_ChainCollection.Add(new Chain(t_Constraint));
 							Debug.Log("Found chain end");
 							return;
 						}
@@ -120,9 +126,10 @@ namespace Manus.ToBeHermes
 
 				// Continue path
 				Constraint t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _CurrentNode.Type);
-				if (t_Parent != null)
+				if (t_Parent != null && !_Path.Contains(t_Parent.bone))
 				{
 					// Debug.Log($"Parent: { _CurrentNode.Type} - {t_Parent.bone.Type}");
+					TraverseConstraints(t_Parent.bone, _Path, _AllConstraints, _ChainCollection);
 				}
 
 				Constraint[] t_Children = PossessionUtilities.GetChildrenForType(_AllConstraints, _CurrentNode.Type);
@@ -130,7 +137,11 @@ namespace Manus.ToBeHermes
 				{
 					foreach (var t_Child in t_Children)
 					{
-						Debug.Log($"Child: { _CurrentNode.Type} - {t_Child.bone.Type}");
+						if (!_Path.Contains(t_Child.bone))
+						{
+							// Debug.Log($"Child: { _CurrentNode.Type} - {t_Child.bone.Type}");
+							TraverseConstraints(t_Child.bone, _Path, _AllConstraints, _ChainCollection);
+						}
 					}
 				}
 			}
@@ -143,6 +154,11 @@ namespace Manus.ToBeHermes
 			public Constraint endConstraint;
 			public float maxDistance;
 			public bool directConnection;
+
+			public Chain(Constraint _EndConstraint)
+			{
+				endConstraint = _EndConstraint;
+			}
 		}
 
 		#endregion

@@ -133,6 +133,8 @@ namespace Manus.ToBeHermes.IK
 
 			bones[BoneType.Hips].Position.Full = t_HipPosition.toProtoVec3();
 			bones[BoneType.Spine].Position.Full = t_SpinePos.toProtoVec3();
+			bones[BoneType.Chest].Position.Full = t_SpinePos.toProtoVec3();
+			bones[BoneType.UpperChest].Position.Full = t_SpinePos.toProtoVec3();
 		}
 
 		private void EstimateArmPositions(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
@@ -236,14 +238,20 @@ namespace Manus.ToBeHermes.IK
 
 		private void EstimateSpineRotation(Tracker _Hip)
 		{
-			quat t_HipRotation = _Hip.rotation;
+			quat t_HipTrackerRotation = _Hip.rotation;
+
+			vec3 t_HipAim = (bones[BoneType.Spine].Position.toGlmVec3() - bones[BoneType.Hips].Position.toGlmVec3()).Normalized;
+			vec3 t_HipUp = _Hip.rotation * -vec3.UnitZ;
+			quat t_HipRotation = GlmMathExtensions.LookRotation(t_HipAim, t_HipUp);
 
 			vec3 t_AimDirection = (bones[BoneType.Neck].Position.toGlmVec3() - bones[BoneType.Spine].Position.toGlmVec3()).Normalized;
-			vec3 t_SpineDirection = (t_HipRotation * -vec3.UnitZ * 3f + bones[BoneType.Head].Rotation.toGlmQuat() * -vec3.UnitZ * 1f) / 4f; // TODO: fix this so it doesn't flip around
+			vec3 t_SpineDirection = (t_HipTrackerRotation * -vec3.UnitZ * 3f + bones[BoneType.Head].Rotation.toGlmQuat() * -vec3.UnitZ * 1f) / 4f; // TODO: fix this so it doesn't flip around
 			quat t_SpineRotation = GlmMathExtensions.LookRotation(t_AimDirection, t_SpineDirection);
 
-			bones[BoneType.Hips].Rotation.Full = t_SpineRotation.toProtoQuat();
+			bones[BoneType.Hips].Rotation.Full = t_HipRotation.toProtoQuat();
 			bones[BoneType.Spine].Rotation.Full = t_SpineRotation.toProtoQuat();
+			bones[BoneType.Chest].Rotation.Full = t_SpineRotation.toProtoQuat();
+			bones[BoneType.UpperChest].Rotation.Full = t_SpineRotation.toProtoQuat();
 		}
 
 		private void EstimateArmRotations(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
