@@ -4173,11 +4173,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: WristZ
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 0a8d1e2be1a3bf24d9e11fec6916a15c,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4253,12 +4254,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Wrist_CalibrationStartZ
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 0a8d1e2be1a3bf24d9e11fec6916a15c,
-        type: 2}
+      propertyPath: m_Name
+      value: WristZ
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538058128417290 stripped
@@ -4274,11 +4274,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: FootLeftPosition
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 88089661daecec14da6fdd073a3a27c8,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4354,12 +4355,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: FootLeft
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 88089661daecec14da6fdd073a3a27c8,
-        type: 2}
+      propertyPath: m_Name
+      value: FootLeftPosition
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538058223894034 stripped
@@ -4375,11 +4375,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: TPose
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 7ee7675136333a5488f6608a3780dda4,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4456,12 +4457,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Body_TPose
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 7ee7675136333a5488f6608a3780dda4,
-        type: 2}
+      propertyPath: m_Name
+      value: TPose
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059126392585 stripped
@@ -4477,11 +4477,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: HipPosition
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: d507cdb2199946842b1767c14e212f14,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4557,12 +4558,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Hip
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: d507cdb2199946842b1767c14e212f14,
-        type: 2}
+      propertyPath: m_Name
+      value: HipPosition
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059095104468 stripped
@@ -4578,11 +4578,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
-        type: 3}
-      propertyPath: m_Name
-      value: HandAligner
-      objectReference: {fileID: 0}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4638,6 +4633,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+        type: 3}
+      propertyPath: m_Name
+      value: HandAligner
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059192155193 stripped
@@ -4653,11 +4653,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: HeadPosition
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4733,12 +4734,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Head
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: 21d818708f779744e84110387049a7e8,
-        type: 2}
+      propertyPath: m_Name
+      value: HeadPosition
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059161389080 stripped
@@ -4754,11 +4754,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: WristX
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: bcecab650cd34034e9514e644f0be8d0,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4834,12 +4835,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: Wrist_CalibrationStartX
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: bcecab650cd34034e9514e644f0be8d0,
-        type: 2}
+      propertyPath: m_Name
+      value: WristX
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059744806991 stripped
@@ -4855,11 +4855,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7548521145749395347}
     m_Modifications:
-    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: m_Name
-      value: FootRightPosition
-      objectReference: {fileID: 0}
+      propertyPath: calibrationEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: bda16459da9da9343b343ac4f4d1c2b1,
+        type: 2}
     - target: {fileID: 313104196447937124, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4935,12 +4936,11 @@ PrefabInstance:
       propertyPath: animationCalibrationTrigger
       value: FootRight
       objectReference: {fileID: 0}
-    - target: {fileID: 313104196447937123, guid: e3369564eecfd92478cfed251622e667,
+    - target: {fileID: 313104196447937126, guid: e3369564eecfd92478cfed251622e667,
         type: 3}
-      propertyPath: calibrationEvent
-      value: 
-      objectReference: {fileID: 11400000, guid: bda16459da9da9343b343ac4f4d1c2b1,
-        type: 2}
+      propertyPath: m_Name
+      value: FootRightPosition
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3369564eecfd92478cfed251622e667, type: 3}
 --- !u!4 &7825538059947045565 stripped
