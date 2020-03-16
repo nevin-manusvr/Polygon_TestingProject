@@ -26,15 +26,22 @@ namespace Manus.Polygon
 
 		private float defaultLength = 1;
 
+		public float DefaultLength
+		{
+			get { return defaultLength; }
+		}
+
 		public BoneScaler(Transform bone, Quaternion lookRotation, Transform[] childBones)
 		{
 			// Instantiate scale bone
-			scaleBone = new GameObject(bone.name + "_scaleBone").transform;
-			scaleBone.SetParent(bone.parent);
-			scaleBone.position = bone.position;
-			scaleBone.rotation = lookRotation;
+			//scaleBone = new GameObject(bone.name + "_scaleBone").transform;
+			//scaleBone.SetParent(bone.parent);
+			//scaleBone.position = bone.position;
+			//scaleBone.rotation = lookRotation;
 
-			bone.SetParent(scaleBone, true);
+			//scaleBone.SetParent(bone, true);
+			scaleBone = bone;
+			scaleBone.localScale = Vector3.one;
 
 			// Instantiate scale fix bones
 			scaleFixBones = new Transform[] { };
@@ -47,9 +54,10 @@ namespace Manus.Polygon
 				{
 					Transform scaleFixBone = new GameObject(child.name + "_scaleFixBone").transform;
 
-					scaleFixBone.SetParent(bone, true);
+					scaleFixBone.SetParent(scaleBone, true);
 					scaleFixBone.position = child.position;
 					scaleFixBone.rotation = lookRotation;
+					scaleFixBone.localScale = Vector3.one;
 
 					scaleFixList.Add(scaleFixBone);
 
@@ -79,10 +87,6 @@ namespace Manus.Polygon
 				if (lookAtChild != null)
 				{
 					defaultLength = Vector3.Project(lookAtChild.position - bone.position, lookRotation * Vector3.forward).magnitude;
-					if (scaleBone.name == "upperarm_l_scaleBone")
-					{
-						Debug.Log(scaleBone.name + " - " + lookAtChild.name + " - " + defaultLength);
-					}
 				}
 			}
 		}

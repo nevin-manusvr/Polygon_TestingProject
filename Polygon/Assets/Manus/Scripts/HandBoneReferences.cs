@@ -1,18 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Manus.ToBeHermes.Skeleton;
+using Hermes.Protocol.Polygon;
 
 namespace Manus.Polygon.Skeleton
 {
+	using System;
 
 	[System.Serializable]
 	public class Finger
 	{
 		public Bone proximal;
-		public OptionalBone middle;
-		public OptionalBone distal;
-		public OptionalBone tip;
+		public Bone middle;
+		public Bone distal;
+		public Bone tip;
 
 		public bool IsValid
 		{
@@ -29,11 +30,33 @@ namespace Manus.Polygon.Skeleton
 			else if (index == 3) enumName += "Ring";
 			else if (index == 4) enumName += "Pinky";
 
-			proximal = new Bone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Proximal"));
-			
-			middle = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Middle"));
-			distal = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Distal"));
-			tip = new OptionalBone((BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Tip"));
+			proximal = new Bone(true, (BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Proximal"));
+			middle = new Bone(true, (BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Middle"));
+			distal = new Bone(true, (BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Distal"));
+			tip = new Bone(true, (BoneType)System.Enum.Parse(typeof(BoneType), enumName + "Tip"));
+		}
+
+		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
+		{
+			var bones = new Dictionary<BoneType, Bone>();
+
+			switch (gatherType)
+			{
+				case GatherType.All:
+					if (proximal.bone) bones.Add(proximal.type, proximal);
+					if (middle.bone) bones.Add(middle.type, middle);
+					if (distal.bone) bones.Add(distal.type, distal);
+					if (tip.bone) bones.Add(tip.type, tip);
+
+					break;
+				case GatherType.Retargeted:
+					break;
+
+				case GatherType.Networked:
+					break;
+			}
+
+			return bones;
 		}
 
 		public void AssignBones(Transform proximal, Transform middle, Transform distal, Transform tip)
@@ -41,7 +64,6 @@ namespace Manus.Polygon.Skeleton
 			this.proximal.AssignTransform(proximal);
 			this.middle.AssignTransform(middle);
 			this.distal.AssignTransform(distal);
-			
 			this.tip.AssignTransform(tip);
 		}
 	}
@@ -70,13 +92,52 @@ namespace Manus.Polygon.Skeleton
 			ClearBoneReferences();
 		}
 
-		public Dictionary<BoneType, Bone> GatherBones()
+		public Dictionary<BoneType, Bone> GatherBones(GatherType gatherType)
 		{
 			var bones = new Dictionary<BoneType, Bone>();
 
-			bones.Add(wrist.type, wrist);
+			switch (gatherType)
+			{
+				case GatherType.All:
+					bones.Add(wrist.type, wrist);
+					AddToDictionary(index.GatherBones(gatherType));
+					AddToDictionary(middle.GatherBones(gatherType));
+					AddToDictionary(ring.GatherBones(gatherType));
+					AddToDictionary(pinky.GatherBones(gatherType));
+					AddToDictionary(thumb.GatherBones(gatherType));
+					break;
+
+				case GatherType.Retargeted:
+					bones.Add(wrist.type, wrist);
+					AddToDictionary(index.GatherBones(gatherType));
+					AddToDictionary(middle.GatherBones(gatherType));
+					AddToDictionary(ring.GatherBones(gatherType));
+					AddToDictionary(pinky.GatherBones(gatherType));
+					AddToDictionary(thumb.GatherBones(gatherType));
+					break;
+
+				case GatherType.Networked:
+					bones.Add(wrist.type, wrist);
+					AddToDictionary(index.GatherBones(gatherType));
+					AddToDictionary(middle.GatherBones(gatherType));
+					AddToDictionary(ring.GatherBones(gatherType));
+					AddToDictionary(pinky.GatherBones(gatherType));
+					AddToDictionary(thumb.GatherBones(gatherType));
+					break;
+			}
 
 			return bones;
+
+			void AddToDictionary(Dictionary<BoneType, Bone> bonesToAdd)
+			{
+				foreach (var bone in bonesToAdd)
+				{
+					if (!bones.ContainsKey(bone.Key))
+					{
+						bones.Add(bone.Key, bone.Value);
+					}
+				}
+			}
 		}
 
 		public void PopulateBones(Transform lowerArm)
@@ -88,7 +149,7 @@ namespace Manus.Polygon.Skeleton
 		{
 			bool isLeft = left;
 
-			wrist = new Bone( isLeft ? BoneType.LeftHand : BoneType.RightHand,
+			wrist.AssignTransform(
 				animator?.GetBoneTransform(isLeft ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand)
 				?? Utils.FindDeepChildTransform(lowerArm, new string[] { "wrist" })
 				?? Utils.FindDeepChildTransform(lowerArm, new string[] { "hand" })
@@ -153,7 +214,7 @@ namespace Manus.Polygon.Skeleton
 
 		public void ClearBoneReferences()
 		{
-			wrist = new Bone(left ? BoneType.LeftHand : BoneType.RightHand);
+			wrist = new Bone(false, left ? BoneType.LeftHand : BoneType.RightHand);
 			thumb = new Finger(left, 0);
 			index = new Finger(left, 1);
 			middle = new Finger(left, 2);

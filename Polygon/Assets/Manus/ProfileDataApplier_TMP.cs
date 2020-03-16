@@ -1,8 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Manus.Core.Utility;
-using UnityEngine.UI;
+using Hermes.Protocol.Polygon;
 
 namespace Manus.Polygon
 {
@@ -66,6 +65,7 @@ namespace Manus.Polygon
 
 			float characterSize = bodyLength / 1.83f;
 
+			polygon.boneReferences.root.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
 			// polygon.newSkeleton.main.bone.localScale = new Vector3(characterSize, characterSize, characterSize);
 			// boneScalers.ChangeSpineLength(spineMultiplier + spineSlider.value);
 			// boneScalers.ChangeArmLength(bodyLength * 0.17f / characterSize * (armMultiplier + armSlider.value), bodyLength * 0.15f / characterSize * (armMultiplier + armSlider.value));
