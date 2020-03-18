@@ -1,6 +1,8 @@
 [submodule "Polygon/Assets/ManusVR/manus-polygon"]
 	path = Polygon/Assets/ManusVR/manus-polygon
-	url = https://github.com/manusvr/Artus.git
+	url = git@github.com:manusvr/Artus.git
+	branch = master
 [submodule "Polygon/Assets/ManusVR/manus-core"]
 	path = Polygon/Assets/ManusVR/manus-core
-	url = https://github.com/manusvr/unity-core.git
+	url = git@github.com:manusvr/unity-core.git
+	branch = master

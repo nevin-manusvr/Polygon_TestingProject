@@ -296,8 +296,12 @@ namespace Manus.Polygon.Skeleton
 			t_Skeletors.Skeletons.Add(t_Skele);
 
 			if (ManusManager.instance.communicationHub.careTaker == null || !ManusManager.instance.communicationHub.careTaker.connected)
+			{
+				Debug.LogError("Hermes not connected");
 				return;
+			}
 
+			Debug.Log("Send to hermes");
 			ManusManager.instance.communicationHub.careTaker.Hermes.PolygonSkeletalDefinitionSetAsync(t_Skeletors);
 		}
 	}

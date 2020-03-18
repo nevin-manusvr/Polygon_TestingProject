@@ -79,6 +79,7 @@ namespace Manus.ToBeHermes
 
 		public void OnNewSkeletonDefinition(HProt.Polygon.InternalData _Poly)
 		{
+			Debug.Log("Message from Unity");
 			foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
 			{
 				graveyard.AddGrave(t_Skeleton);
