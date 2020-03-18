@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+
+using UnityEngine;
 using UnityEditor.Animations;
 
 public class RecordTransformHierarchy : MonoBehaviour
@@ -35,3 +37,4 @@ public class RecordTransformHierarchy : MonoBehaviour
         }
     }
 }
+#endif

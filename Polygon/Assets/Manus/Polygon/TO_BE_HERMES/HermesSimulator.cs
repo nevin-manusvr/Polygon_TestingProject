@@ -46,10 +46,15 @@ namespace Manus.ToBeHermes
 				new Tracker(VRTrackerType.RightFoot, targets.rightFoot.position.ToGlmVec3(), targets.rightFoot.rotation.ToGlmQuat())
 			);
 
-			foreach (Grave grave in graveyard.graves)
-			{
-				grave.possession.Move();
-			}
+			UnityMainThreadDispatcher.Instance().Enqueue(
+				() =>
+				{
+					foreach (Grave t_Grave in graveyard.graves)
+					{
+						t_Grave.possession.Move();
+					}
+				});
+			
 
 			UpdatePolygonSkeletons();
 		}
@@ -79,13 +84,17 @@ namespace Manus.ToBeHermes
 
 		public void OnNewSkeletonDefinition(HProt.Polygon.InternalData _Poly)
 		{
-			Debug.Log("Message from Unity");
-			foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
-			{
-				graveyard.AddGrave(t_Skeleton);
+			//TODO : remove
+			UnityMainThreadDispatcher.Instance().Enqueue(
+				() =>
+				{
+					foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
+					{
+						graveyard.AddGrave(t_Skeleton);
 
-				graveyard.GetGrave((int)t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
-			}
+						graveyard.GetGrave((int)t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
+					}
+				});
 		}
 
 		public void UpdatePolygonSkeletons()
@@ -97,19 +106,7 @@ namespace Manus.ToBeHermes
 
 			foreach (var grave in graveyard.graves)
 			{
-				foreach (var bone in grave.Skeleton.Bones)
-				{
-					foreach (var ikBone in IK.Skeleton.Bones)
-					{
-						if (bone.Type == ikBone.Type)
-						{
-							bone.Position = ikBone.Position;
-							bone.Rotation = ikBone.Rotation;
-						}
-					}
-				}
-
-				t_Data.Skeletons.Add(grave.Skeleton);
+				t_Data.Skeletons.Add(grave.possession.Skeleton);
 			}
 
 			ManusManager.instance.communicationHub.careTaker.Hermes?.UpdatePolygonAsync(t_Data);

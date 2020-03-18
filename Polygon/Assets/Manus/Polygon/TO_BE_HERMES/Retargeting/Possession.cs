@@ -17,18 +17,22 @@ namespace Manus.ToBeHermes
 		private List<Constraint> m_AllConstraints;
 		private Dictionary<int, List<Constraint>> m_Constraints;
 
+		public Skeleton Skeleton { get { return m_Skeleton; } }
+
 		public Possession(Skeleton _Skeleton, BoneType[] _Filter)
 		{
 			m_Skeleton = new Skeleton() { DeviceID = (uint)_Skeleton.DeviceID };
 
 			foreach (var t_Bone in _Skeleton.Bones)
 			{
-				if (!_Filter.Contains(t_Bone.Type))
-					continue;
+				//if (!_Filter.Contains(t_Bone.Type))
+				//	continue;
 
 				m_Skeleton.Bones.Add(t_Bone.Clone());
 			}
 		}
+
+		#region Setup
 
 		public void SetTargetSkeleton(Skeleton _TargetSkeleton)
 		{
@@ -67,10 +71,52 @@ namespace Manus.ToBeHermes
 			}
 		}
 
+		#endregion
+
 		public void Move()
 		{
-			
+			PositionBones();
+			SolveBoneLengths();
+			ApplyResults();
 		}
+
+		#region Solver
+
+		private void PositionBones()
+		{
+			foreach (var t_Contraint in m_AllConstraints)
+			{
+				t_Contraint.PositionConstraint();
+			}
+		}
+
+		private void SolveBoneLengths()
+		{
+			int t_Iterations = 25;
+			float t_ClampedQuality = Mathf.Lerp(1, 0.001f, .5f);
+
+			foreach (int priority in m_Constraints.Keys)
+			{
+				for (int i = 0; i < t_Iterations; i++)
+				{
+					foreach (var t_Contraint in m_Constraints[priority])
+					{
+						t_Contraint.SolveLengths(t_ClampedQuality);
+					}
+				}
+			}
+		}
+
+		private void ApplyResults()
+		{
+			foreach (var t_Contraint in m_AllConstraints)
+			{
+				t_Contraint.ApplyRetargetingPosition();
+				t_Contraint.ApplyRetargetingRotation();
+			}
+		}
+
+		#endregion
 
 		#region Modules
 
@@ -82,6 +128,9 @@ namespace Manus.ToBeHermes
 			private Bone m_TargetBone;
 
 			private Chain[] m_Chains;
+
+			public vec3 targetPosition;
+			public quat targetRotation;
 
 			public Constraint(int _Priority, Bone _Bone, Bone _TargetBone)
 			{
@@ -97,11 +146,6 @@ namespace Manus.ToBeHermes
 				var chains = new List<Chain>();
 				TraverseConstraints(bone, new List<Bone>(), _AllConstraints, chains);
 
-				foreach (var chain in chains)
-				{
-					Debug.Log(bone.Type + " - " + chain.endConstraint.bone.Type);
-				}
-
 				m_Chains = chains.ToArray();
 			}
 
@@ -116,9 +160,7 @@ namespace Manus.ToBeHermes
 					{
 						if (t_Constraint.priority >= priority)
 						{
-							// Add chain;
-							_ChainCollection.Add(new Chain(t_Constraint));
-							Debug.Log("Found chain end");
+							_ChainCollection.Add(new Chain(t_Constraint, _Path, _AllConstraints));
 							return;
 						}
 					}
@@ -147,6 +189,54 @@ namespace Manus.ToBeHermes
 			}
 
 			#endregion
+
+			#region Solver
+			
+			public void PositionConstraint()
+			{
+				targetPosition = m_TargetBone.Position.toGlmVec3();
+			}
+
+			public void SolveLengths(float _Quality)
+			{
+				if (m_Chains == null)
+					return;
+
+				if (bone.Type == BoneType.LeftHand)
+				{
+					Debug.Log(bone.Type + " has chains" + m_Chains.Length);
+					foreach (var chain in m_Chains)
+					{
+						Debug.Log(bone.Type + " has chains" + chain.endConstraint.bone.Type);
+					}
+				}
+
+				foreach (var t_Chain in m_Chains)
+				{
+					float distance = vec3.Distance(targetPosition, t_Chain.endConstraint.targetPosition);
+					float difference = t_Chain.maxDistance - distance;
+
+					if (difference < 0 || t_Chain.directConnection)
+					{
+						difference = t_Chain.maxDistance - distance;
+
+						vec3 direction = (t_Chain.endConstraint.targetPosition - targetPosition).Normalized;
+						targetPosition -= direction * difference * (t_Chain.endConstraint.priority > priority ? 1 : 0.5f) * _Quality;
+					}
+				}
+			}
+
+			public void ApplyRetargetingPosition()
+			{
+				bone.Position.Full = targetPosition.toProtoVec3();
+			}
+
+			public void ApplyRetargetingRotation()
+			{
+				bone.Rotation = m_TargetBone.Rotation;
+			}
+
+			#endregion
 		}
 
 		public class Chain
@@ -155,9 +245,56 @@ namespace Manus.ToBeHermes
 			public float maxDistance;
 			public bool directConnection;
 
-			public Chain(Constraint _EndConstraint)
+			public Chain(Constraint _EndConstraint, List<Bone> _Chain, Constraint[] _AllConstraints)
 			{
 				endConstraint = _EndConstraint;
+
+				CalculateShortcuts(ref _Chain, _AllConstraints);
+				maxDistance = CalculateChainLength(_Chain);
+				directConnection = _Chain.Count < 3;
+			}
+
+			private void CalculateShortcuts(ref List<Bone> _Chain, Constraint[] _AllConstraints)
+			{
+				var t_BonesToRemove = new List<Bone>();
+				bool t_LastWasParent = false;
+
+				for (var i = 0; i < _Chain.Count; i++)
+				{
+					if (i == _Chain.Count - 1) continue;
+
+					var t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _Chain[i].Type);
+					if (t_Parent != null && t_Parent.bone == _Chain[i + 1]) 
+					{
+						t_LastWasParent = true;
+					}
+					else
+					{
+						if (t_LastWasParent)
+						{
+							t_BonesToRemove.Add(_Chain[i]);
+							// Debug.Log("Remove :  " + _Chain[i].Type + " - From : " + _Chain[0].Type + " - " + _Chain[_Chain.Count -1].Type);
+						}
+
+						t_LastWasParent = false;
+					}
+				}
+
+				foreach (Bone t_BoneToRemove in t_BonesToRemove)
+				{
+					_Chain.RemoveAt(_Chain.IndexOf(t_BoneToRemove));
+				}
+			}
+
+			private float CalculateChainLength(List<Bone> _Chain)
+			{
+				// Calculate max length
+				float t_Length = 0;
+				for (int i = 0; i < _Chain.Count - 1; i++)
+				{
+					t_Length += vec3.Distance(_Chain[i].Position.toGlmVec3(), _Chain[i + 1].Position.toGlmVec3());
+				}
+				return t_Length;
 			}
 		}
 

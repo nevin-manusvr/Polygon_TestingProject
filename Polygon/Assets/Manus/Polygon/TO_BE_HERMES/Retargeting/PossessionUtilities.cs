@@ -314,7 +314,11 @@ namespace Manus.ToBeHermes
 
 			if (t_Children.Count == 0 && DefaultBoneStructure[_Type].childNodes.Length == 1)
 			{
-				t_Children = GetChildrenForType(_Constraints, DefaultBoneStructure[_Type].childNodes[0]).ToList();
+				var t_NewChildren = GetChildrenForType(_Constraints, DefaultBoneStructure[_Type].childNodes[0]);
+				if (t_NewChildren == null) 
+					return null;
+
+				t_Children = t_NewChildren.ToList();
 			}
 
 			return t_Children.ToArray();
