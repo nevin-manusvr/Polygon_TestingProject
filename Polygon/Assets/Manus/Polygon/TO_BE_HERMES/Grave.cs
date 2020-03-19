@@ -9,13 +9,13 @@ namespace Manus.ToBeHermes
 	public class Grave
 	{
 		// TMP
-		public int m_ID;
+		public uint m_ID;
 		
 		public Possession possession;
 
 		#region Properties
 
-		public int ID { get { return (int)Skeleton.DeviceID; } }
+		public uint ID { get { return Skeleton.DeviceID; } }
 
 		public Skeleton Skeleton { get; internal set; }
 
@@ -24,7 +24,7 @@ namespace Manus.ToBeHermes
 
 		public Grave(Skeleton _Skeleton)
 		{
-			m_ID = (int)_Skeleton.DeviceID;
+			m_ID = _Skeleton.DeviceID;
 			Skeleton = _Skeleton;
 
 			possession = new Possession(Skeleton, PossessionUtilities.DefaultRetargetTypes);

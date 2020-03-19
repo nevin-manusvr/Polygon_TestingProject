@@ -20,7 +20,7 @@ namespace Manus.Polygon.Skeleton
 		public bool useIK;
 		public bool updateFromHermes;
 
-		public int deviceID;
+		public uint deviceID;
 
 		public Animator animator;
 
@@ -279,7 +279,7 @@ namespace Manus.Polygon.Skeleton
 			HProt.Polygon.SkeletalDefinition t_Skeletors = new HProt.Polygon.SkeletalDefinition();
 
 			HProt.Polygon.Skeleton t_Skele = new HProt.Polygon.Skeleton();
-			t_Skele.DeviceID = (uint)deviceID;
+			t_Skele.DeviceID = deviceID;
 
 			// Add bones
 			foreach (var bone in boneReferences.GatherBones(GatherType.All))

@@ -22,6 +22,7 @@ namespace Manus.ToBeHermes.IK
 			public float legLength = .80f;
 			public float shoulderWidth = .35f;
 			public float legWidth = 0.2f;
+			public float ankleHeight = 0.13f;
 		}
 
 		#endregion
@@ -29,15 +30,32 @@ namespace Manus.ToBeHermes.IK
 		// Fields
 		public BodyMeasurements measurements;
 		private Dictionary<BoneType, Bone> bones;
+		private Dictionary<ControlBoneType, ControlBone> controls;
 
 		// Properties
-		public int ID { get { return (int)Skeleton.DeviceID; } }
+		public uint ID { get { return Skeleton.DeviceID; } }
 
 		public Skeleton Skeleton { get; internal set; }
 
-		public Ghost(int _ID)
+		public Ghost(uint _ID)
 		{
-			Skeleton = new Skeleton { DeviceID = (uint)_ID };
+			// TMP:
+			measurements = new BodyMeasurements();
+			measurements.playerHeight = 1.83f;
+			measurements.neckLength = .1f;
+			measurements.spineHeight = .6f;
+			measurements.armLength = .55f;
+			measurements.legLength = .8f;
+			measurements.shoulderWidth = .35f;
+			measurements.legWidth = .2f;
+			// END TMP
+
+			GenerateSkeleton(_ID, measurements);
+		}
+
+		public void GenerateSkeleton(uint _ID, BodyMeasurements _Measurements)
+		{
+			Skeleton = new Skeleton { DeviceID = _ID };
 
 			// Create all bones that are going to be estimated
 			Skeleton.Bones.Add(new Bone { Type = BoneType.Head, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
@@ -72,15 +90,28 @@ namespace Manus.ToBeHermes.IK
 				bones.Add(t_Bone.Type, t_Bone);
 			}
 
-			// TMP:
-			measurements = new BodyMeasurements();
-			measurements.playerHeight = 1.83f;
-			measurements.neckLength = .1f;
-			measurements.spineHeight = .6f;
-			measurements.armLength = .55f;
-			measurements.legLength = .8f;
-			measurements.shoulderWidth = .35f;
-			measurements.legWidth = .2f;
+			// Create all control bones
+			var t_LeftHeelControl = new ControlBone { Type = ControlBoneType.LeftHeelControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
+			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.LeftFoot], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			Skeleton.Controls.Add(t_LeftHeelControl);
+
+			var t_RightHeelControl = new ControlBone { Type = ControlBoneType.RightHeelControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
+			t_RightHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.RightFoot], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			Skeleton.Controls.Add(t_RightHeelControl);
+
+			var t_HipControl = new ControlBone { Type = ControlBoneType.HipControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
+			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.Hips], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.Spine], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.LeftUpperLeg], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.RightUpperLeg], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
+			Skeleton.Controls.Add(t_HipControl);
+
+			// Add all bones to a dictionary for easy access
+			controls = new Dictionary<ControlBoneType, ControlBone>();
+			foreach (Bone t_Bone in Skeleton.Bones)
+			{
+				bones.Add(t_Bone.Type, t_Bone);
+			}
 		}
 
 		public void EstimateBody(Tracker _Head, Tracker _LeftHand, Tracker _RightHand, Tracker _Hip, Tracker _LeftFoot, Tracker _RightFoot)

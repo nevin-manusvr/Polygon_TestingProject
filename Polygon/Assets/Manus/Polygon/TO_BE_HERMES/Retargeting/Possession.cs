@@ -6,29 +6,33 @@ using System.Linq;
 
 using UnityEngine;
 using GlmSharp;
+using GlmMathAddons;
 using Hermes.Tools;
 
 namespace Manus.ToBeHermes 
 {
 	public class Possession
 	{
-		private readonly Skeleton m_Skeleton;
-
 		private List<Constraint> m_AllConstraints;
 		private Dictionary<int, List<Constraint>> m_Constraints;
 
-		public Skeleton Skeleton { get { return m_Skeleton; } }
+		public Skeleton Skeleton { get; }
 
 		public Possession(Skeleton _Skeleton, BoneType[] _Filter)
 		{
-			m_Skeleton = new Skeleton() { DeviceID = (uint)_Skeleton.DeviceID };
+			Skeleton = new Skeleton() { DeviceID = (uint)_Skeleton.DeviceID };
 
 			foreach (var t_Bone in _Skeleton.Bones)
 			{
 				//if (!_Filter.Contains(t_Bone.Type))
 				//	continue;
 
-				m_Skeleton.Bones.Add(t_Bone.Clone());
+				Skeleton.Bones.Add(t_Bone.Clone());
+			}
+
+			foreach (var t_Control in _Skeleton.Controls)
+			{
+				Skeleton.Controls.Add(t_Control.Clone());
 			}
 		}
 
@@ -44,7 +48,7 @@ namespace Manus.ToBeHermes
 			m_AllConstraints = new List<Constraint>();
 			m_Constraints = new Dictionary<int, List<Constraint>>();
 
-			foreach (var t_Bone in m_Skeleton.Bones)
+			foreach (var t_Bone in Skeleton.Bones)
 			{
 				foreach (var t_TargetBone in _TargetSkeleton.Bones)
 				{
@@ -75,6 +79,25 @@ namespace Manus.ToBeHermes
 
 		public void Move()
 		{
+			//foreach (var control in Skeleton.Controls)
+			//{
+			//	if (control.Type == ControlBoneType.LeftHeelControl)
+			//	{
+			//		m4x4 t_HeelMatrix = m4x4.TRS(control.Position.toGlmVec3(), control.Rotation.toGlmQuat(), vec3.Ones);
+			//		foreach (var t_OffsetBone in control.BoneLocalOffsets)
+			//		{
+			//			vec3 t_Pos = t_HeelMatrix.MultiplyPoint3x4(t_OffsetBone.LocalPosition.toGlmVec3());
+			//			foreach (var t_Bone in Skeleton.Bones)
+			//			{
+			//				if (t_Bone.Type == t_OffsetBone.Bone.Type)
+			//				{
+			//					t_Bone.Position.Full = t_Pos.toProtoVec3();
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
+
 			PositionBones();
 			SolveBoneLengths();
 			ApplyResults();
@@ -128,6 +151,7 @@ namespace Manus.ToBeHermes
 			private Bone m_TargetBone;
 
 			private Chain[] m_Chains;
+			private ControlConstraint[] m_Controls;
 
 			public vec3 targetPosition;
 			public quat targetRotation;
@@ -202,15 +226,6 @@ namespace Manus.ToBeHermes
 				if (m_Chains == null)
 					return;
 
-				if (bone.Type == BoneType.LeftHand)
-				{
-					Debug.Log(bone.Type + " has chains" + m_Chains.Length);
-					foreach (var chain in m_Chains)
-					{
-						Debug.Log(bone.Type + " has chains" + chain.endConstraint.bone.Type);
-					}
-				}
-
 				foreach (var t_Chain in m_Chains)
 				{
 					float distance = vec3.Distance(targetPosition, t_Chain.endConstraint.targetPosition);
@@ -237,6 +252,11 @@ namespace Manus.ToBeHermes
 			}
 
 			#endregion
+		}
+
+		public class ControlConstraint
+		{
+
 		}
 
 		public class Chain

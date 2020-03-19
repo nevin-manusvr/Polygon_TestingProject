@@ -1,27 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Hermes.Protocol.Polygon;
+using System.Linq;
+using GlmSharp;
 
 namespace Manus.ToBeHermes
 {
-	using System;
-	using System.Linq;
-	using UnityEngine;
-
-	public class Node
-	{
-		public BoneType parentNode;
-		public BoneType[] childNodes;
-
-		public Node(BoneType _Parent, BoneType[] _ChildNodes)
-		{
-			parentNode = _Parent;
-			childNodes = _ChildNodes ?? new BoneType[] {};
-		}
-	}
-
 	public static class PossessionUtilities
 	{
+		public class Node
+		{
+			public BoneType parentNode;
+			public BoneType[] childNodes;
+
+			public Node(BoneType _Parent, BoneType[] _ChildNodes)
+			{
+				parentNode = _Parent;
+				childNodes = _ChildNodes ?? new BoneType[] { };
+			}
+		}
+
 		public static readonly Dictionary<BoneType, Node> DefaultBoneStructure = new Dictionary<BoneType, Node>
 		 {
 		     {BoneType.Root, new Node(BoneType.Root, new []{BoneType.Hips})},
@@ -184,7 +182,7 @@ namespace Manus.ToBeHermes
 				case BoneType.Spine:
 				case BoneType.Chest:
 				case BoneType.UpperChest:
-					return 50;
+					return 40;
 
 				// Legs
 				case BoneType.LeftUpperLeg:
@@ -215,7 +213,7 @@ namespace Manus.ToBeHermes
 					return 0;
 				case BoneType.LeftHand:
 				case BoneType.RightHand:
-					return 90;
+					return 80;
 
 				// Hands
 				case BoneType.LeftIndexProximal:
@@ -322,6 +320,11 @@ namespace Manus.ToBeHermes
 			}
 
 			return t_Children.ToArray();
+		}
+
+		public static quat CalculateBoneRotation()
+		{
+			return quat.Identity;
 		}
 	}
 }

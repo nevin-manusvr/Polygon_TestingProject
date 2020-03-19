@@ -92,7 +92,7 @@ namespace Manus.ToBeHermes
 					{
 						graveyard.AddGrave(t_Skeleton);
 
-						graveyard.GetGrave((int)t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
+						graveyard.GetGrave(t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
 					}
 				});
 		}

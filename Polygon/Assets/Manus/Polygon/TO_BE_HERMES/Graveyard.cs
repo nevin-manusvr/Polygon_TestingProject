@@ -28,16 +28,16 @@ namespace Manus.ToBeHermes
 				return;
 			}
 
-			if (ContainsGrave((int)_Skeleton.DeviceID))
+			if (ContainsGrave(_Skeleton.DeviceID))
 			{
 				Debug.LogWarning("Skeleton already added, replace old one");
-				RemoveGrave((int)_Skeleton.DeviceID);
+				RemoveGrave(_Skeleton.DeviceID);
 			}
 
 			graves.Add(new Grave(_Skeleton));
 		}
 
-		public bool RemoveGrave(int _ID)
+		public bool RemoveGrave(uint _ID)
 		{
 			if (!ContainsGrave(_ID))
 			{
@@ -57,7 +57,7 @@ namespace Manus.ToBeHermes
 			return false;
 		}
 
-		public bool ContainsGrave(int _ID)
+		public bool ContainsGrave(uint _ID)
 		{
 			foreach (var grave in graves)
 			{
@@ -70,7 +70,7 @@ namespace Manus.ToBeHermes
 			return false;
 		}
 
-		public Grave GetGrave(int _ID)
+		public Grave GetGrave(uint _ID)
 		{
 			foreach (var t_Grave in graves)
 			{
