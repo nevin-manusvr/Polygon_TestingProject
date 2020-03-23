@@ -28,14 +28,16 @@ namespace Manus.ToBeHermes.IK
 		#endregion
 
 		// Fields
+		private uint m_ID;
 		public BodyMeasurements measurements;
-		private Dictionary<BoneType, Bone> bones;
-		private Dictionary<ControlBoneType, ControlBone> controls;
+
+		private Dictionary<BoneType, GlmBone> bones;
+		private Dictionary<ControlBoneType, GlmControl> controls;
 
 		// Properties
-		public uint ID { get { return Skeleton.DeviceID; } }
+		public uint ID { get { return Skeleton.id; } }
 
-		public Skeleton Skeleton { get; internal set; }
+		public GlmSkeleton Skeleton { get; internal set; }
 
 		public Ghost(uint _ID)
 		{
@@ -50,67 +52,69 @@ namespace Manus.ToBeHermes.IK
 			measurements.legWidth = .2f;
 			// END TMP
 
-			GenerateSkeleton(_ID, measurements);
+			m_ID = _ID;
+
+			GenerateSkeleton(measurements);
 		}
 
-		public void GenerateSkeleton(uint _ID, BodyMeasurements _Measurements)
+		public void GenerateSkeleton(BodyMeasurements _Measurements)
 		{
-			Skeleton = new Skeleton { DeviceID = _ID };
-
+			Skeleton = new GlmSkeleton { id = m_ID };
+			
 			// Create all bones that are going to be estimated
-			Skeleton.Bones.Add(new Bone { Type = BoneType.Head, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.Neck, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.Hips, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.Spine, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.Chest, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.UpperChest, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.Head });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.Neck });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.Hips });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.Spine });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.Chest });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.UpperChest });
 
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftShoulder, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftUpperArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftLowerArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftHand, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftShoulder });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftUpperArm });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftLowerArm });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftHand });
 
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightShoulder, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightUpperArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightLowerArm, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightHand, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightShoulder });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightUpperArm });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightLowerArm });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightHand });
 
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftUpperLeg, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftLowerLeg, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.LeftFoot, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftUpperLeg });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftLowerLeg });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.LeftFoot });
 
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightUpperLeg, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightLowerLeg, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
-			Skeleton.Bones.Add(new Bone { Type = BoneType.RightFoot, Position = new HProt.Translation(), Rotation = new HProt.Orientation() });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightUpperLeg });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightLowerLeg });
+			Skeleton.bones.Add(new GlmBone { type = BoneType.RightFoot });
 
 			// Add all bones to a dictionary for easy access
-			bones = new Dictionary<BoneType, Bone>();
-			foreach (Bone t_Bone in Skeleton.Bones)
+			bones = new Dictionary<BoneType, GlmBone>();
+			foreach (var t_Bone in Skeleton.bones)
 			{
-				bones.Add(t_Bone.Type, t_Bone);
+				bones.Add(t_Bone.type, t_Bone);
 			}
 
 			// Create all control bones
-			var t_LeftHeelControl = new ControlBone { Type = ControlBoneType.LeftHeelControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
-			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.LeftFoot], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			Skeleton.Controls.Add(t_LeftHeelControl);
+			var t_LeftHeelControl = new GlmControl { type = ControlBoneType.LeftHeelControl };
+			t_LeftHeelControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.LeftFoot], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			Skeleton.controls.Add(t_LeftHeelControl);
 
-			var t_RightHeelControl = new ControlBone { Type = ControlBoneType.RightHeelControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
-			t_RightHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.RightFoot], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			Skeleton.Controls.Add(t_RightHeelControl);
+			var t_RightHeelControl = new GlmControl { type = ControlBoneType.RightHeelControl };
+			t_RightHeelControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.RightFoot], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			Skeleton.controls.Add(t_RightHeelControl);
 
-			var t_HipControl = new ControlBone { Type = ControlBoneType.HipControl, Position = new HProt.Translation(), Rotation = new HProt.Orientation() };
-			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.Hips], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.Spine], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.LeftUpperLeg], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			t_LeftHeelControl.BoneLocalOffsets.Add(new BoneLocalOffset { Bone = bones[BoneType.RightUpperLeg], LocalPosition = new HProt.Translation { Full = new vec3(0, _Measurements.ankleHeight, 0).toProtoVec3() }, LocalRotation = new HProt.Orientation { Full = quat.Identity.toProtoQuat() } });
-			Skeleton.Controls.Add(t_HipControl);
+			var t_HipControl = new GlmControl { type = ControlBoneType.HipControl };
+			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.Hips], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.Spine], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.LeftUpperLeg], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.RightUpperLeg], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
+			Skeleton.controls.Add(t_HipControl);
 
 			// Add all bones to a dictionary for easy access
-			controls = new Dictionary<ControlBoneType, ControlBone>();
-			foreach (Bone t_Bone in Skeleton.Bones)
+			controls = new Dictionary<ControlBoneType, GlmControl>();
+			foreach (var t_Control in Skeleton.controls)
 			{
-				bones.Add(t_Bone.Type, t_Bone);
+				controls.Add(t_Control.type, t_Control);
 			}
 		}
 
@@ -145,8 +149,8 @@ namespace Manus.ToBeHermes.IK
 			vec3 t_DirectionToHip = _Hip.position - _Head.position;
 			vec3 t_Position = _Head.position + (t_DirectionToNeck.Normalized + t_DirectionToHip.Normalized).Normalized * measurements.neckLength;
 			
-			bones[BoneType.Neck].Position.Full = t_Position.toProtoVec3();
-			bones[BoneType.Head].Position.Full = _Head.position.toProtoVec3();
+			bones[BoneType.Neck].position = t_Position;
+			bones[BoneType.Head].position = _Head.position;
 
 			//#if UNITY_EDITOR
 			//			Gizmos.color = Color.cyan;
@@ -158,20 +162,23 @@ namespace Manus.ToBeHermes.IK
 		{
 			vec3 t_HipPosition = _Hip.position;
 
-			vec3 t_NeckPos = bones[BoneType.Neck].Position.toGlmVec3();
+			vec3 t_NeckPos = bones[BoneType.Neck].position;
 			vec3 t_SpineDirection = (_Hip.rotation * -vec3.UnitZ * 3f + _Head.rotation * -vec3.UnitZ * 1f).Normalized; // TODO: fix this so it doesn't flip around
 			vec3 t_SpinePos = IK(t_HipPosition, t_NeckPos, (t_HipPosition + t_NeckPos) / 2f + t_SpineDirection, measurements.spineHeight);
 
-			bones[BoneType.Hips].Position.Full = t_HipPosition.toProtoVec3();
-			bones[BoneType.Spine].Position.Full = t_SpinePos.toProtoVec3();
-			bones[BoneType.Chest].Position.Full = t_SpinePos.toProtoVec3();
-			bones[BoneType.UpperChest].Position.Full = t_SpinePos.toProtoVec3();
+			controls[ControlBoneType.HipControl].position = _Hip.position;
+			controls[ControlBoneType.HipControl].rotation = _Hip.rotation;
+
+			bones[BoneType.Hips].position = t_HipPosition;
+			bones[BoneType.Spine].position = t_SpinePos;
+			bones[BoneType.Chest].position = t_SpinePos;
+			bones[BoneType.UpperChest].position = t_SpinePos;
 		}
 
 		private void EstimateArmPositions(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
 		{
-			vec3 t_NeckPos = bones[BoneType.Neck].Position.toGlmVec3();
-			vec3 t_SpinePos = bones[BoneType.Spine].Position.toGlmVec3();
+			vec3 t_NeckPos = bones[BoneType.Neck].position;
+			vec3 t_SpinePos = bones[BoneType.Spine].position;
 
 			vec3 t_DownDirection = ((t_SpinePos - t_NeckPos) + (t_NeckPos - _Head.position)).Normalized;
 			vec3 t_SideDirection = (_Hip.rotation * vec3.UnitX * 2f + _Head.rotation * vec3.UnitX).Normalized * (_Left ? -1f : 1f);
@@ -196,10 +203,10 @@ namespace Manus.ToBeHermes.IK
 			vec3 t_ElbowPos = (_Hand.position + t_UpperArmPos) / 2f + t_ModifiedElbowAimDirection;
 			t_ElbowPos = IK(t_UpperArmPos, _Hand.position, t_ElbowPos, measurements.armLength);
 
-			bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].Position.Full = t_ShoulderPos.toProtoVec3();
-			bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].Position.Full = t_UpperArmPos.toProtoVec3();
-			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].Position.Full = t_ElbowPos.toProtoVec3();
-			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].Position.Full = _Hand.position.toProtoVec3();
+			bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].position = t_ShoulderPos;
+			bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].position = t_UpperArmPos;
+			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].position = t_ElbowPos;
+			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].position = _Hand.position;
 
 			//#if UNITY_EDITOR
 			//			Gizmos.color = Color.cyan;
@@ -235,9 +242,12 @@ namespace Manus.ToBeHermes.IK
 			vec3 t_KneePosition = (t_UpperLegPosition + t_FootPosition) / 2f + t_modifiedKneeAimPosition;
 			t_KneePosition = IK(t_UpperLegPosition, t_FootPosition, t_KneePosition, measurements.legLength);
 
-			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].Position.Full = t_UpperLegPosition.toProtoVec3();
-			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].Position.Full = t_KneePosition.toProtoVec3();
-			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].Position.Full = _Foot.position.toProtoVec3();
+			controls[_Left ? ControlBoneType.LeftHeelControl : ControlBoneType.RightHeelControl].position = _Foot.position;
+			controls[_Left ? ControlBoneType.LeftHeelControl : ControlBoneType.RightHeelControl].rotation = _Foot.rotation;
+
+			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].position = t_UpperLegPosition;
+			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].position = t_KneePosition;
+			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].position = _Foot.position;
 
 
 			//#if UNITY_EDITOR
@@ -259,30 +269,30 @@ namespace Manus.ToBeHermes.IK
 			quat t_HeadRotation = _Head.rotation;
 			quat t_HipRotatation = _Hip.rotation;
 
-			vec3 t_DirectionToHead = bones[BoneType.Head].Position.toGlmVec3() - bones[BoneType.Neck].Position.toGlmVec3();
+			vec3 t_DirectionToHead = bones[BoneType.Head].position - bones[BoneType.Neck].position;
 			vec3 t_BackDirection = (t_HeadRotation * -vec3.UnitZ * 2f + t_HipRotatation * -vec3.UnitZ).Normalized;
 			quat t_NeckRotation = GlmMathExtensions.LookRotation(t_DirectionToHead.Normalized, t_BackDirection);
 
-			bones[BoneType.Neck].Rotation.Full = t_NeckRotation.toProtoQuat();
-			bones[BoneType.Head].Rotation.Full = t_HeadRotation.toProtoQuat();
+			bones[BoneType.Neck].rotation = t_NeckRotation;
+			bones[BoneType.Head].rotation = t_HeadRotation;
 		}
 
 		private void EstimateSpineRotation(Tracker _Hip)
 		{
 			quat t_HipTrackerRotation = _Hip.rotation;
 
-			vec3 t_HipAim = (bones[BoneType.Spine].Position.toGlmVec3() - bones[BoneType.Hips].Position.toGlmVec3()).Normalized;
+			vec3 t_HipAim = (bones[BoneType.Spine].position - bones[BoneType.Hips].position).Normalized;
 			vec3 t_HipUp = _Hip.rotation * -vec3.UnitZ;
 			quat t_HipRotation = GlmMathExtensions.LookRotation(t_HipAim, t_HipUp);
 
-			vec3 t_AimDirection = (bones[BoneType.Neck].Position.toGlmVec3() - bones[BoneType.Spine].Position.toGlmVec3()).Normalized;
-			vec3 t_SpineDirection = (t_HipTrackerRotation * -vec3.UnitZ * 3f + bones[BoneType.Head].Rotation.toGlmQuat() * -vec3.UnitZ * 1f) / 4f; // TODO: fix this so it doesn't flip around
+			vec3 t_AimDirection = (bones[BoneType.Neck].position - bones[BoneType.Spine].position).Normalized;
+			vec3 t_SpineDirection = (t_HipTrackerRotation * -vec3.UnitZ * 3f + bones[BoneType.Head].rotation * -vec3.UnitZ * 1f) / 4f; // TODO: fix this so it doesn't flip around
 			quat t_SpineRotation = GlmMathExtensions.LookRotation(t_AimDirection, t_SpineDirection);
 
-			bones[BoneType.Hips].Rotation.Full = t_HipRotation.toProtoQuat();
-			bones[BoneType.Spine].Rotation.Full = t_SpineRotation.toProtoQuat();
-			bones[BoneType.Chest].Rotation.Full = t_SpineRotation.toProtoQuat();
-			bones[BoneType.UpperChest].Rotation.Full = t_SpineRotation.toProtoQuat();
+			bones[BoneType.Hips].rotation = t_HipRotation;
+			bones[BoneType.Spine].rotation = t_SpineRotation;
+			bones[BoneType.Chest].rotation = t_SpineRotation;
+			bones[BoneType.UpperChest].rotation = t_SpineRotation;
 		}
 
 		private void EstimateArmRotations(Tracker _Head, Tracker _Hip, Tracker _Hand, bool _Left)
@@ -292,10 +302,10 @@ namespace Manus.ToBeHermes.IK
 			quat t_HandRotation = _Hand.rotation;
 			
 			// Bone positions
-			vec3 t_ShoulderPosition = bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].Position.toGlmVec3();
-			vec3 t_UpperArmPosition = bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].Position.toGlmVec3();
-			vec3 t_LowerArmPosition = bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].Position.toGlmVec3();
-			vec3 t_HandPosition = bones[_Left ? BoneType.LeftHand : BoneType.RightHand].Position.toGlmVec3();
+			vec3 t_ShoulderPosition = bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].position;
+			vec3 t_UpperArmPosition = bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].position;
+			vec3 t_LowerArmPosition = bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].position;
+			vec3 t_HandPosition = bones[_Left ? BoneType.LeftHand : BoneType.RightHand].position;
 
 			// Shoulder
 			vec3 t_ShoulderDirection = (t_UpperArmPosition - t_ShoulderPosition).Normalized;
@@ -311,10 +321,10 @@ namespace Manus.ToBeHermes.IK
 			vec3 t_LowerArmUp = vec3.Cross(vec3.Cross(t_LowerArmPosition - t_UpperArmPosition, vec3.UnitY), t_LowerArmPosition - t_UpperArmPosition);
 			quat t_lowerArmRotation = GlmMathExtensions.LookRotation(t_LowerArmDirection, t_LowerArmUp);
 
-			bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].Rotation.Full = t_ShoulderRotation.toProtoQuat();
-			bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].Rotation.Full = t_UpperArmRotation.toProtoQuat();
-			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].Rotation.Full = t_lowerArmRotation.toProtoQuat();
-			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].Rotation.Full = t_HandRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftShoulder : BoneType.RightShoulder].rotation = t_ShoulderRotation;
+			bones[_Left ? BoneType.LeftUpperArm : BoneType.RightUpperArm].rotation = t_UpperArmRotation;
+			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].rotation = t_lowerArmRotation;
+			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].rotation = t_HandRotation;
 		}
 
 		private void EstimateLegRotations(Tracker _Hip, Tracker _Foot, bool _Left)
@@ -322,9 +332,9 @@ namespace Manus.ToBeHermes.IK
 			quat t_FootRotation = _Foot.rotation;
 			quat t_HipRotation = _Hip.rotation;
 
-			vec3 t_FootPosition = bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].Position.toGlmVec3();
-			vec3 t_LowerLegPosition = bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].Position.toGlmVec3();
-			vec3 t_UpperLegPosition = bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].Position.toGlmVec3();
+			vec3 t_FootPosition = bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].position;
+			vec3 t_LowerLegPosition = bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].position;
+			vec3 t_UpperLegPosition = bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].position;
 
 			// Upper leg, TODO: fix this
 			vec3 t_UpperLegDirection = (t_LowerLegPosition - t_UpperLegPosition).Normalized;
@@ -336,9 +346,9 @@ namespace Manus.ToBeHermes.IK
 			vec3 t_LowerLegUp = t_upperLegRotation * vec3.UnitZ + t_upperLegRotation * vec3.UnitY;
 			quat t_LowerLegRotation = GlmMathExtensions.LookRotation(t_LowerLegDirection, t_LowerLegUp);
 
-			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].Rotation.Full = t_upperLegRotation.toProtoQuat();
-			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].Rotation.Full = t_LowerLegRotation.toProtoQuat();
-			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].Rotation.Full = t_FootRotation.toProtoQuat();
+			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].rotation = t_upperLegRotation;
+			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].rotation = t_LowerLegRotation;
+			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].rotation = t_FootRotation;
 		}
 
 		#region Math extensions

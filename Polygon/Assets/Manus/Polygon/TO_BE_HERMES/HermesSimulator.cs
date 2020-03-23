@@ -64,21 +64,41 @@ namespace Manus.ToBeHermes
 			Gizmos.color = Color.blue;
 			if (IK != null && IK.Skeleton != null)
 			{
-				foreach (var bone in IK.Skeleton.Bones)
+				foreach (var t_Bone in IK.Skeleton.bones)
 				{
-					Vector3 t_Pos = bone.Position.ToVector3();
-					Quaternion t_Rot = bone.Rotation.ToUnityQuat();
+					Vector3 t_Pos = t_Bone.position.ToUnityVector3();
+					Quaternion t_Rot = t_Bone.rotation.ToUnityQuat();
 
 					Gizmos.color = Color.cyan;
 					Gizmos.DrawWireSphere(t_Pos, .02f);
 					Gizmos.color = Color.blue;
-					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.forward * .05f);
+					Gizmos.DrawRay(t_Pos, t_Bone.rotation.ToUnityQuat() * Vector3.forward * .05f);
 					Gizmos.color = Color.green;
-					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.up * .05f);
+					Gizmos.DrawRay(t_Pos, t_Bone.rotation.ToUnityQuat() * Vector3.up * .05f);
 					Gizmos.color = Color.red;
-					Gizmos.DrawRay(t_Pos, bone.Rotation.ToUnityQuat() * Vector3.right * .05f);
+					Gizmos.DrawRay(t_Pos, t_Bone.rotation.ToUnityQuat() * Vector3.right * .05f);
 
 				}
+
+				foreach (var t_Control in IK.Skeleton.controls)
+				{
+					Vector3 t_Pos = t_Control.position.ToUnityVector3();
+					Quaternion t_Rot = t_Control.rotation.ToUnityQuat();
+
+					Gizmos.color = Color.magenta;
+					Gizmos.DrawWireCube(t_Pos, new Vector3(.1f, .03f, 0.1f));
+					Gizmos.color = Color.blue;
+					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.forward * .05f);
+					Gizmos.color = Color.green;
+					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.up * .05f);
+					Gizmos.color = Color.red;
+					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.right * .05f);
+				}
+			}
+
+			foreach (var t_Grave in graveyard.graves)
+			{
+				t_Grave.possession.DrawGizmos();
 			}
 		}
 
@@ -91,7 +111,6 @@ namespace Manus.ToBeHermes
 					foreach (var t_Skeleton in _Poly.Skeleton.Skeletons)
 					{
 						graveyard.AddGrave(t_Skeleton);
-
 						graveyard.GetGrave(t_Skeleton.DeviceID).possession.SetTargetSkeleton(IK.Skeleton);
 					}
 				});

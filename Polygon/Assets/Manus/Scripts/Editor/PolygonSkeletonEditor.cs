@@ -292,6 +292,18 @@ namespace Manus.Polygon.Skeleton.Editor
 					ErrorHandler.LogError(ErrorMessage.NotImplemented);
 					break;
 			}
+
+			if (Application.isPlaying) return;
+			Matrix4x4 t_ControlMatrix = Matrix4x4.TRS(control.position, control.rotation, Vector3.one);
+			foreach (var t_LocalBones in control.bonesToControl)
+			{
+				var t_BonePos = t_ControlMatrix.MultiplyPoint3x4(t_LocalBones.localPosition);
+				if (Vector3.Distance(t_BonePos, t_LocalBones.bone.bone.position) <= 0.00001f)
+					continue;
+
+				Handles.SphereHandleCap(0, t_BonePos, Quaternion.identity, size * .5f, EventType.Repaint);
+				Handles.DrawLine(t_BonePos, t_LocalBones.bone.bone.position);
+			}
 		}
 
 		private void DrawRotationGizmo(Bone bone, float size)

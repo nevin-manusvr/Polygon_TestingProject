@@ -278,7 +278,7 @@ namespace Manus.ToBeHermes
 
 			foreach (var t_Constraint in _Constraints)
 			{
-				if (t_Constraint.bone.Type == _ParentType)
+				if (t_Constraint.bone.type == _ParentType)
 				{
 					t_Parent = t_Constraint;
 					break;
@@ -302,7 +302,7 @@ namespace Manus.ToBeHermes
 			{
 				foreach (var t_Constraint in _Constraints)
 				{
-					if (t_Constraint.bone.Type == t_ChildType)
+					if (t_Constraint.bone.type == t_ChildType)
 					{
 						t_Children.Add(t_Constraint);
 						break;
@@ -328,4 +328,3 @@ namespace Manus.ToBeHermes
 		}
 	}
 }
-

@@ -86,7 +86,7 @@ namespace GlmMathAddons
 		// Returns the identity matrix (RO).
 		public static m4x4 identity { get { return identityMatrix; } }
 
-		public m4x4 Invert(m4x4 _Matrix)
+		public static m4x4 Invert(m4x4 _Matrix)
 		{
 			m4x4 t_Result;
    

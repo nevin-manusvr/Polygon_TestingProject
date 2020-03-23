@@ -250,9 +250,9 @@ namespace Manus.Polygon.Skeleton
 			UnityMainThreadDispatcher.Instance().Enqueue(
 				() =>
 					{
-						foreach (HProt.Polygon.Skeleton polySkeleton in _Poly.Skeletons)
+						foreach (var polySkeleton in _Poly.Skeletons)
 						{
-							if (polySkeleton.DeviceID != (uint)deviceID)
+							if (polySkeleton.DeviceID != deviceID)
 								continue;
 
 							var localBones = boneReferences.GatherBones(GatherType.Retargeted);

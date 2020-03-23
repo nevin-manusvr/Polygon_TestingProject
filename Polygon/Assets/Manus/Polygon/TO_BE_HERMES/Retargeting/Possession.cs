@@ -7,54 +7,103 @@ using System.Linq;
 using UnityEngine;
 using GlmSharp;
 using GlmMathAddons;
-using Hermes.Tools;
+using Manus.Core.Hermes;
 
 namespace Manus.ToBeHermes 
 {
 	public class Possession
 	{
+		private GlmSkeleton m_Skeleton;
+
 		private List<Constraint> m_AllConstraints;
 		private Dictionary<int, List<Constraint>> m_Constraints;
 
-		public Skeleton Skeleton { get; }
+		private List<TargetControl> m_TargetControls;
+
+		public Skeleton Skeleton { get { return m_Skeleton; } }
 
 		public Possession(Skeleton _Skeleton, BoneType[] _Filter)
 		{
-			Skeleton = new Skeleton() { DeviceID = (uint)_Skeleton.DeviceID };
+			m_Skeleton = new GlmSkeleton() { id = _Skeleton.DeviceID };
 
 			foreach (var t_Bone in _Skeleton.Bones)
 			{
-				//if (!_Filter.Contains(t_Bone.Type))
-				//	continue;
-
-				Skeleton.Bones.Add(t_Bone.Clone());
+				m_Skeleton.bones.Add(t_Bone);
 			}
 
 			foreach (var t_Control in _Skeleton.Controls)
 			{
-				Skeleton.Controls.Add(t_Control.Clone());
+				m_Skeleton.controls.Add(t_Control);
 			}
 		}
 
 		#region Setup
 
-		public void SetTargetSkeleton(Skeleton _TargetSkeleton)
+		public void SetTargetSkeleton(GlmSkeleton _TargetSkeleton)
 		{
 			GeneratePosessedSkeleton(_TargetSkeleton);
 		}
 
-		private void GeneratePosessedSkeleton(Skeleton _TargetSkeleton)
+		private void GeneratePosessedSkeleton(GlmSkeleton _TargetSkeleton)
 		{
+			// Reset current skeleton
 			m_AllConstraints = new List<Constraint>();
 			m_Constraints = new Dictionary<int, List<Constraint>>();
+			m_TargetControls = new List<TargetControl>();
 
-			foreach (var t_Bone in Skeleton.Bones)
+			// Copy target skeleton
+			var t_TargetSkeleton = new GlmSkeleton() { id = _TargetSkeleton.id };
+			foreach (var t_Bone in _TargetSkeleton.bones)
 			{
-				foreach (var t_TargetBone in _TargetSkeleton.Bones)
+				t_TargetSkeleton.bones.Add(t_Bone);
+			}
+			foreach (var t_Control in _TargetSkeleton.controls)
+			{
+				t_TargetSkeleton.controls.Add(t_Control);
+			}
+
+
+			// Regenerating the bones that are controlled by control bones and also exist in the main skeleton controls
+			foreach (var t_TargetControl in t_TargetSkeleton.controls)
+			{
+				TargetControl t_Target = new TargetControl { control = t_TargetControl };
+				m_TargetControls.Add(t_Target);
+
+				// main control
+				GlmControl t_MainControl = m_Skeleton.controls.Where(control => control.type == t_TargetControl.type).FirstOrDefault();
+				if (t_MainControl == null)
+					continue;
+
+				foreach (var t_LocalBone in t_TargetControl.localBones)
 				{
-					if (t_Bone.Type == t_TargetBone.Type)
+					var t_MainBone = t_MainControl.localBones.Where(localBone => localBone.bone.type == t_LocalBone.bone.type).FirstOrDefault();
+					if (t_MainBone == null)
+						continue;
+
+					for (int i = 0; i < t_TargetSkeleton.bones.Count; i++)
 					{
-						var t_Priority = PossessionUtilities.GetBonePriority(t_Bone.Type);
+						if (t_LocalBone.bone.type == t_TargetSkeleton.bones[i].type)
+						{
+							var t_BoneSettings = t_TargetSkeleton.bones[i];
+							
+							Debug.Log("Update: " + t_BoneSettings.type + " - " + t_MainBone.localPosition);
+							var t_NewTargetBone = new GlmBone { type = t_BoneSettings.type, position = t_BoneSettings.position, rotation = t_BoneSettings.rotation };
+							t_TargetSkeleton.bones[i] = t_NewTargetBone;
+							t_Target.localOffsets.Add(new LocalOffsets { bone = t_NewTargetBone, localPosition = t_MainBone.localPosition, localRotation = t_MainBone.localRotation });
+						}
+					}
+				}
+			}
+
+
+			// Generate Constraints
+			foreach (var t_Bone in m_Skeleton.bones)
+			{
+				foreach (var t_TargetBone in t_TargetSkeleton.bones)
+				{
+					if (t_Bone.type == t_TargetBone.type)
+					{
+						var t_Priority = PossessionUtilities.GetBonePriority(t_Bone.type);
 						var t_Constraint = new Constraint(t_Priority, t_Bone, t_TargetBone);
 
 						if (!m_Constraints.ContainsKey(t_Priority))
@@ -66,6 +115,7 @@ namespace Manus.ToBeHermes
 				}
 			}
 
+			// Order and generate max lengths
 			m_Constraints = m_Constraints.OrderByDescending(t_Result => t_Result.Key).ToDictionary(t_Result => t_Result.Key, t_Result => t_Result.Value);
 
 			var m_AllConstraintsArray = m_AllConstraints.ToArray();
@@ -79,6 +129,8 @@ namespace Manus.ToBeHermes
 
 		public void Move()
 		{
+			if (m_AllConstraints == null)
+				return;
 			//foreach (var control in Skeleton.Controls)
 			//{
 			//	if (control.Type == ControlBoneType.LeftHeelControl)
@@ -98,12 +150,22 @@ namespace Manus.ToBeHermes
 			//	}
 			//}
 
+			UpdateTargetControls();
 			PositionBones();
+
 			SolveBoneLengths();
 			ApplyResults();
 		}
 
 		#region Solver
+
+		private void UpdateTargetControls()
+		{
+			foreach (var t_Control in m_TargetControls)
+			{
+				t_Control.Update();
+			}
+		}
 
 		private void PositionBones()
 		{
@@ -141,26 +203,36 @@ namespace Manus.ToBeHermes
 
 		#endregion
 
+		public void DrawGizmos()
+		{
+			Gizmos.color = Color.magenta;
+
+			foreach (var t_Constraint in m_AllConstraints)
+			{
+				Gizmos.DrawWireCube(t_Constraint.targetBone.position.ToUnityVector3(), new Vector3(.05f, .05f, .05f));
+			}
+		}
+
 		#region Modules
 
 		public class Constraint
 		{
 			public int priority;
 
-			public Bone bone;
-			private Bone m_TargetBone;
+			public GlmBone bone;
+			public GlmBone targetBone;
 
 			private Chain[] m_Chains;
-			private ControlConstraint[] m_Controls;
+			// private ControlConstraint[] m_Controls;
 
 			public vec3 targetPosition;
 			public quat targetRotation;
 
-			public Constraint(int _Priority, Bone _Bone, Bone _TargetBone)
+			public Constraint(int _Priority, GlmBone _Bone, GlmBone _TargetBone)
 			{
 				priority = _Priority;
 				bone = _Bone;
-				m_TargetBone = _TargetBone;
+				targetBone = _TargetBone;
 			}
 
 			#region Setup
@@ -168,14 +240,14 @@ namespace Manus.ToBeHermes
 			public void AddChains(Constraint[] _AllConstraints)
 			{
 				var chains = new List<Chain>();
-				TraverseConstraints(bone, new List<Bone>(), _AllConstraints, chains);
+				TraverseConstraints(bone, new List<GlmBone>(), _AllConstraints, chains);
 
 				m_Chains = chains.ToArray();
 			}
 
-			private void TraverseConstraints(Bone _CurrentNode, List<Bone> _Path, Constraint[] _AllConstraints, List<Chain> _ChainCollection)
+			private void TraverseConstraints(GlmBone _CurrentNode, List<GlmBone> _Path, Constraint[] _AllConstraints, List<Chain> _ChainCollection)
 			{
-				_Path = new List<Bone>(_Path);
+				_Path = new List<GlmBone>(_Path);
 				_Path.Add(_CurrentNode);
 
 				foreach (Constraint t_Constraint in _AllConstraints)
@@ -191,14 +263,14 @@ namespace Manus.ToBeHermes
 				}
 
 				// Continue path
-				Constraint t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _CurrentNode.Type);
+				Constraint t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _CurrentNode.type);
 				if (t_Parent != null && !_Path.Contains(t_Parent.bone))
 				{
 					// Debug.Log($"Parent: { _CurrentNode.Type} - {t_Parent.bone.Type}");
 					TraverseConstraints(t_Parent.bone, _Path, _AllConstraints, _ChainCollection);
 				}
 
-				Constraint[] t_Children = PossessionUtilities.GetChildrenForType(_AllConstraints, _CurrentNode.Type);
+				Constraint[] t_Children = PossessionUtilities.GetChildrenForType(_AllConstraints, _CurrentNode.type);
 				if (t_Children != null)
 				{
 					foreach (var t_Child in t_Children)
@@ -218,7 +290,7 @@ namespace Manus.ToBeHermes
 			
 			public void PositionConstraint()
 			{
-				targetPosition = m_TargetBone.Position.toGlmVec3();
+				targetPosition = targetBone.position;
 			}
 
 			public void SolveLengths(float _Quality)
@@ -243,20 +315,44 @@ namespace Manus.ToBeHermes
 
 			public void ApplyRetargetingPosition()
 			{
-				bone.Position.Full = targetPosition.toProtoVec3();
+				bone.position = targetPosition;
 			}
 
 			public void ApplyRetargetingRotation()
 			{
-				bone.Rotation = m_TargetBone.Rotation;
+				bone.rotation = targetBone.rotation;
 			}
 
 			#endregion
 		}
 
-		public class ControlConstraint
+		public class TargetControl
 		{
+			public GlmControl control;
+			public List<LocalOffsets> localOffsets;
 
+			public TargetControl()
+			{
+				localOffsets = new List<LocalOffsets>();
+			}
+
+			public void Update()
+			{
+				var t_Parent = m4x4.TRS(control.position, control.rotation, vec3.Ones);
+
+				foreach (var t_Offset in localOffsets)
+				{
+					t_Offset.bone.position = t_Parent.MultiplyPoint3x4(t_Offset.localPosition);
+					Debug.DrawRay(t_Parent.MultiplyPoint3x4(t_Offset.localPosition).ToUnityVector3(), Vector3.forward * 0.1f, Color.green);
+				}
+			}
+		}
+
+		public class LocalOffsets
+		{
+			public GlmBone bone;
+			public vec3 localPosition;
+			public quat localRotation;
 		}
 
 		public class Chain
@@ -265,7 +361,7 @@ namespace Manus.ToBeHermes
 			public float maxDistance;
 			public bool directConnection;
 
-			public Chain(Constraint _EndConstraint, List<Bone> _Chain, Constraint[] _AllConstraints)
+			public Chain(Constraint _EndConstraint, List<GlmBone> _Chain, Constraint[] _AllConstraints)
 			{
 				endConstraint = _EndConstraint;
 
@@ -274,16 +370,16 @@ namespace Manus.ToBeHermes
 				directConnection = _Chain.Count < 3;
 			}
 
-			private void CalculateShortcuts(ref List<Bone> _Chain, Constraint[] _AllConstraints)
+			private void CalculateShortcuts(ref List<GlmBone> _Chain, Constraint[] _AllConstraints)
 			{
-				var t_BonesToRemove = new List<Bone>();
+				var t_BonesToRemove = new List<GlmBone>();
 				bool t_LastWasParent = false;
 
 				for (var i = 0; i < _Chain.Count; i++)
 				{
 					if (i == _Chain.Count - 1) continue;
 
-					var t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _Chain[i].Type);
+					var t_Parent = PossessionUtilities.GetParentForType(_AllConstraints, _Chain[i].type);
 					if (t_Parent != null && t_Parent.bone == _Chain[i + 1]) 
 					{
 						t_LastWasParent = true;
@@ -300,19 +396,19 @@ namespace Manus.ToBeHermes
 					}
 				}
 
-				foreach (Bone t_BoneToRemove in t_BonesToRemove)
+				foreach (GlmBone t_BoneToRemove in t_BonesToRemove)
 				{
 					_Chain.RemoveAt(_Chain.IndexOf(t_BoneToRemove));
 				}
 			}
 
-			private float CalculateChainLength(List<Bone> _Chain)
+			private float CalculateChainLength(List<GlmBone> _Chain)
 			{
 				// Calculate max length
 				float t_Length = 0;
 				for (int i = 0; i < _Chain.Count - 1; i++)
 				{
-					t_Length += vec3.Distance(_Chain[i].Position.toGlmVec3(), _Chain[i + 1].Position.toGlmVec3());
+					t_Length += vec3.Distance(_Chain[i].position, _Chain[i + 1].position);
 				}
 				return t_Length;
 			}

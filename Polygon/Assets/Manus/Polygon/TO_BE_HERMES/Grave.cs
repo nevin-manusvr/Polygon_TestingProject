@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Hermes.Protocol.Polygon;
 using UnityEngine;
+
 namespace Manus.ToBeHermes
 {
-
 	[System.Serializable]
 	public class Grave
 	{
