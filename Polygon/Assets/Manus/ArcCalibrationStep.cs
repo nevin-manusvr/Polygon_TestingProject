@@ -25,7 +25,7 @@ namespace Manus.Polygon
 			for (var i = 0; i < settings.Length; i++)
 			{
 				arcArray[i] = settings[i].useParentTracker
-								  ? new Arc(trackers, settings[i].parentTracker, true, name)
+								  ? new Arc(trackers, settings[i].parentTracker, false, name)
 					              : arcArray[i] = new Arc();
 			}
 		}
