@@ -12,41 +12,28 @@ public class UI_Behaviour : MonoBehaviour
     public CalibrationControllerEvent controllerEvent;
 	public CalibrationSequence sequence;
 
-    [Header("Guide Canvas")]
-    [SerializeField]
-    private CanvasGroup m_GuideCanvas;
-    [SerializeField]
-    private List<CanvasGroup> m_List;
-    private int m_GuideIndex;
-    [SerializeField]
-    CanvasGroup m_WelcomeText;
-    [SerializeField]
-    CanvasGroup m_ProgressText;
-    [SerializeField]
-    CanvasGroup m_ControllerText;
-    [SerializeField]
-    CanvasGroup m_ToggleText;
-    [SerializeField]
-    private GameObject m_GuideButtons;
 
 
     [Header("Progress Canvas")]
     [SerializeField]
     private CanvasGroup m_ProgressCanvas;
     [SerializeField]
-    private Image m_CurrentStepSliderImages;
+    private Image m_CurrentStepSliderImage;
     private int m_CurrentStep;
 
     [SerializeField]
-    private TextMeshProUGUI m_CurrentStepText;
+    public TextMeshProUGUI m_CurrentStepText;
 
     [SerializeField]
-    private TextMeshProUGUI m_CurrentStepIndexText;
-
+    private TextMeshProUGUI m_CurrentStepIndexText;    
+   
+    [Header("Second Progress Canvas")]
     [SerializeField]
-    private CanvasGroup m_GetReadyText;
+    private CanvasGroup m_SecondProgressCanvas;
     [SerializeField]
-    private CanvasGroup m_CalibratingText;
+    private Image m_SliderImage;
+    [SerializeField]
+    private TextMeshProUGUI m_GetReadyText;
 
     [Header("Controller Canvas")]
     [SerializeField]
@@ -66,23 +53,16 @@ public class UI_Behaviour : MonoBehaviour
     [SerializeField]
     private Image m_FocusImage;
 
-    [Header("Toggle Canvas")]
-    [SerializeField]
-    private CanvasGroup m_ToggleCanvas;
-
-
     [Header("Buttons")]
 
     [SerializeField]
-    private bool m_ButtonsAreActive;
+    public bool m_ButtonsAreActive;
     [SerializeField]
     private bool m_AreSwitched;
 
     [Header("Instructor")]
     [SerializeField]
     private Image m_InstructorFocusImage;
-    [SerializeField]
-    private Image m_InstructorSliderImage;
 
     private Camera m_Camera;
 
@@ -94,14 +74,11 @@ public class UI_Behaviour : MonoBehaviour
     {
         m_Camera = Camera.main;
 
-        m_GuideIndex = 1;
 
         controllerEvent.StartCalibrationSequence();
         m_ButtonsAreActive = true;
         m_AreSwitched = false;
-        ToggleUIButtons();
-        m_GetReadyText.alpha = 0;
-        m_CalibratingText.alpha = 0;
+       
 
         m_CurrentStep = 0;
 
@@ -117,7 +94,7 @@ public class UI_Behaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(m_Camera.transform.position.x, m_Camera.transform.position.y / 1.6f, m_Camera.transform.position.z + 0.35f);
+        transform.position = new Vector3(m_Camera.transform.position.x - 0.1f, m_Camera.transform.position.y / 1.1f, m_Camera.transform.position.z + 0.35f);
     }
 
 
@@ -135,11 +112,10 @@ public class UI_Behaviour : MonoBehaviour
 				    controllerEvent.RaiseSetupNextStep();
                     StartSlider();
                     m_CurrentStep += 1;
-                    UpdateCurrentStep(null);
 			    }
 
 			    break;
-		    case "Previous":
+            case "Previous":
 
                 controllerEvent.RaisePreviousStep();
                 controllerEvent.RaiseSetupNextStep();
@@ -162,16 +138,6 @@ public class UI_Behaviour : MonoBehaviour
                 SwitchButtons();
 
                 break;
-            case "StartGuide":
-
-                StartGuide(m_GuideIndex);
-
-                break;
-            case "SkipGuide":
-
-                SkipGuide();
-
-                break;
 	    }
 	}
 
@@ -181,9 +147,10 @@ public class UI_Behaviour : MonoBehaviour
         m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons());
         //m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
         FocusInstructor();
+        m_GetReadyText.text = "Asume pose";
 
 
-        m_InstructorSliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
+        m_SliderImage.DOFillAmount(.5f, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
                                                                                         controllerEvent.RaiseStartNextStep();
                                                                                         //m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
                                                                                         UndoSlider(); 
@@ -194,8 +161,9 @@ public class UI_Behaviour : MonoBehaviour
 
     void UndoSlider()
     {
+        m_GetReadyText.text = "Callibrating";
         //m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
-        m_InstructorSliderImage.DOFillAmount(0, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
+        m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
                                                                                         if(sequence.currentIndex == sequence.calibrationSteps.Count)
 			                                                                            {
                                                                                             SwitchButtons();
@@ -204,6 +172,9 @@ public class UI_Behaviour : MonoBehaviour
                                                                                         ToggleUIButtons(); 
                                                                                         m_PlayButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
                                                                                         m_PreviousButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
+                                                                                        m_GetReadyText.text = "";
+                                                                                        m_SliderImage.DOFillAmount(0, 0f);
+                                                                                        UpdateCurrentStep(null);
                                                                                         FocusUI();
                                                                                     });
     }
@@ -253,64 +224,13 @@ public class UI_Behaviour : MonoBehaviour
     public void UpdateCurrentStep(string currentStepText)
     {
         float sliderValue = 1f / 8f * m_CurrentStep;
-        m_CurrentStepSliderImages.DOFillAmount(sliderValue, .4f).SetEase(Ease.InOutCubic);
+        m_CurrentStepSliderImage.DOFillAmount(sliderValue, .4f).SetEase(Ease.InOutCubic);
         m_CurrentStepIndexText.text = m_CurrentStep.ToString();
         if(currentStepText != null)
         {
             m_CurrentStepText.text = currentStepText;
         }
     }
-
-    private void StartGuide(int index)
-    {
-        if(index < 4)
-        {
-            m_List[index - 1].DOFade(0, .2f);
-            m_List[index].DOFade(1, .2f);
-        }
-
-        switch (index)
-        {
-            case 1:
-                m_ProgressCanvas.DOFade(1, .5f).SetEase(Ease.InOutCubic);
-                break;
-            case 2:
-                ToggleUIButtons();
-                m_ControllerCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
-                break;
-            case 3:
-                m_ToggleCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);              
-                break;
-            case 4:
-                CloseGuide();
-                break;
-        }
-        m_GuideIndex += 1;
-
-    }
-
-    private void CloseGuide()
-    {
-        m_GuideCanvas.DOFade(0, 0.5f).SetEase(Ease.InOutCubic);
-        m_GuideButtons.SetActive(false);
-
-    }
-    private void SkipGuide()
-    {
-        CloseGuide();
-        ToggleUIButtons();
-
-        m_ProgressCanvas.DOFade(1, .5f).SetEase(Ease.InOutCubic);
-
-        m_ControllerCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
-        
-        m_ToggleCanvas.DOFade(1, 0.5f).SetEase(Ease.InOutCubic);
-        /*
-        close guide canvas
-        open Progress, controller anf toggle canvas
-        */
-    }
-
 
     private void FocusInstructor() 
     {
