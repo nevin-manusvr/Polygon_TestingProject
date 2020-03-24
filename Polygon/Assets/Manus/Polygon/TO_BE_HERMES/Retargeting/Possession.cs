@@ -89,7 +89,7 @@ namespace Manus.ToBeHermes
 							Debug.Log("Update: " + t_BoneSettings.type + " - " + t_MainBone.localPosition);
 							var t_NewTargetBone = new GlmBone { type = t_BoneSettings.type, position = t_BoneSettings.position, rotation = t_BoneSettings.rotation };
 							t_TargetSkeleton.bones[i] = t_NewTargetBone;
-							t_Target.localOffsets.Add(new LocalOffsets { bone = t_NewTargetBone, localPosition = t_MainBone.localPosition, localRotation = t_MainBone.localRotation });
+							t_Target.localOffsets.Add(new TargetLocalOffsets { bone = t_NewTargetBone, localPosition = t_MainBone.localPosition, localRotation = t_MainBone.localRotation });
 						}
 					}
 				}
@@ -326,35 +326,6 @@ namespace Manus.ToBeHermes
 			#endregion
 		}
 
-		public class TargetControl
-		{
-			public GlmControl control;
-			public List<LocalOffsets> localOffsets;
-
-			public TargetControl()
-			{
-				localOffsets = new List<LocalOffsets>();
-			}
-
-			public void Update()
-			{
-				var t_Parent = m4x4.TRS(control.position, control.rotation, vec3.Ones);
-
-				foreach (var t_Offset in localOffsets)
-				{
-					t_Offset.bone.position = t_Parent.MultiplyPoint3x4(t_Offset.localPosition);
-					Debug.DrawRay(t_Parent.MultiplyPoint3x4(t_Offset.localPosition).ToUnityVector3(), Vector3.forward * 0.1f, Color.green);
-				}
-			}
-		}
-
-		public class LocalOffsets
-		{
-			public GlmBone bone;
-			public vec3 localPosition;
-			public quat localRotation;
-		}
-
 		public class Chain
 		{
 			public Constraint endConstraint;
@@ -412,6 +383,53 @@ namespace Manus.ToBeHermes
 				}
 				return t_Length;
 			}
+		}
+
+		#endregion
+
+		#region Control constraints
+
+		public class ControlConstraint
+		{
+
+
+			public ControlConstraint()
+			{
+
+			}
+		}
+
+		#endregion
+
+		#region Target bontrol bones
+
+		public class TargetControl
+		{
+			public GlmControl control;
+			public List<TargetLocalOffsets> localOffsets;
+
+			public TargetControl()
+			{
+				localOffsets = new List<TargetLocalOffsets>();
+			}
+
+			public void Update()
+			{
+				var t_Parent = m4x4.TRS(control.position, control.rotation, vec3.Ones);
+
+				foreach (var t_Offset in localOffsets)
+				{
+					t_Offset.bone.position = t_Parent.MultiplyPoint3x4(t_Offset.localPosition);
+					Debug.DrawRay(t_Parent.MultiplyPoint3x4(t_Offset.localPosition).ToUnityVector3(), Vector3.forward * 0.1f, Color.green);
+				}
+			}
+		}
+
+		public class TargetLocalOffsets
+		{
+			public GlmBone bone;
+			public vec3 localPosition;
+			public quat localRotation;
 		}
 
 		#endregion
