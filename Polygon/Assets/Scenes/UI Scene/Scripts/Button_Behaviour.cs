@@ -46,6 +46,10 @@ public class Button_Behaviour : MonoBehaviour
     }
     void OnTriggerEnter(Collider collider)
     {
+        if (collider.gameObject.layer == 10)
+        {
+            return;
+        }
 
         transform.GetComponent<Image>().color = new Color32(140,24,18,255);
         m_ChildImage.DOColor(m_PressedButtonColor, .1f);
@@ -61,6 +65,10 @@ public class Button_Behaviour : MonoBehaviour
 
     void OnTriggerStay(Collider collider)
     {
+        if (collider.gameObject.layer == 10)
+        {
+            return;
+        }
         float dist = Vector3.Distance(m_Camera.transform.position, collider.transform.position);
         float m_handposition = dist * 100;
     
@@ -86,6 +94,10 @@ public class Button_Behaviour : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
+        if(collider.gameObject.layer == 10)
+        {
+            return;
+        }
         if(!m_IsColliding) return;
         m_IsColliding = false;
 
@@ -140,7 +152,7 @@ public class Button_Behaviour : MonoBehaviour
             m_ChildImage.sprite = m_UnlockSprite;
         }
         m_UIBehaviour.ToggleUI(m_IsLocked);
-        m_UIBehaviour.ToggleUIButtons();
+        //m_UIBehaviour.ToggleUIButtons();
         //switches slider image to either lock or unlock
         //toggles ui
     }

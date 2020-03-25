@@ -65,6 +65,7 @@ namespace Manus.Polygon
 				}
 
 				VRTrackerType trackerType = trackers.RequiredTrackers[i];
+				
 
 				// Hide tracker when there is no tracker data
 				if (!trackers.GetTracker(trackerType, out TransformValues trackerTransform))
@@ -79,6 +80,13 @@ namespace Manus.Polygon
 				trackerVisuals[i]?.transform.SetPositionAndRotation(
 					trackerTransform.position,
 					trackerTransform.rotation);
+
+				//Gives head tacker certain layer for UI Toggle
+				if(trackerType == VRTrackerType.Head)
+				{
+					GameObject Child = trackerVisuals[i].transform.GetChild(0).gameObject;
+					Child.layer = 9;
+				}
 			}
 		}
 

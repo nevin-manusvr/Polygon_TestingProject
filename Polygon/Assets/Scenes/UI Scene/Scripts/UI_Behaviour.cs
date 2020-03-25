@@ -13,6 +13,8 @@ public class UI_Behaviour : MonoBehaviour
 	public CalibrationSequence sequence;
 
 
+    public bool m_IsInPlace;
+
 
     [Header("Progress Canvas")]
     [SerializeField]
@@ -76,7 +78,7 @@ public class UI_Behaviour : MonoBehaviour
 
 
         controllerEvent.StartCalibrationSequence();
-        m_ButtonsAreActive = true;
+        m_ButtonsAreActive = false;
         m_AreSwitched = false;
        
 
@@ -88,6 +90,8 @@ public class UI_Behaviour : MonoBehaviour
         m_CheckButtonObj = gameObject.transform.GetChild(2).GetChild(2).GetChild(2).gameObject;
         m_CheckButtonObj.SetActive(false);
         m_CheckButton.alpha = 0;
+
+        ToggleUI(false);
 
     }
 
@@ -144,7 +148,7 @@ public class UI_Behaviour : MonoBehaviour
     void StartSlider()
     {
         m_PlayButton.DOFade(0, .3f);
-        m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons());
+        m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons(false));
         //m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
         FocusInstructor();
         m_GetReadyText.text = "Asume pose";
@@ -169,7 +173,7 @@ public class UI_Behaviour : MonoBehaviour
                                                                                             SwitchButtons();
 			                                                                            }
                                                                                         //m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
-                                                                                        ToggleUIButtons(); 
+                                                                                        ToggleUIButtons(true); 
                                                                                         m_PlayButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
                                                                                         m_PreviousButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
                                                                                         m_GetReadyText.text = "";
@@ -179,9 +183,9 @@ public class UI_Behaviour : MonoBehaviour
                                                                                     });
     }
 
-    public void ToggleUIButtons()
+    public void ToggleUIButtons(bool areActive)
     {
-        m_ButtonsAreActive = !m_ButtonsAreActive;  
+        m_ButtonsAreActive = areActive;  
         m_ControllerButtons.SetActive(m_ButtonsAreActive);
     }
 
@@ -191,13 +195,17 @@ public class UI_Behaviour : MonoBehaviour
         {
             m_ControllerCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
             m_ProgressCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+            m_SecondProgressCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+            ToggleUIButtons(isVisible);
         }
         else
         {
             m_ControllerCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
             m_ProgressCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
+            m_SecondProgressCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
+            ToggleUIButtons(isVisible);
         }
-        
+
     }
 
     private void SwitchButtons()

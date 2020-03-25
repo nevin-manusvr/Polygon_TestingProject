@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UI_Desktop_Behaviour : MonoBehaviour
 {
     GameObject m_UI_PhysicalButtons;
-    UI_Behaviour m_UIBehviour;
+    UI_Behaviour m_UIBehaviour;
 
     public TextMeshProUGUI m_text;
 
@@ -20,7 +20,7 @@ public class UI_Desktop_Behaviour : MonoBehaviour
     void Start()
     {
         m_UI_PhysicalButtons = GameObject.Find("UI_PhysicalButtons");
-        m_UIBehviour = m_UI_PhysicalButtons.GetComponent<UI_Behaviour>();        
+        m_UIBehaviour = m_UI_PhysicalButtons.GetComponent<UI_Behaviour>();        
     }
 
     public void StartCalibration()
@@ -30,26 +30,26 @@ public class UI_Desktop_Behaviour : MonoBehaviour
 
     public void NextStep()
     {
-        m_UIBehviour.ButtonFunction("Next");
-        m_text.text = "Current Step: " + m_UIBehviour.m_CurrentStepText.text;
+        m_UIBehaviour.ButtonFunction("Next");
+        m_text.text = "Current Step: " + m_UIBehaviour.m_CurrentStepText.text;
     }
 
     public void PreviousStep()
     {
-        m_UIBehviour.ButtonFunction("Previous");
-        m_text.text = "Current Step: " + m_UIBehviour.m_CurrentStepText.text;
+        m_UIBehaviour.ButtonFunction("Previous");
+        m_text.text = "Current Step: " + m_UIBehaviour.m_CurrentStepText.text;
     }
 
     public void StartCalibrationStep()
     {
-        m_UIBehviour.ButtonFunction("Start");
-        m_text.text = "Current Step: " + m_UIBehviour.m_CurrentStepText.text;
+        m_UIBehaviour.ButtonFunction("Start");
+        m_text.text = "Current Step: " + m_UIBehaviour.m_CurrentStepText.text;
 
     }
 
     private void Update()
     {
-        if (!m_UIBehviour.m_ButtonsAreActive)
+        if (!m_UIBehaviour.m_ButtonsAreActive)
         {
             m_StartCalibrationButton.interactable = false;
             m_PreviousStepButton.interactable = false;
