@@ -181,9 +181,11 @@ namespace Manus.ToBeHermes
 				case BoneType.Hips:
 					return 30;
 				case BoneType.Spine:
+					return 35;
 				case BoneType.Chest:
-				case BoneType.UpperChest:
 					return 40;
+				case BoneType.UpperChest:
+					return 35;
 
 				// Legs
 				case BoneType.LeftUpperLeg:
@@ -348,8 +350,6 @@ namespace Manus.ToBeHermes
 				case BoneType.Head:
 					return _Constraints.GetConstraintForType(BoneType.Head).targetBone.rotation;
 				case BoneType.Neck:
-					break;
-				case BoneType.Hips:
 
 					{
 						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
@@ -360,43 +360,161 @@ namespace Manus.ToBeHermes
 						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
 					}
 
-					break;
+				case BoneType.Hips:
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, -t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.Spine:
-					break;
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.Chest:
-					break;
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.UpperChest:
-					break;
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftUpperLeg:
 
 					{
-						
+						vec3 t_AimDirection = (_Constraints.GetChildrenForType(_Bone.type)[0].bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, -t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
 					}
 
-					break;
 				case BoneType.RightUpperLeg:
-					break;
+
+					{
+						vec3 t_AimDirection = (_Constraints.GetChildrenForType(_Bone.type)[0].bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, -t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftLowerLeg:
-					break;
+
+					{
+						vec3 t_AimDirection = (_Constraints.GetChildrenForType(_Bone.type)[0].bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.rotation * vec3.UnitX;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.RightLowerLeg:
-					break;
+
+					{
+						vec3 t_AimDirection = (_Constraints.GetChildrenForType(_Bone.type)[0].bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.rotation * vec3.UnitX;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftFoot:
 					return _Constraints.GetConstraintForType(BoneType.LeftFoot).targetBone.rotation;
 				case BoneType.RightFoot:
 					return _Constraints.GetConstraintForType(BoneType.RightFoot).targetBone.rotation;
 				
 				case BoneType.LeftShoulder:
-					break;
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.RightShoulder:
-					break;
+					
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftUpperArm:
-					break;
+					
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.RightUpperArm:
-					break;
+					
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftLowerArm:
-					break;
+					
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.RightLowerArm:
-					break;
+					
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
 				case BoneType.LeftHand:
 					return _Constraints.GetConstraintForType(BoneType.LeftHand).targetBone.rotation;
 				case BoneType.RightHand:

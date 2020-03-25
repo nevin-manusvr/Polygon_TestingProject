@@ -46,9 +46,9 @@ namespace Manus.ToBeHermes.IK
 			measurements = new BodyMeasurements();
 			measurements.playerHeight = 1.83f;
 			measurements.neckLength = .1f;
-			measurements.spineHeight = .6f;
-			measurements.armLength = .55f;
-			measurements.legLength = .8f;
+			measurements.spineHeight = .8f;
+			measurements.armLength = .8f;
+			measurements.legLength = 1.2f;
 			measurements.shoulderWidth = .35f;
 			measurements.legWidth = .2f;
 			// END TMP
@@ -106,7 +106,6 @@ namespace Manus.ToBeHermes.IK
 
 			var t_HipControl = new GlmControl { type = ControlBoneType.HipControl };
 			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.Hips], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
-			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.Spine], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
 			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.LeftUpperLeg], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
 			t_HipControl.localBones.Add(new GlmLocalBone { bone = bones[BoneType.RightUpperLeg], localPosition = new vec3(0, _Measurements.ankleHeight, 0), localRotation = quat.Identity });
 			Skeleton.controls.Add(t_HipControl);
