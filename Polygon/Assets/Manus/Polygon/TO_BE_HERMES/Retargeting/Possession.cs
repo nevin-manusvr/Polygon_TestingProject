@@ -86,7 +86,6 @@ namespace Manus.ToBeHermes
 						{
 							var t_BoneSettings = t_TargetSkeleton.bones[i];
 							
-							Debug.Log("Update: " + t_BoneSettings.type + " - " + t_MainBone.localPosition);
 							var t_NewTargetBone = new GlmBone { type = t_BoneSettings.type, position = t_BoneSettings.position, rotation = t_BoneSettings.rotation };
 							t_TargetSkeleton.bones[i] = t_NewTargetBone;
 							t_Target.localOffsets.Add(new TargetLocalOffsets { bone = t_NewTargetBone, localPosition = t_MainBone.localPosition, localRotation = t_MainBone.localRotation });
@@ -194,10 +193,12 @@ namespace Manus.ToBeHermes
 
 		private void ApplyResults()
 		{
-			foreach (var t_Contraint in m_AllConstraints)
+			Constraint[] t_Constraints = m_AllConstraints.ToArray();
+
+			for (int i = 0; i < t_Constraints.Length; i++)
 			{
-				t_Contraint.ApplyRetargetingPosition();
-				t_Contraint.ApplyRetargetingRotation();
+				t_Constraints[i].ApplyRetargetingPosition();
+				t_Constraints[i].ApplyRetargetingRotation(t_Constraints);
 			}
 		}
 
@@ -318,9 +319,9 @@ namespace Manus.ToBeHermes
 				bone.position = targetPosition;
 			}
 
-			public void ApplyRetargetingRotation()
+			public void ApplyRetargetingRotation(Constraint[] _Constraints)
 			{
-				bone.rotation = targetBone.rotation;
+				bone.rotation = bone.CalculateBoneRotation(_Constraints);
 			}
 
 			#endregion
@@ -420,7 +421,7 @@ namespace Manus.ToBeHermes
 				foreach (var t_Offset in localOffsets)
 				{
 					t_Offset.bone.position = t_Parent.MultiplyPoint3x4(t_Offset.localPosition);
-					Debug.DrawRay(t_Parent.MultiplyPoint3x4(t_Offset.localPosition).ToUnityVector3(), Vector3.forward * 0.1f, Color.green);
+					t_Offset.bone.rotation = GlmMathExtensions.LookRotation(t_Parent.MultiplyVector(t_Offset.localRotation * vec3.UnitZ), t_Parent.MultiplyVector(t_Offset.localRotation * vec3.UnitY));
 				}
 			}
 		}

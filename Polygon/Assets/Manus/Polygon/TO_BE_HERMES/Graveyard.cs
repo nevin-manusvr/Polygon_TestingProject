@@ -20,7 +20,7 @@ namespace Manus.ToBeHermes
 			graves = new List<Grave>();
 		}
 
-		public void AddGrave(HProt.Polygon.Skeleton _Skeleton)
+		public void AddGrave(Skeleton _Skeleton)
 		{
 			if (!IsSkeletonValid(_Skeleton))
 			{
@@ -84,7 +84,7 @@ namespace Manus.ToBeHermes
 			return null;
 		}
 
-		private static bool IsSkeletonValid(HProt.Polygon.Skeleton _Skeleton)
+		private static bool IsSkeletonValid(Skeleton _Skeleton)
 		{
 			var t_RequiredBones = new BoneType[]
 				                      {

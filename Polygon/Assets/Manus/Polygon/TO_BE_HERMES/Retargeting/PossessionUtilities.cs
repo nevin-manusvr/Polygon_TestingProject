@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Hermes.Protocol.Polygon;
 using System.Linq;
 using GlmSharp;
+using GlmMathAddons;
 
 namespace Manus.ToBeHermes
 {
@@ -23,7 +24,7 @@ namespace Manus.ToBeHermes
 		public static readonly Dictionary<BoneType, Node> DefaultBoneStructure = new Dictionary<BoneType, Node>
 		 {
 		     {BoneType.Root, new Node(BoneType.Root, new []{BoneType.Hips})},
-		     {BoneType.Hips, new Node(BoneType.Root, new []{BoneType.LeftUpperLeg, BoneType.RightUpperLeg, BoneType.Spine})},
+		     {BoneType.Hips, new Node(BoneType.Root, new []{ BoneType.Spine, BoneType.LeftUpperLeg, BoneType.RightUpperLeg})},
 			 {BoneType.Spine, new Node(BoneType.Hips, new []{BoneType.Chest})},
 			 {BoneType.Chest, new Node(BoneType.Spine, new []{BoneType.UpperChest})},
 			 {BoneType.UpperChest, new Node(BoneType.Chest, new []{BoneType.Neck, BoneType.LeftShoulder, BoneType.RightShoulder})},
@@ -322,8 +323,172 @@ namespace Manus.ToBeHermes
 			return t_Children.ToArray();
 		}
 
-		public static quat CalculateBoneRotation()
+		public static Possession.Constraint GetConstraintForType(this Possession.Constraint[] _Constraints, BoneType _Type)
 		{
+			if (!DefaultBoneStructure.ContainsKey(_Type))
+				return null;
+
+			foreach (var t_Constraint in _Constraints)
+			{
+				if (t_Constraint.bone.type == _Type)
+					return t_Constraint;
+			}
+
+			return null;
+		}
+
+		public static quat CalculateBoneRotation(this GlmBone _Bone,  Possession.Constraint[] _Constraints)
+		{
+			
+			
+			switch (_Bone.type)
+			{
+				case BoneType.Root:
+					return quat.Identity;
+				case BoneType.Head:
+					return _Constraints.GetConstraintForType(BoneType.Head).targetBone.rotation;
+				case BoneType.Neck:
+					break;
+				case BoneType.Hips:
+
+					{
+						var t_AimConstraint = _Constraints.GetChildrenForType(_Bone.type)[0];
+						vec3 t_AimDirection = (t_AimConstraint.bone.position - _Bone.position).Normalized;
+						vec3 t_SideDirection = _Constraints.GetConstraintForType(BoneType.LeftUpperLeg).bone.position - _Constraints.GetConstraintForType(BoneType.RightUpperLeg).bone.position;
+						vec3 t_Up = vec3.Cross(t_AimDirection, t_SideDirection);
+
+						return GlmMathExtensions.LookRotation(t_AimDirection, t_Up);
+					}
+
+					break;
+				case BoneType.Spine:
+					break;
+				case BoneType.Chest:
+					break;
+				case BoneType.UpperChest:
+					break;
+				case BoneType.LeftUpperLeg:
+
+					{
+						
+					}
+
+					break;
+				case BoneType.RightUpperLeg:
+					break;
+				case BoneType.LeftLowerLeg:
+					break;
+				case BoneType.RightLowerLeg:
+					break;
+				case BoneType.LeftFoot:
+					return _Constraints.GetConstraintForType(BoneType.LeftFoot).targetBone.rotation;
+				case BoneType.RightFoot:
+					return _Constraints.GetConstraintForType(BoneType.RightFoot).targetBone.rotation;
+				
+				case BoneType.LeftShoulder:
+					break;
+				case BoneType.RightShoulder:
+					break;
+				case BoneType.LeftUpperArm:
+					break;
+				case BoneType.RightUpperArm:
+					break;
+				case BoneType.LeftLowerArm:
+					break;
+				case BoneType.RightLowerArm:
+					break;
+				case BoneType.LeftHand:
+					return _Constraints.GetConstraintForType(BoneType.LeftHand).targetBone.rotation;
+				case BoneType.RightHand:
+					return _Constraints.GetConstraintForType(BoneType.RightHand).targetBone.rotation;
+				case BoneType.LeftToes:
+				case BoneType.RightToes:
+				case BoneType.LeftToesEnd:
+				case BoneType.RightToesEnd:
+					break;
+					//case BoneType.LeftThumbProximal:
+						  //	break;
+						  //case BoneType.LeftThumbMiddle:
+						  //	break;
+						  //case BoneType.LeftThumbDistal:
+						  //	break;
+						  //case BoneType.LeftThumbTip:
+						  //	break;
+						  //case BoneType.RightThumbProximal:
+						  //	break;
+						  //case BoneType.RightThumbMiddle:
+						  //	break;
+						  //case BoneType.RightThumbDistal:
+						  //	break;
+						  //case BoneType.RightThumbTip:
+						  //	break;
+						  //case BoneType.LeftIndexProximal:
+						  //	break;
+						  //case BoneType.LeftIndexMiddle:
+						  //	break;
+						  //case BoneType.LeftIndexDistal:
+						  //	break;
+						  //case BoneType.LeftIndexTip:
+						  //	break;
+						  //case BoneType.RightIndexProximal:
+						  //	break;
+						  //case BoneType.RightIndexMiddle:
+						  //	break;
+						  //case BoneType.RightIndexDistal:
+						  //	break;
+						  //case BoneType.RightIndexTip:
+						  //	break;
+						  //case BoneType.LeftMiddleProximal:
+						  //	break;
+						  //case BoneType.LeftMiddleMiddle:
+						  //	break;
+						  //case BoneType.LeftMiddleDistal:
+						  //	break;
+						  //case BoneType.LeftMiddleTip:
+						  //	break;
+						  //case BoneType.RightMiddleProximal:
+						  //	break;
+						  //case BoneType.RightMiddleMiddle:
+						  //	break;
+						  //case BoneType.RightMiddleDistal:
+						  //	break;
+						  //case BoneType.RightMiddleTip:
+						  //	break;
+						  //case BoneType.LeftRingProximal:
+						  //	break;
+						  //case BoneType.LeftRingMiddle:
+						  //	break;
+						  //case BoneType.LeftRingDistal:
+						  //	break;
+						  //case BoneType.LeftRingTip:
+						  //	break;
+						  //case BoneType.RightRingProximal:
+						  //	break;
+						  //case BoneType.RightRingMiddle:
+						  //	break;
+						  //case BoneType.RightRingDistal:
+						  //	break;
+						  //case BoneType.RightRingTip:
+						  //	break;
+						  //case BoneType.LeftPinkyProximal:
+						  //	break;
+						  //case BoneType.LeftPinkyMiddle:
+						  //	break;
+						  //case BoneType.LeftPinkyDistal:
+						  //	break;
+						  //case BoneType.LeftPinkyTip:
+						  //	break;
+						  //case BoneType.RightPinkyProximal:
+						  //	break;
+						  //case BoneType.RightPinkyMiddle:
+						  //	break;
+						  //case BoneType.RightPinkyDistal:
+						  //	break;
+						  //case BoneType.RightPinkyTip:
+				default:
+					break;
+			}
+
 			return quat.Identity;
 		}
 	}

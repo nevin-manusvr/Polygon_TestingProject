@@ -6,3 +6,6 @@
 	path = Polygon/Assets/ManusVR/manus-core
 	url = git@github.com:manusvr/unity-core.git
 	branch = master
+[submodule "Polygon/Assets/ManusVR/manus-math"]
+	path = Polygon/Assets/ManusVR/manus-math
+	url = git@github.com:manusvr/ManusGlmMath.git

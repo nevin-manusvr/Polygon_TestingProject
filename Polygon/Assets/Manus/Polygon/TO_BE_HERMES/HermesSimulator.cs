@@ -84,15 +84,16 @@ namespace Manus.ToBeHermes
 				{
 					Vector3 t_Pos = t_Control.position.ToUnityVector3();
 					Quaternion t_Rot = t_Control.rotation.ToUnityQuat();
-
+					Gizmos.matrix = Matrix4x4.TRS(t_Pos, t_Rot, Vector3.one);
 					Gizmos.color = Color.magenta;
-					Gizmos.DrawWireCube(t_Pos, new Vector3(.1f, .03f, 0.1f));
+					Gizmos.DrawWireCube(Vector3.zero, new Vector3(.1f, .03f, 0.1f));
 					Gizmos.color = Color.blue;
-					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.forward * .05f);
+					Gizmos.DrawRay(Vector3.zero, Vector3.forward * .05f);
 					Gizmos.color = Color.green;
-					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.up * .05f);
+					Gizmos.DrawRay(Vector3.zero, Vector3.up * .05f);
 					Gizmos.color = Color.red;
-					Gizmos.DrawRay(t_Pos, t_Control.rotation.ToUnityQuat() * Vector3.right * .05f);
+					Gizmos.DrawRay(Vector3.zero, Vector3.right * .05f);
+					Gizmos.matrix = Matrix4x4.identity;
 				}
 			}
 

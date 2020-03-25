@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GlmSharp;
+using GlmMathAddons;
 using Hermes.Protocol.Polygon;
 using Hermes.Tools;
 using Manus.ToBeHermes.Tracking;
@@ -132,14 +133,14 @@ namespace Manus.ToBeHermes.IK
 
 
 			// Rotation
-			EstimateNeckRotation(_Head, _Hip);
-			EstimateSpineRotation(_Hip);
+			//EstimateNeckRotation(_Head, _Hip);
+			//EstimateSpineRotation(_Hip);
 
-			EstimateArmRotations(_Head, _Hip, _LeftHand, true);
-			EstimateArmRotations(_Head, _Hip, _RightHand, false);
+			//EstimateArmRotations(_Head, _Hip, _LeftHand, true);
+			//EstimateArmRotations(_Head, _Hip, _RightHand, false);
 
-			EstimateLegRotations(_Hip, _LeftFoot, true);
-			EstimateLegRotations(_Hip, _RightFoot, false);
+			//EstimateLegRotations(_Hip, _LeftFoot, true);
+			//EstimateLegRotations(_Hip, _RightFoot, false);
 		}
 
 		// Position
@@ -151,6 +152,8 @@ namespace Manus.ToBeHermes.IK
 			
 			bones[BoneType.Neck].position = t_Position;
 			bones[BoneType.Head].position = _Head.position;
+
+			bones[BoneType.Head].rotation = _Head.rotation;
 
 			//#if UNITY_EDITOR
 			//			Gizmos.color = Color.cyan;
@@ -208,6 +211,8 @@ namespace Manus.ToBeHermes.IK
 			bones[_Left ? BoneType.LeftLowerArm : BoneType.RightLowerArm].position = t_ElbowPos;
 			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].position = _Hand.position;
 
+			bones[_Left ? BoneType.LeftHand : BoneType.RightHand].rotation = _Hand.rotation;
+
 			//#if UNITY_EDITOR
 			//			Gizmos.color = Color.cyan;
 			//			Gizmos.DrawLine(_spinePos.ToUnityVector3(), shoulder.ToUnityVector3());
@@ -247,7 +252,9 @@ namespace Manus.ToBeHermes.IK
 
 			bones[_Left ? BoneType.LeftUpperLeg : BoneType.RightUpperLeg].position = t_UpperLegPosition;
 			bones[_Left ? BoneType.LeftLowerLeg : BoneType.RightLowerLeg].position = t_KneePosition;
+
 			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].position = _Foot.position;
+			bones[_Left ? BoneType.LeftFoot : BoneType.RightFoot].rotation = _Foot.rotation;
 
 
 			//#if UNITY_EDITOR
