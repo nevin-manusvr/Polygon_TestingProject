@@ -25,7 +25,7 @@ public class UI_Desktop_Behaviour : MonoBehaviour
 
     public void StartCalibration()
     {
-
+        m_UIBehaviour.ButtonFunction("Continue");
     }
 
     public void NextStep()
@@ -51,7 +51,7 @@ public class UI_Desktop_Behaviour : MonoBehaviour
     {
         if (!m_UIBehaviour.m_ButtonsAreActive)
         {
-            m_StartCalibrationButton.interactable = false;
+            m_StartCalibrationButton.interactable = true;
             m_PreviousStepButton.interactable = false;
             m_StartStepButton.interactable = false;
 
