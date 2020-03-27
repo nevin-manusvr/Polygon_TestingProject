@@ -9,3 +9,7 @@
 [submodule "Polygon/Assets/ManusVR/manus-math"]
 	path = Polygon/Assets/ManusVR/manus-math
 	url = git@github.com:manusvr/ManusGlmMath.git
+	branch = master
+[submodule "Polygon/Assets/ManusVR/polygon"]
+	path = Polygon/Assets/ManusVR/polygon
+	url = git@github.com:manusvr/Polygon-Plugin.git

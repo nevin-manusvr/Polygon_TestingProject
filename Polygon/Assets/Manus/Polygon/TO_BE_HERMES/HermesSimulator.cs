@@ -1,21 +1,14 @@
 ﻿using UnityEngine;
 using HProt = Hermes.Protocol;
-
+using Hermes.Protocol.Polygon;
+using Manus.Core;
+using Manus.Core.Hermes;
+using Manus.Core.Utility;
+using Manus.Polygon;
+using Manus.ToBeHermes.IK;
+using Manus.ToBeHermes.Tracking;
 namespace Manus.ToBeHermes
 {
-	using System.Collections.Generic;
-	using GlmSharp;
-	using Google.Protobuf.Collections;
-	using Hermes.Protocol.Polygon;
-	using Hermes.Tools;
-
-	using Manus.Core;
-	using Manus.Core.Hermes;
-	using Manus.Core.Utility;
-	using Manus.Polygon;
-	using Manus.ToBeHermes.IK;
-	using Manus.ToBeHermes.Tracking;
-
 	public class HermesSimulator : MonoBehaviour
 	{
 		public static HermesSimulator instance;

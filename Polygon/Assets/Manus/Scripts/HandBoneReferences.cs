@@ -5,8 +5,6 @@ using Hermes.Protocol.Polygon;
 
 namespace Manus.Polygon.Skeleton
 {
-	using System;
-
 	[System.Serializable]
 	public class Finger
 	{
