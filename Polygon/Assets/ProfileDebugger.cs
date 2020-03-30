@@ -79,6 +79,12 @@ namespace Manus.Polygon
 				trackerVisuals[i]?.transform.SetPositionAndRotation(
 					trackerTransform.position,
 					trackerTransform.rotation);
+
+
+				//gives trackers a corresponding tag
+				trackerVisuals[i].transform.tag = trackers.RequiredTrackers[i].ToString();
+
+				
 			}
 		}
 

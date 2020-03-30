@@ -13,6 +13,11 @@ TagManager:
   - HandCollider
   - SkipGuide
   - StartGuide
+  - LeftHand
+  - RightHand
+  - Head
+  - LeftFoot
+  - RightFoot
   layers:
   - Default
   - TransparentFX
