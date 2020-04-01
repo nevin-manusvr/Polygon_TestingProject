@@ -13,6 +13,9 @@ public class UI_Behaviour : MonoBehaviour
 	public CalibrationSequence sequence;
 
 
+    GameObject m_NaviObj;
+    Navi_Behaviour m_Navi;
+
 
     [Header("Progress Canvas")]
     [SerializeField]
@@ -73,6 +76,9 @@ public class UI_Behaviour : MonoBehaviour
     void Start()
     {
         m_Camera = Camera.main;
+
+        m_NaviObj = GameObject.Find("Navi");
+        m_Navi = m_NaviObj.GetComponent<Navi_Behaviour>();
 
 
         controllerEvent.StartCalibrationSequence();
@@ -143,6 +149,7 @@ public class UI_Behaviour : MonoBehaviour
 
     void StartSlider()
     {
+        m_Navi.MoveToCharacter();
         m_PlayButton.DOFade(0, .3f);
         m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons());
         //m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
@@ -176,6 +183,7 @@ public class UI_Behaviour : MonoBehaviour
                                                                                         m_SliderImage.DOFillAmount(0, 0f);
                                                                                         UpdateCurrentStep(null);
                                                                                         FocusUI();
+                                                                                        m_Navi.MoveToUI();
                                                                                     });
     }
 
