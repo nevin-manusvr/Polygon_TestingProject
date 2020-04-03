@@ -146,7 +146,7 @@ public class UI_Behaviour : MonoBehaviour
         m_PlayButton.DOFade(0, .3f);
         m_PreviousButton.DOFade(0, .3f).OnComplete( () => ToggleUIButtons());
         //m_GetReadyText.DOFade(1, .5f).SetEase(Ease.InOutCubic);
-        FocusInstructor();
+        //FocusInstructor();
         m_GetReadyText.text = "Asume pose";
 
 

@@ -20,8 +20,11 @@ public class CalibrationController : MonoBehaviour
 
 
     [Header("Animations")]
+    [SerializeField]
     private GameObject model;
     private Animator modelAnimator;
+    private Vector3 m_CentrePos;
+    private Vector3 m_StartPos;
 	[SerializeField] private string animationPoseTrigger;
 	[SerializeField] private string animationCalibrationTrigger;
 
@@ -31,8 +34,13 @@ public class CalibrationController : MonoBehaviour
 
         m_UIBehaviour = FindObjectOfType<UI_Behaviour>();
 
-        model = GameObject.Find("CalibrationInstructionModel");
+        model = GameObject.Find("CalibrationInstructionModel_" + this.gameObject.name.ToString());
         modelAnimator = model.GetComponent<Animator>();
+        m_StartPos = model.transform.position;
+        m_CentrePos = new Vector3(1, 0, 3);
+
+
+        
     }
 
     public void Update()
@@ -57,6 +65,7 @@ public class CalibrationController : MonoBehaviour
         eventListener.startCalibrationResponse += OnStartCalibration;
         eventListener.updateCalibrationResponse += OnUpdateCalibration;
 		eventListener.finishCalibrationResponse += OnFinishCalibration;
+        
     }
 
     private void OnDisable() 
@@ -72,6 +81,7 @@ public class CalibrationController : MonoBehaviour
         //shows ui and starts countdown
         m_UIBehaviour.UpdateCurrentStep(calibrationStepName);
         TriggerPoseAnimation(calibrationStepName);
+        MoveModelToCenter();
     }
 
     public void OnStartCalibration()
@@ -86,6 +96,7 @@ public class CalibrationController : MonoBehaviour
     public void OnFinishCalibration()
     {
         ResetTrigger();
+        MoveBackToPlace();
     }
 
     //Set trigger for animations
@@ -102,5 +113,16 @@ public class CalibrationController : MonoBehaviour
     void ResetTrigger()
     {
         modelAnimator.SetTrigger("IsDone");
+    }
+
+
+    void MoveModelToCenter()
+    {
+        model.transform.DOMove(m_CentrePos, 2f);
+    } 
+
+    void MoveBackToPlace()
+    {
+        model.transform.DOMove(m_StartPos, 2f);
     }
 }
