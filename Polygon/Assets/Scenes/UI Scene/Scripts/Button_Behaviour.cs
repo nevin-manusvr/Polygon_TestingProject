@@ -30,6 +30,10 @@ public class Button_Behaviour : MonoBehaviour
     [SerializeField]
     Sprite m_LockSprite;
 
+    [SerializeField]
+    GameObject m_Guide;
+    Animator m_GuideAnimator;
+
     private void Start()
     {
         m_IsLocked = false;
@@ -43,6 +47,8 @@ public class Button_Behaviour : MonoBehaviour
         m_Camera = Camera.main;
         m_Child = transform.GetChild(0).gameObject;
         m_ChildImage = m_Child.GetComponent<Image>();
+
+        m_GuideAnimator = m_Guide.GetComponent<Animator>();
     }
     void OnTriggerEnter(Collider collider)
     {
@@ -55,6 +61,7 @@ public class Button_Behaviour : MonoBehaviour
 
 
         m_UIBehaviour.ButtonFunction(transform.tag);
+        m_GuideAnimator.SetTrigger("PTI");
 
         
     }
