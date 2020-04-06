@@ -161,7 +161,7 @@ public class UI_Behaviour : MonoBehaviour
 
     void UndoSlider()
     {
-        m_GetReadyText.text = "Callibrating";
+        m_GetReadyText.text = "Calibrating";
         //m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
         m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
                                                                                         if(sequence.currentIndex == sequence.calibrationSteps.Count)
