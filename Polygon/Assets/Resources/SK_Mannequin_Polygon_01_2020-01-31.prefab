@@ -1055,24 +1055,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: 0.000000055831563, z: 0, w: 1}
           localPosition: {x: -0.000000005885766, y: 0.1346583, z: -0.0000000032838012}
           localRotation: {x: 0, y: 0, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 2
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!114 &1699901381979519911
 MonoBehaviour:
   m_ObjectHideFlags: 0

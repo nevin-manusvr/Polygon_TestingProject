@@ -36,7 +36,7 @@ namespace Manus.Polygon
 
 		private void Start()
 		{
-			boneScalers = GetComponent<PolygonSkeleton>().boneScalers;
+			// boneScalers = GetComponent<PolygonSkeleton>().boneScalers;
 		}
 
 		private void Update()

@@ -3893,68 +3893,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1008637311
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1008637312}
-  - component: {fileID: 1008637313}
-  m_Layer: 0
-  m_Name: Retargeter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1008637312
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008637311}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1710966215}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1008637313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008637311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84806dca030603843b080422692358a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  priorities:
-    rootPriority: 100
-    hipPriority: 25
-    spinePriority: 0
-    neckPriority: 15
-    headPriority: 125
-    shoulderPriority: 25
-    upperArmPriority: 50
-    lowerArmPriority: 0
-    handPriority: 100
-    upperLegPriority: 50
-    lowerLegPriority: 0
-    footPriority: 75
-    toesPriority: 50
-    toesEndPriority: 25
-  mainSkeleton: {fileID: 2847168082745557357}
-  retargetSkeleton: {fileID: 0}
-  quality: 0.7
-  iterations: 50
 --- !u!1 &1024436877
 GameObject:
   m_ObjectHideFlags: 0
@@ -5346,7 +5284,6 @@ MonoBehaviour:
   port: 6969
   playerPrefab: {fileID: 4593338892965481905, guid: 9df17853294764a4fa5112bb007578a5,
     type: 3}
-  test: {fileID: 0}
 --- !u!114 &1163469332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6269,36 +6206,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -5}
   m_SizeDelta: {x: 0, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1407894082
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1407894083}
-  m_Layer: 0
-  m_Name: TrackingData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1407894083
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1407894082}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1710966215}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1409552011
 GameObject:
   m_ObjectHideFlags: 0
@@ -7278,9 +7185,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1407894083}
-  - {fileID: 1008637312}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11992,24 +11897,6 @@ MonoBehaviour:
         position: {x: 1.1956284, y: 0, z: -2.9048493}
         rotation: {x: 0, y: 0.0071215765, z: 0, w: 0.99997467}
         bonesToControl: []
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 0, y: 0, z: -1}
-    totalHandInfluenceOnElbowRotation: 1
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!4 &1122219782686699098
 Transform:
   m_ObjectHideFlags: 0
@@ -12721,24 +12608,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: -0.00044140496, z: -0, w: 0.99999994}
           localPosition: {x: 0.0000000050841544, y: 0.09792429, z: -0.0000000025542128}
           localRotation: {x: 0, y: 5.588068e-12, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 2
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!114 &1204280279411900130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16771,24 +16640,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: -0.0014121644, z: -0, w: 0.99999905}
           localPosition: {x: -0.0000000031243128, y: 0.1226694, z: -0.00000015303429}
           localRotation: {x: 0, y: 3.224338e-11, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -360, y: 360}
-    handInfluenceOnElbowRotation: {x: 0.1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 1
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!1 &2856361919899805481
 GameObject:
   m_ObjectHideFlags: 0
@@ -19234,24 +19085,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: 0.00000006930202, z: 0, w: 1}
           localPosition: {x: 0.0000000021470206, y: 0.13465783, z: 0.000000023668502}
           localRotation: {x: 0, y: 0, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 2
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!1 &3953382037227889919
 GameObject:
   m_ObjectHideFlags: 0
@@ -20625,24 +20458,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: -0.0046799886, z: -0, w: 0.9999891}
           localPosition: {x: 7.43523e-10, y: 0.31024837, z: -0.0000001905173}
           localRotation: {x: 0, y: 1.8669488e-10, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 2
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!4 &4214350637871991309
 Transform:
   m_ObjectHideFlags: 0
@@ -22457,24 +22272,6 @@ MonoBehaviour:
             desiredRotation: {x: 0, y: 0.007024604, z: 0, w: 0.9999753}
           localPosition: {x: 0.0000000056960756, y: 0.100094855, z: 0.000000013304556}
           localRotation: {x: 0, y: 4.1868872e-10, z: 0, w: 1}
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 1, y: 0.3, z: -1}
-    totalHandInfluenceOnElbowRotation: 2
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!1 &4386283067482199591
 GameObject:
   m_ObjectHideFlags: 0

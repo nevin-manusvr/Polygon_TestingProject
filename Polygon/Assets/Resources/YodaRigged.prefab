@@ -2368,24 +2368,6 @@ MonoBehaviour:
         position: {x: 0.040465802, y: 0, z: -1.238814}
         rotation: {x: 0, y: 0.0071227727, z: 0, w: 0.99997467}
         bonesToControl: []
-  ik:
-    isInitialized: 0
-    ikGenerated: 0
-    hipInfluence: 1
-    headInfluence: 1
-    kneeMinMax: {x: -40, y: 50}
-    footInfluenceOnKneeRotation: {x: 0.1, y: 1, z: 1}
-    totalFootInfluenceOnKneeRotation: 1
-    elbowMinMax: {x: -30, y: 80}
-    handInfluenceOnElbowRotation: {x: 0, y: 0, z: -1}
-    totalHandInfluenceOnElbowRotation: 1
-    hipIK: {fileID: 0}
-    spineIK: []
-    neckIK: {fileID: 0}
-    leftArmIK: {fileID: 0}
-    rightArmIK: {fileID: 0}
-    leftLegIK: {fileID: 0}
-    rightLegIK: {fileID: 0}
 --- !u!114 &3646994874764761800
 MonoBehaviour:
   m_ObjectHideFlags: 0

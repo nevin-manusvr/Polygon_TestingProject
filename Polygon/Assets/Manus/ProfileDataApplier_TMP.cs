@@ -29,7 +29,7 @@ namespace Manus.Polygon
 		private void Start()
 		{
 			polygon = GetComponent<PolygonSkeleton>();
-			boneScalers = polygon.boneScalers;
+			//boneScalers = polygon.boneScalers;
 
 			debug.SetActive(true);
 			model.SetActive(false);
