@@ -8,6 +8,7 @@ public class Button_Behaviour : MonoBehaviour
 {
 
     UI_Behaviour m_UIBehaviour;
+    UI_WelcomeBehaviour m_UIWelcomeBehaviour;
 
     private Camera m_Camera;
     GameObject m_Child;
@@ -40,6 +41,7 @@ public class Button_Behaviour : MonoBehaviour
 
 
         m_UIBehaviour = GetComponentInParent<UI_Behaviour>();
+        m_UIWelcomeBehaviour = GameObject.Find("UI_WelcomeScreen").GetComponent<UI_WelcomeBehaviour>();
         m_Camera = Camera.main;
         m_Child = transform.GetChild(0).gameObject;
         m_ChildImage = m_Child.GetComponent<Image>();
@@ -53,8 +55,14 @@ public class Button_Behaviour : MonoBehaviour
         if(m_IsColliding) return;
         m_IsColliding = true;
 
+        if(gameObject.tag == "Begin")
+        {
 
-        m_UIBehaviour.ButtonFunction(transform.tag);
+        }
+        else
+        {
+            m_UIBehaviour.ButtonFunction(transform.tag);
+        }
 
         
     }

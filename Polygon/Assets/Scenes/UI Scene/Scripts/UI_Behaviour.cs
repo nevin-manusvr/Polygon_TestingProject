@@ -12,8 +12,6 @@ public class UI_Behaviour : MonoBehaviour
     public CalibrationControllerEvent controllerEvent;
 	public CalibrationSequence sequence;
 
-
-
     [Header("Progress Canvas")]
     [SerializeField]
     private CanvasGroup m_ProgressCanvas;
@@ -94,7 +92,8 @@ public class UI_Behaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(m_Camera.transform.position.x - 0.1f, m_Camera.transform.position.y / 1.1f, m_Camera.transform.position.z + 0.35f);
+        //change to fixed position of the red circle
+        //transform.position = new Vector3(m_Camera.transform.position.x - 0.1f, m_Camera.transform.position.y / 1.1f, m_Camera.transform.position.z + 0.35f);
     }
 
 
