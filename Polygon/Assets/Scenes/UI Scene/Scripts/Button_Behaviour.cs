@@ -48,108 +48,53 @@ public class Button_Behaviour : MonoBehaviour
     }
     void OnTriggerEnter(Collider collider)
     {
-
-        transform.GetComponent<Image>().color = new Color32(140,24,18,255);
-        m_ChildImage.DOColor(m_PressedButtonColor, .1f);
-        
-        if(m_IsColliding) return;
-        m_IsColliding = true;
-
-        if(gameObject.tag == "Begin")
+        //checks if "collider" is either the left or right hand.
+        if(collider.gameObject.layer == 10 || collider.gameObject.layer == 11)
         {
+            transform.GetComponent<Image>().color = new Color32(140,24,18,255);
+            m_ChildImage.DOColor(m_PressedButtonColor, .1f);
+        
+            if(m_IsColliding) return;
+            m_IsColliding = true;
 
+            if(gameObject.tag == "Begin")
+            {
+                m_UIWelcomeBehaviour.CloseWelcome();
+            }
+            else
+            {
+                m_UIBehaviour.ButtonFunction(transform.tag);
+            }
         }
         else
         {
-            m_UIBehaviour.ButtonFunction(transform.tag);
-        }
-
-        
+            return;
+        }        
     }
 
     void OnTriggerStay(Collider collider)
     {
-        float dist = Vector3.Distance(m_Camera.transform.position, collider.transform.position);
-        float m_handposition = dist * 100;
-    
-        m_Child.transform.localPosition = new Vector3(0, 0, m_handposition);
-
-
-        //makes button follow tracker along x axis
-        if(this.gameObject.CompareTag("Slider"))
+        if (collider.gameObject.layer == 10 || collider.gameObject.layer == 11)
         {
-            transform.position = new Vector3(collider.transform.position.x, transform.position.y ,transform.position.z);
-            
-            if(transform.localPosition.x < -125)
-            {
-                transform.localPosition = new Vector3(-125, transform.position.y, transform.position.z);
-            }
-            else if (transform.localPosition.x > 125)
-            {
-                transform.localPosition = new Vector3(125, transform.position.y, transform.position.z);
-            }
-        }
+            //makes it visually look like you're pushing the button
+            float dist = Vector3.Distance(m_Camera.transform.position, collider.transform.position);
+            float m_handposition = dist * 100;
 
+            m_Child.transform.localPosition = new Vector3(0, 0, m_handposition);
+        }
     }
 
     void OnTriggerExit(Collider collider)
     {
-        if(!m_IsColliding) return;
-        m_IsColliding = false;
-
-        m_ChildImage.DOColor(m_ButtonColor, .1f);
-        Vector3 Startpos =  new Vector3(transform.localPosition.x, 0, 0);
-        m_Child.transform.DOLocalMoveZ(0, 0.1f);
-       
-       
-       
-       
-        if (this.gameObject.CompareTag("Slider"))
+        if (collider.gameObject.layer == 10 || collider.gameObject.layer == 11)
         {
-            if (transform.localPosition.x >= 40)
-            {
-                m_IsLocked = true;
-                transform.DOLocalMoveX(125, .2f);
-            }
-            else if (transform.localPosition.x <= -40)
-            {
-                m_IsLocked = false;
-                transform.DOLocalMoveX(-125, .2f);
-            }
-            else if (transform.localPosition.x < 40 && transform.localPosition.x > -40)
-            {
-                if(m_IsLocked)
-                {
-                    transform.DOLocalMoveX(125, .2f);
-                }
-                else
-                {
-                    transform.DOLocalMoveX(-125, .2f);
-                }
-            }
+            if (!m_IsColliding) return;
+            m_IsColliding = false;
 
-            if (m_WasLocked != m_IsLocked)
-            {
-                SwitchImage();
-                m_WasLocked = m_IsLocked;
-            }
+            m_ChildImage.DOColor(m_ButtonColor, .1f);
+            Vector3 Startpos =  new Vector3(transform.localPosition.x, 0, 0);
+            m_Child.transform.DOLocalMoveZ(0, 0.1f);
 
         }
-    }
-
-    private void SwitchImage()
-    {
-        if(m_IsLocked)
-        {
-            m_ChildImage.sprite = m_LockSprite;
-        } 
-        else
-        {
-            m_ChildImage.sprite = m_UnlockSprite;
-        }
-        m_UIBehaviour.ToggleUI(m_IsLocked);
-        m_UIBehaviour.ToggleUIButtons();
-        //switches slider image to either lock or unlock
-        //toggles ui
     }
 }

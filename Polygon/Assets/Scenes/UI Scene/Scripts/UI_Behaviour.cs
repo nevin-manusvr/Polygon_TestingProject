@@ -63,6 +63,7 @@ public class UI_Behaviour : MonoBehaviour
     private Image m_InstructorFocusImage;
 
     private Camera m_Camera;
+    private GameObject m_UI_Platform;
 
 
     
@@ -71,10 +72,11 @@ public class UI_Behaviour : MonoBehaviour
     void Start()
     {
         m_Camera = Camera.main;
+        m_UI_Platform = GameObject.Find("UI_Platform");
 
 
         controllerEvent.StartCalibrationSequence();
-        m_ButtonsAreActive = true;
+        m_ButtonsAreActive = false;
         m_AreSwitched = false;
        
 
@@ -86,6 +88,8 @@ public class UI_Behaviour : MonoBehaviour
         m_CheckButtonObj = gameObject.transform.GetChild(2).GetChild(2).GetChild(2).gameObject;
         m_CheckButtonObj.SetActive(false);
         m_CheckButton.alpha = 0;
+
+        ToggleUI(false);
 
     }
 
@@ -190,13 +194,23 @@ public class UI_Behaviour : MonoBehaviour
         {
             m_ControllerCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
             m_ProgressCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
+            m_SecondProgressCanvas.DOFade(1, 1f).SetEase(Ease.InOutCubic);
         }
         else
         {
             m_ControllerCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
             m_ProgressCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
+            m_SecondProgressCanvas.DOFade(0, 1f).SetEase(Ease.InOutCubic);
         }
         
+    }
+    //sets ui hight to hight of user
+    private bool m_UIHightSet = false;
+    public void SetUIHight()
+    {
+        if (m_UIHightSet) return;
+        m_UIHightSet = true;
+        transform.position = new Vector3(m_UI_Platform.transform.position.x, m_Camera.transform.position.y / 1.1f, m_UI_Platform.transform.position.z + .5f);
     }
 
     private void SwitchButtons()

@@ -13,6 +13,7 @@ TagManager:
   - HandCollider
   - SkipGuide
   - StartGuide
+  - Begin
   layers:
   - Default
   - TransparentFX
@@ -23,12 +24,12 @@ TagManager:
   - 
   - 
   - StereoRender_Ignore
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Head
+  - LeftHand
+  - RightHand
+  - LeftFoot
+  - RightFoot
+  - Waist
   - 
   - 
   - 

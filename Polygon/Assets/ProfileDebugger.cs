@@ -79,6 +79,11 @@ namespace Manus.Polygon
 				trackerVisuals[i]?.transform.SetPositionAndRotation(
 					trackerTransform.position,
 					trackerTransform.rotation);
+
+				//gets child object with collider and gives them a corresponding tag
+				GameObject Child = trackerVisuals[i].transform.GetChild(0).gameObject;
+				int l = 9 + i;
+				Child.layer = l;
 			}
 		}
 
