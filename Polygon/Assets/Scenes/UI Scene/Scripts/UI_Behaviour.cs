@@ -17,7 +17,7 @@ public class UI_Behaviour : MonoBehaviour
     private CanvasGroup m_ProgressCanvas;
     [SerializeField]
     private Image m_CurrentStepSliderImage;
-    private int m_CurrentStep;
+    public int m_CurrentStep;
 
     [SerializeField]
     public TextMeshProUGUI m_CurrentStepText;
