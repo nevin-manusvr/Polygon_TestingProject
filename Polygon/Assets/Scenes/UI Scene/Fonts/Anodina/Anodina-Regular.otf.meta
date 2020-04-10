@@ -1,0 +1,27 @@
+fileFormatVersion: 2
+guid: 87136726fb19c0640ae4a12c3cc588e3
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Anodina
+  fontNames:
+  - Anodina
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d42fc7241ae00434b9396232b2025f86, type: 3}
+  - {fileID: 12800000, guid: a301c92410b16a24b968902567a8acda, type: 3}
+  - {fileID: 12800000, guid: f1856676c92bd8e4a862b6205f5d40e0, type: 3}
+  - {fileID: 12800000, guid: 2030c4287fb853142a7d3fd0660c6f1f, type: 3}
+  - {fileID: 12800000, guid: 6800dfae41b4d374c88d319e9a37fa5c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

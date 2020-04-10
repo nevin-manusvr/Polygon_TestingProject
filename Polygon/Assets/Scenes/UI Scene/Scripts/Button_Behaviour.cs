@@ -36,7 +36,7 @@ public class Button_Behaviour : MonoBehaviour
         m_IsLocked = false;
         m_WasLocked = true;
 
-        m_PressedButtonColor = new Color32(140,24,18,255);
+        m_PressedButtonColor = new Color32(86, 173, 214, 255);
         m_ButtonColor = new Color32(25,30,34,255);
 
 
@@ -51,7 +51,7 @@ public class Button_Behaviour : MonoBehaviour
         //checks if "collider" is either the left or right hand.
         if(collider.gameObject.layer == 10 || collider.gameObject.layer == 11)
         {
-            transform.GetComponent<Image>().color = new Color32(140,24,18,255);
+            transform.GetComponent<Image>().color = m_PressedButtonColor;
             m_ChildImage.DOColor(m_PressedButtonColor, .1f);
         
             if(m_IsColliding) return;

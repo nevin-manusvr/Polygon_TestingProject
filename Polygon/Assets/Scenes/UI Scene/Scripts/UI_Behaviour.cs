@@ -93,16 +93,6 @@ public class UI_Behaviour : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //change to fixed position of the red circle
-        //transform.position = new Vector3(m_Camera.transform.position.x - 0.1f, m_Camera.transform.position.y / 1.1f, m_Camera.transform.position.z + 0.35f);
-    }
-
-
-
-
     public void ButtonFunction(string buttonTag)
     {
 
