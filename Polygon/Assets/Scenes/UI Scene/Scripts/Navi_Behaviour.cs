@@ -58,7 +58,8 @@ public class Navi_Behaviour : MonoBehaviour
         m_UIPlatform = GameObject.Find("UI_Platform");
         m_PlatformPos = m_UIPlatform.transform.position;
 
-        m_CharacterPos = new Vector3(1.187f, 1.663f, 0.428f);
+        m_Character = GameObject.Find("CalibrationInstructionModel");
+        m_CharacterPos = m_Character.transform.position;
 
         m_meshrenderer = transform.GetComponent<MeshRenderer>();
         isCalled = false;
@@ -91,7 +92,7 @@ public class Navi_Behaviour : MonoBehaviour
                 break;
             case State.Welcome:
                 CheckPreviousState();
-                GetPos(m_UIWelcomeScreen, m_UIWelcomePos);
+                GetPos(m_UIWelcomeScreen);
                 FlyTo(m_UIWelcomePos);
 
                 //FlyIntoWelcome();
@@ -101,7 +102,7 @@ public class Navi_Behaviour : MonoBehaviour
                 break;
             case State.Controlls:
                 CheckPreviousState();
-                GetPos(m_UIPhysicalButtons, m_UIPos);
+                GetPos(m_UIPhysicalButtons);
                 FlyTo(m_UIPos);
                 //FlyIntoControlls();
 
@@ -110,7 +111,7 @@ public class Navi_Behaviour : MonoBehaviour
                 break;
             case State.Instruction:
                 CheckPreviousState();
-                GetPos(m_Character, m_CharacterPos);
+                GetPos(m_Character);
                 FlyTo(m_CharacterPos);
 
                 //FlyIntoInstruction();
@@ -165,11 +166,22 @@ public class Navi_Behaviour : MonoBehaviour
     }
 
 
-    private void GetPos(GameObject targetObject, Vector3 targetPos)
+    private void GetPos(GameObject targetObject)
     {
-        targetPos = targetObject.transform.position;
+        Vector3 targetPos = targetObject.transform.position;
+        if(targetObject == m_UIWelcomeScreen)
+        {
+            m_UIWelcomePos = targetPos;
+        }
+        else if(targetObject == m_UIPhysicalButtons)
+        {
+            m_UIPos = targetPos;
+        }
+        else if(targetObject == m_Character)
+        {
+            m_CharacterPos = new Vector3(targetPos.x, targetPos.y + 1.2f, targetPos.z);
+        }
     }
-    //when user is standing in platform but hasn't pressed button of welcome
 
     private void FlyTo(Vector3 targetPos)
     {

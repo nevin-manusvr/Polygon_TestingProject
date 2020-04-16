@@ -37,7 +37,7 @@ public class Button_Behaviour : MonoBehaviour
         m_WasLocked = true;
 
         m_PressedButtonColor = new Color32(86, 173, 214, 255);
-        m_ButtonColor = new Color32(25,30,34,255);
+        m_ButtonColor = new Color32(255,255,255,255);
 
 
         m_UIBehaviour = GetComponentInParent<UI_Behaviour>();

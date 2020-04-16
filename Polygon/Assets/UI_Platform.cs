@@ -19,7 +19,7 @@ public class UI_Platform : MonoBehaviour
     [SerializeField]
     private Navi_Behaviour m_NaviBehaviour;
 
-    public bool isStandingIn;
+    private bool isStandingIn;
     bool isCalled;
 
     // Start is called before the first frame update
@@ -55,16 +55,16 @@ public class UI_Platform : MonoBehaviour
             {
                 m_UIWelcomeBehaviour.ToggleButton(true);
                 m_UIWelcomeBehaviour.ShowButton();
+                m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Welcome;
+                m_UIBehaviour.SetUIHight();
+
             }
             else
             {
-               /*
                 m_UIBehaviour.ToggleUI(true);
-                m_UIBehaviour.ToggleUIButtons();
-                m_UIBehaviour.SetUIHight();
-                //show ui_physical buttons*/
+                m_UIBehaviour.ToggleUIButtons(true);
+                m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Controlls;
             }
-            m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Welcome;
         }
         else
         {
@@ -74,15 +74,17 @@ public class UI_Platform : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (m_UIBehaviour.m_ButtonsAreActive) return;
+        if (m_UIBehaviour.isActive) return;
 
         if (other.gameObject.layer == 9)
         {
             if (!m_UIWelcomeBehaviour.m_WelcomeIsActive)
             {
+                if (isStandingIn) return;
+                isStandingIn = true;
                 m_UIBehaviour.ToggleUI(true);
-                m_UIBehaviour.ToggleUIButtons();
-                m_UIBehaviour.SetUIHight();
+                m_UIBehaviour.ToggleUIButtons(true);
+
             }
         }
     }
@@ -95,14 +97,14 @@ public class UI_Platform : MonoBehaviour
             {
                 m_UIWelcomeBehaviour.HideButton();
                 m_UIWelcomeBehaviour.ToggleButton(false);
-                isCalled = false;
+                
             }
             else
             {
                 m_UIBehaviour.ToggleUI(false);
-                m_UIBehaviour.ToggleUIButtons();
-                //show ui_physical buttons
+                m_UIBehaviour.ToggleUIButtons(false);
             }
+            isCalled = false;
             m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Stand;
         }
     }
