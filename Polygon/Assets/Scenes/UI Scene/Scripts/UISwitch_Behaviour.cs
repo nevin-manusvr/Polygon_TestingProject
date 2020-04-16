@@ -18,7 +18,9 @@ public class UISwitch_Behaviour : MonoBehaviour
     Vector3 m_StartingPos;
     public Vector3 dist;
 
+    [SerializeField]
     bool m_IsToggled;
+    [SerializeField]
     bool m_IsColliding;
 
 

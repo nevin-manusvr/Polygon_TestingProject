@@ -111,8 +111,8 @@ public class UI_Behaviour : MonoBehaviour
 			    
 			    if (!sequence.isFinished)
 			    {
-				    controllerEvent.RaiseSetupNextStep();
                     m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Instruction;
+				    controllerEvent.RaiseSetupNextStep();
                     StartSlider();
                     m_CurrentStep += 1;
 			    }
