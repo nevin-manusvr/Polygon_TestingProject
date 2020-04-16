@@ -14,6 +14,14 @@ public class UI_Platform : MonoBehaviour
     [SerializeField]
     private UI_WelcomeBehaviour m_UIWelcomeBehaviour;
 
+    [SerializeField]
+    private GameObject m_Navi;
+    [SerializeField]
+    private Navi_Behaviour m_NaviBehaviour;
+
+    public bool isStandingIn;
+    bool isCalled;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +30,12 @@ public class UI_Platform : MonoBehaviour
         
         m_UIWelcomeScreen = GameObject.Find("UI_WelcomeScreen");
         m_UIWelcomeBehaviour = m_UIWelcomeScreen.GetComponent<UI_WelcomeBehaviour>();
+        
+        m_Navi = GameObject.Find("Navi");
+        m_NaviBehaviour = m_Navi.GetComponent<Navi_Behaviour>();
+
+        isStandingIn = false;
+        isCalled = false;
     }
 
     // Update is called once per frame
@@ -35,6 +49,8 @@ public class UI_Platform : MonoBehaviour
 
         if(other.gameObject.layer == 9) 
         {
+            if (isCalled) return;
+            isCalled = true;
             if (m_UIWelcomeBehaviour.m_WelcomeIsActive)
             {
                 m_UIWelcomeBehaviour.ToggleButton(true);
@@ -48,6 +64,7 @@ public class UI_Platform : MonoBehaviour
                 m_UIBehaviour.SetUIHight();
                 //show ui_physical buttons*/
             }
+            m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Welcome;
         }
         else
         {
@@ -78,6 +95,7 @@ public class UI_Platform : MonoBehaviour
             {
                 m_UIWelcomeBehaviour.HideButton();
                 m_UIWelcomeBehaviour.ToggleButton(false);
+                isCalled = false;
             }
             else
             {
@@ -85,17 +103,7 @@ public class UI_Platform : MonoBehaviour
                 m_UIBehaviour.ToggleUIButtons();
                 //show ui_physical buttons
             }
+            m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Stand;
         }
-
-
-        /*
-        if (other.gameObject.layer == 9)
-        {
-            m_UIBehaviour.ToggleUI(false);
-        }
-        else
-        {
-            return;
-        }*/
     }
 }

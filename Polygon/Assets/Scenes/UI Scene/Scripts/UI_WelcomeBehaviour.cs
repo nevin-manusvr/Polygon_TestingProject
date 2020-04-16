@@ -17,11 +17,15 @@ public class UI_WelcomeBehaviour : MonoBehaviour
     [SerializeField]
     private CanvasGroup m_BeginButton;
     [SerializeField]
-    private bool m_ButtonIsActive;
+    public bool m_ButtonIsActive;
     [SerializeField]
     public bool m_WelcomeIsActive;
 
-
+    [Header("NAVI")]
+    [SerializeField]
+    private GameObject m_Navi;
+    [SerializeField]
+    private Navi_Behaviour m_NaviBehaviour;
 
 
 
@@ -38,6 +42,9 @@ public class UI_WelcomeBehaviour : MonoBehaviour
         m_WelcomeButton.SetActive(false);
         m_ButtonIsActive = false;
         m_WelcomeIsActive = true;
+
+        m_Navi = GameObject.Find("Navi");
+        m_NaviBehaviour = m_Navi.GetComponent<Navi_Behaviour>();
     }
 
     // Update is called once per frame
@@ -49,6 +56,7 @@ public class UI_WelcomeBehaviour : MonoBehaviour
     //toggles button when standing in/out of the red circle
     public void ToggleButton(bool isActive)
     {
+        m_ButtonIsActive = isActive;
         m_WelcomeButton.SetActive(isActive);
     }
 
@@ -73,5 +81,7 @@ public class UI_WelcomeBehaviour : MonoBehaviour
             ToggleButton(false);
             m_WelcomeIsActive = false;
         });
+        m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Controlls;
+
     }
 }

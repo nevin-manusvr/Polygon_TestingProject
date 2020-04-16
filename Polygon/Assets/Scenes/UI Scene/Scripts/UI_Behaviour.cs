@@ -65,6 +65,12 @@ public class UI_Behaviour : MonoBehaviour
     private Camera m_Camera;
     private GameObject m_UI_Platform;
 
+    [Header("NAVI")]
+    [SerializeField]
+    private GameObject m_Navi;
+    [SerializeField]
+    private Navi_Behaviour m_NaviBehaviour;
+
 
     
 
@@ -73,6 +79,9 @@ public class UI_Behaviour : MonoBehaviour
     {
         m_Camera = Camera.main;
         m_UI_Platform = GameObject.Find("UI_Platform");
+
+        m_Navi = GameObject.Find("Navi");
+        m_NaviBehaviour = m_Navi.GetComponent<Navi_Behaviour>();
 
 
         controllerEvent.StartCalibrationSequence();
@@ -103,6 +112,7 @@ public class UI_Behaviour : MonoBehaviour
 			    if (!sequence.isFinished)
 			    {
 				    controllerEvent.RaiseSetupNextStep();
+                    m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Instruction;
                     StartSlider();
                     m_CurrentStep += 1;
 			    }
@@ -143,11 +153,11 @@ public class UI_Behaviour : MonoBehaviour
         m_GetReadyText.text = "Asume pose";
 
 
-        m_SliderImage.DOFillAmount(.5f, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {
-                                                                                        controllerEvent.RaiseStartNextStep();
-                                                                                        //m_GetReadyText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
-                                                                                        UndoSlider(); 
-                                                                                    });
+        m_SliderImage.DOFillAmount(.5f, 4f).SetEase(Ease.InOutCubic).OnComplete(() => 
+        {
+            controllerEvent.RaiseStartNextStep();
+            UndoSlider(); 
+        });
 
         
     }
@@ -156,20 +166,22 @@ public class UI_Behaviour : MonoBehaviour
     {
         m_GetReadyText.text = "Calibrating";
         //m_CalibratingText.DOFade(1, .5f).SetEase(Ease.InOutCubic).SetDelay(.2f);
-        m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => {   
-                                                                                        if(sequence.currentIndex == sequence.calibrationSteps.Count)
-			                                                                            {
-                                                                                            SwitchButtons();
-			                                                                            }
-                                                                                        //m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
-                                                                                        ToggleUIButtons(); 
-                                                                                        m_PlayButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
-                                                                                        m_PreviousButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
-                                                                                        m_GetReadyText.text = "";
-                                                                                        m_SliderImage.DOFillAmount(0, 0f);
-                                                                                        UpdateCurrentStep(null);
-                                                                                        FocusUI();
-                                                                                    });
+        m_SliderImage.DOFillAmount(1, 4f).SetEase(Ease.InOutCubic).OnComplete(() => 
+        {
+            if(sequence.currentIndex == sequence.calibrationSteps.Count)
+			{
+                SwitchButtons();
+			}
+            //m_CalibratingText.DOFade(0, .5f).SetEase(Ease.InOutCubic);
+            ToggleUIButtons(); 
+            m_PlayButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
+            m_PreviousButton.DOFade(1, .3f).SetEase(Ease.InOutCubic);
+            m_GetReadyText.text = "";
+            m_SliderImage.DOFillAmount(0, 0f);
+            UpdateCurrentStep(null);
+            m_NaviBehaviour.m_CurrentState = Navi_Behaviour.State.Controlls;
+            FocusUI();
+        });
     }
 
     public void ToggleUIButtons()

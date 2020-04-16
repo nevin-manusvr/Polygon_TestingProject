@@ -5,8 +5,9 @@ using DG.Tweening;
 
 public class UISwitch_Behaviour : MonoBehaviour
 {
-
+    [SerializeField]
     GameObject m_UI_PhysicalButtons;
+    [SerializeField]
     UI_Behaviour m_UIBehviour;
 
     [SerializeField]
